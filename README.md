@@ -14,6 +14,11 @@ command-line based operations.
 
 # Building the Command-Line Tool
 
+Run 
+'''
+mvn package
+'''
+creates a jar containg all dependencies.
 
 # License
 
