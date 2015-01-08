@@ -89,7 +89,7 @@ public class MetadataMapper
 
     public static void main(String argv[])
     {
-        System.out.println("** MetadataMapper");
+        System.out.println("** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH");
         try
         {
             Args.parse(MetadataMapper.class, argv);
