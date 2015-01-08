@@ -117,7 +117,7 @@
                     </args>
                     <forceRegenerate>true</forceRegenerate>
                     <generateDirectory>target/generated/jaxb2</generateDirectory>
-                    <generatePackage>de.dpa.metadata.imaging.configuration.generated</generatePackage>
+                    <generatePackage>de.dpa.metadatamapper.imaging.configuration.generated</generatePackage>
                     <cleanPackageDirectories>true</cleanPackageDirectories>
                 </configuration>
             </plugin>
@@ -169,7 +169,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>de.dpa.metadata.MetadataMapper</mainClass>
+                            <mainClass>de.dpa.metadatamapper.MetadataMapper</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -183,7 +183,7 @@
                     <archive>
                         <manifest>
                             <mainClass>
-                                de.dpa.metadata.MetadataMapper
+                                de.dpa.metadatamapper.MetadataMapper
                             </mainClass>
                         </manifest>
                     </archive>
@@ -191,8 +191,8 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <id>make-assembly</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
