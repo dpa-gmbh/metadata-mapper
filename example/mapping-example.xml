@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping name="default" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/ file:///C:/dev/ws/service-dispatch/src/main/resources/mapping/xsd/metadata-mapping-1-0.xsd">
+	<config>
+		<timezone>Europe/Berlin</timezone>
+		<iim charset="iso8859-15" characterMappingRef="utf8-to-iso8859-15" defaultReplaceChar="·"/>
+		<xmp charset="utf-8" defaultReplaceChar="·"/>
+	</config>
+	<metadata name="City (legacy)" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/locality/name]]></xpath>
+		<xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/locality/name]]></xpath>
+		<xpath rank="3"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/locality/name]]></xpath>
+		<xpath rank="4"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/locality/name]]></xpath>
+		<xpath rank="5"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/locality/name]]></xpath>
+		<iim>
+			<mapsTo dataset="90" field="City" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="City" targetType="Text"/>
+		</xmp>
+	</metadata>
+	<metadata name="Country (legacy)" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/country/name]]></xpath>
+		<xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/name]]></xpath>
+		<xpath rank="3"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/country/name]]></xpath>
+		<xpath rank="4"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/country/name]]></xpath>
+		<xpath rank="5"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/country/name]]></xpath>
+		<iim>
+			<mapsTo dataset="101" field="Country/Primary Location Name" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Country" targetType="Text"/>
+		</xmp>
+	</metadata>
+	<metadata name="Country Code (legacy)" cardinality="ONE">
+		<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta/located/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
+		<xpath rank="2" returnType="STRING"><![CDATA[substring(//contentMeta/located/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a2:"]/@qcode,13)]]></xpath>
+		<xpath rank="3" returnType="STRING"><![CDATA[substring(//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
+		<xpath rank="4" returnType="STRING"><![CDATA[substring(//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
+		<xpath rank="5" returnType="STRING"><![CDATA[substring(//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a2:"]/@qcode,13)]]></xpath>
+		<xpath rank="6" returnType="STRING"><![CDATA[substring(//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a2:"]/@qcode,13)]]></xpath>
+		<iim>
+			<mapsTo dataset="100" field="Country/Primary Location Code" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="CountryCode" targetType="Text"/>
+		</xmp>
+	</metadata>
+	<metadata name="Headline" cardinality="ONE">
+		<xpath><![CDATA[//contentMeta/headline[@rank='1' or not(@rank)]]]></xpath>
+		<iim>
+			<mapsTo dataset="105" field="Headline" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Headline"/>
+		</xmp>
+	</metadata>
+	<metadata name="Description" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/description[@role='drol:caption']]]></xpath>
+		<xpath rank="2"><![CDATA[//contentMeta/description[not(@role)]]></xpath>
+		<iim>
+			<mapsTo dataset="120" field="Caption/Abstract" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="description"/>
+		</xmp>
+	</metadata>
+	<metadata name="Intellectual Genre" cardinality="ONE">
+		<xpath rank="1"><![CDATA[/newsItem/contentMeta/genre/name]]></xpath>
+		<xpath rank="2"><![CDATA[/newsItem/contentMeta/genre/@literal]]></xpath>
+		<iim>
+			<mapsTo dataset="4" field="Object Attribute Reference" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="IntellectualGenre"/>
+		</xmp>
+	</metadata>
+	<metadata name="Keywords" cardinality="MANY">
+		<xpath><![CDATA[//contentMeta/keyword | //contentMeta/subject[not(@type = 'dpatype:category')]/name]]></xpath>
+		<iim>
+			<mapsTo dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo field="Subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/">
+				<mapsTo field="Subject" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Province or State (legacy)" cardinality="MANY">
+		<xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/area/name]]></xpath>
+		<xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/area/name]]></xpath>
+		<xpath rank="3"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/area/name]]></xpath>
+		<xpath rank="4"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/area/name]]></xpath>
+		<xpath rank="5"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/area/name]]></xpath>
+		<iim>
+			<mapsTo dataset="95" field="Province/State" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="State" targetType="Text"/>
+		</xmp>
+	</metadata>
+	<metadata name="Scene Code" cardinality="MANY">
+		<xpath rank="1"><![CDATA[//contentMeta/genre/@qcode]]></xpath>
+		<xmp>
+			<mapsTo targetNamespace="http://purl.org/dc/elements/1.1/" field="Scene" targetType="Bag">
+				<mapsTo field="Scene" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Subject Code" cardinality="MANY">
+		<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta//subject[starts-with(@qcode, 'subj:')]/@qcode, 6)]]></xpath>
+		<iim>
+			<mapsTo field="Subject Reference" dataset="12" targetType="LIST_OF_STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="SubjectCode" targetType="Bag">
+				<mapsTo field="SubjectCode" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Subjectlocation (legacy)" cardinality="MANY">
+		<default/>
+		<iim>
+			<mapsTo field="Sublocation" dataset="92" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="Location" targetType="Text"/>
+		</xmp>
+	</metadata>
+	<metadata name="Date Created" cardinality="ONE">
+		<xpath><![CDATA[//contentMeta/contentCreated]]></xpath>
+		<iim>
+			<mapsTo dataset="55" field="Date Created" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Date" field="DateCreated"/>
+		</xmp>
+	</metadata>
+	<metadata name="Description Writer" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/contributor[@role="ctrol:descrWriter"]/name]]></xpath>
+		<xpath rank="2"><![CDATA[//contentMeta/contributor/name]]></xpath>
+		<iim>
+			<mapsTo dataset="122" field="Writer/Editor" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text" field="CaptionWriter"/>
+		</xmp>
+	</metadata>
+	<metadata name="Instructions" cardinality="ONE">
+		<xpath><![CDATA[//itemMeta/edNote]]></xpath>
+		<iim>
+			<mapsTo dataset="40" field="Special Instructions" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Instructions"/>
+		</xmp>
+	</metadata>
+	<metadata name="Job Id" cardinality="ONE">
+		<xpath><![CDATA[//contentMeta/altId[@type='dpatype:orgTransRef']]]></xpath>
+		<iim>
+			<mapsTo dataset="103" field="Original Transmission, Reference" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="TransmissionReference"/>
+		</xmp>
+	</metadata>
+	<metadata name="Title" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/title]]></xpath>
+		<xpath rank="2"><![CDATA[//contentMeta/headline[not(@rank) or @rank='1']]]></xpath>
+		<xmp>
+			<mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="title"/>
+		</xmp>
+	</metadata>
+	<metadata name="Copyright Notice" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//rightsInfo/copyrightNotice]]></xpath>
+		<xpath rank="2" returnType="STRING"><![CDATA[concat('(c) ',//rightsInfo/copyrightHolder/name)]]></xpath>
+		<default>(c) dpa</default>
+		<iim>
+			<mapsTo dataset="116" field="Copyright Notice" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="rights"/>
+		</xmp>
+	</metadata>
+	<metadata name="Creator" cardinality="MANY">
+		<xpath><![CDATA[//contentMeta/creator/name]]></xpath>
+		<iim>
+			<mapsTo dataset="80" field="By-line" targetType="LIST_OF_STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Sequence" field="creator"/>
+		</xmp>
+	</metadata>
+	<metadata name="Creator's Contact Info" cardinality="ONE">
+		<xpath part="line"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/line]]></xpath>
+		<xpath part="city"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/locality/name]]></xpath>
+		<xpath part="country"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/country/name]]></xpath>
+		<xpath part="postal"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/postalCode]]></xpath>
+		<xpath part="state"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/area/name]]></xpath>
+		<xpath part="phone"><![CDATA[//contentMeta/creator/personDetails/contactInfo/phone]]></xpath>
+		<xpath part="url"><![CDATA[//contentMeta/creator/personDetails/contactInfo/web]]></xpath>
+		<xpath part="mail"><![CDATA[//contentMeta/creator/personDetails/contactInfo/email]]></xpath>
+		<xmp>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Struct" field="CreatorContactInfo">
+				<mapsTo part-ref="line" field="CiAdrExtadr" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
+				<mapsTo part-ref="city" field="CiAdrCity" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
+				<mapsTo part-ref="country" field="CiAdrCtry" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
+				<mapsTo part-ref="phone" field="CiTelWork" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
+				<mapsTo part-ref="postal" field="CiAdrPcode" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
+				<mapsTo part-ref="state" field="CiAdrRegion" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
+				<mapsTo part-ref="url" field="CiUrlWork" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
+				<mapsTo part-ref="mail" field="CiEmailWork" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Creator's Jobtitle" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/creator/facet]]></xpath>
+		<xpath rank="2" returnType="STRING"><![CDATA[substring(//contentMeta/creator/related[starts-with(@qcode, 'dpaaccno:')]/@qcode, 10)]]></xpath>
+		<iim>
+			<mapsTo dataset="85" field="By-line Title" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="AuthorsPosition"/>
+		</xmp>
+	</metadata>
+	<metadata name="Credit" cardinality="ONE">
+		<xpath><![CDATA[//contentMeta/creditline]]></xpath>
+		<iim>
+			<mapsTo field="Credit" dataset="110" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo field="Credit" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
+		</xmp>
+	</metadata>
+	<metadata name="Rights Usage Terms" cardinality="ONE">
+		<xpath><![CDATA[//rightsInfo/usageTerms]]></xpath>
+		<xmp>
+			<mapsTo field="UsageTerms" targetNamespace="http://ns.adobe.com/xap/1.0/rights/" targetType="LangAlt"/>
+		</xmp>
+	</metadata>
+	<metadata name="Source" cardinality="ONE">
+		<xpath><![CDATA[//rightsInfo/copyrightHolder/name]]></xpath>
+		<iim>
+			<mapsTo field="Source" dataset="115" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo field="Source" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
+		</xmp>
+	</metadata>
+	<metadata name="Language" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/language/@tag]]></xpath>
+		<xpath rank="2"><![CDATA[//newsItem/@xml:lang]]></xpath>
+		<iim>
+			<mapsTo dataset="135" field="Language Identifier" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/" field="language">
+                <mapsTo field="language" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+            </mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Location Created" cardinality="ONE">
+        <xpath part="city" rank="1"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/locality/name]]></xpath>
+		<xpath part="city" rank="2"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/locality/name]]></xpath>
+		<xpath part="country" rank="1"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/name]]></xpath>
+		<xpath part="country" rank="2"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/country/name]]></xpath>
+		<xpath part="province" rank="1"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/area/name]]></xpath>
+		<xpath part="province" rank="2"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/area/name]]></xpath>
+        <xpath part="countryCode" rank="1" returnType="STRING">
+            <![CDATA[substring(//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
+        <xpath part="countryCode" rank="2" returnType="STRING">
+            <![CDATA[substring(//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
+        <xpath part="countryCode" rank="3" returnType="STRING">
+            <![CDATA[substring(//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a2:"]/@qcode,13)]]></xpath>
+        <xpath part="countryCode" rank="4" returnType="STRING">
+            <![CDATA[substring(//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a2:"]/@qcode,13)]]></xpath>
+		<xmp>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="LocationCreated" targetType="Struct">
+				<mapsTo part-ref="city" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="City"/>
+				<mapsTo part-ref="country" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="CountryName"/>
+				<mapsTo part-ref="countryCode" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="CountryCode"/>
+				<mapsTo part-ref="province" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="ProvinceState"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Urgency" cardinality="ONE">
+		<xpath><![CDATA[//contentMeta/urgency]]></xpath>
+		<iim>
+			<mapsTo dataset="10" field="Urgency" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="Integer" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Urgency"/>
+		</xmp>
+	</metadata>
+	<metadata name="Category" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='dpatype:category']/name[@role='nrol:mnemonic']]]></xpath>
+		<xpath rank="2"><![CDATA[//contentMeta/subject[@type='dpatype:category']/name[1]]]></xpath>
+		<iim>
+			<mapsTo dataset="15" field="Category" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Category"/>
+		</xmp>
+	</metadata>
+	<metadata name="Additional Model Information" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/description[@role='drol:modelInfo']]]></xpath>
+		<xmp>
+			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="AddlModelInfo"/>
+		</xmp>
+	</metadata>
+	<metadata name="Code of Organisation Featured in the Image" cardinality="MANY">
+		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='cpnat:organisation']/@qcode]]></xpath>
+		<xmp>
+			<mapsTo field="OrganisationInImageCode" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+				<mapsTo field="OrganisationInImageCode" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="CV-Term About Image" cardinality="MANY">
+		<!--compositeXpath>
+                <from><![CDATA[//contentMeta/subject]]></from>
+                <select>
+                    <xpath part="qcode"><![CDATA[./@qcode]]></xpath>
+                    <xpath part="name"><![CDATA[./name]]></xpath>
+                </select>
+            </compositeXpath-->
+		<xmp>
+			<mapsTo field="aboutCVterm" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+				<mapsTo field="aboutCVterm" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct">
+					<!-- IPTC says "mapping to URI"? -->
+					<mapsTo field="CvTermId" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+				</mapsTo>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Location Shown" cardinality="ONE">
+		<!--compositeXpath rank="1">
+            <from><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address]]></from>
+            <select>
+                <xpath part="city"><![CDATA[locality/name]]></xpath>
+                <xpath part="country" ><![CDATA[country/name]]></xpath>
+                <xpath part="provice"><![CDATA[area/name]]></xpath>
+            </select>
+        </compositeXpath>
+        <compositeXpath rank="2">
+            <from><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address]]></from>
+            <select>
+                <xpath part="city"><![CDATA[locality/name]]></xpath>
+                <xpath part="country" ><![CDATA[country/name]]></xpath>
+                <xpath part="provice"><![CDATA[area/name]]></xpath>
+            </select>
+        </compositeXpath-->
+		<xpath part="city" rank="1"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/locality/name]]></xpath>
+		<xpath part="city" rank="2"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/locality/name]]></xpath>
+		<xpath part="country" rank="1"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/country/name]]></xpath>
+		<xpath part="country" rank="2"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/country/name]]></xpath>
+		<xpath part="province" rank="1"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/area/name]]></xpath>
+		<xpath part="province" rank="2"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/area/name]]></xpath>
+        <xpath part="countryCode" rank="1" returnType="STRING">
+            <![CDATA[substring(//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
+        <xpath part="countryCode" rank="2" returnType="STRING">
+            <![CDATA[substring(//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
+        <xpath part="countryCode" rank="3" returnType="STRING">
+            <![CDATA[substring(//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a2:"]/@qcode,13)]]></xpath>
+        <xpath part="countryCode" rank="4" returnType="STRING">
+            <![CDATA[substring(//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a2:"]/@qcode,13)]]></xpath>
+		<xmp>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="LocationShown" targetType="Struct">
+				<mapsTo part-ref="city" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="City"/>
+				<mapsTo part-ref="country" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="CountryName"/>
+				<mapsTo part-ref="countryCode" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="CountryCode"/>
+				<mapsTo part-ref="province" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="ProvinceState"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Model Age" cardinality="MANY">
+		<xpath rank="1"><![CDATA[//contentMeta/description[@role='drol:modelAge']]]></xpath>
+		<xmp>
+			<mapsTo field="ModelAge" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+				<mapsTo field="ModelAge" targetType="Integer" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Name of Organisation Featured in the Image" cardinality="MANY">
+		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='cpnat:organisation']/name]]></xpath>
+		<xmp>
+			<mapsTo field="OrganisationInImageName" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+				<mapsTo field="OrganisationInImageName" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Person Shown in the Image" cardinality="MANY">
+		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='cpnat:person']/name]]></xpath>
+		<xmp>
+			<mapsTo field="PersonInImage" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+				<mapsTo field="PersonInImage" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="Digital Image GUID" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//newsItem/@guid]]></xpath>
+		<xpath rank="2"><![CDATA[//contentMeta/altId[@type='altidtype:imageGUID']]]></xpath>
+		<iim>
+			<mapsTo dataset="5" field="Object Name" targetType="STRING"/>
+		</iim>
+		<xmp>
+			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="DigImageGUID"/>
+		</xmp>
+	</metadata>
+	<metadata name="Event" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='cpnat:event']/name[1]]]></xpath>
+		<xpath rank="2"><![CDATA[//contentMeta/subject[@type='cpnat:event']/@qcode[1]]]></xpath>
+		<xpath rank="3"><![CDATA[//contentMeta/subject[@type='cpnat:event']/@literal[1]]]></xpath>
+		<xmp>
+			<mapsTo field="Event" targetType="LangAlt" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+		</xmp>
+	</metadata>
+	<metadata name="Image Registry Entry" cardinality="MANY">
+		<!--compositeXpath>
+            <from><![CDATA[//newsItem]]></from>
+            <select>
+                <xpath part="guid"><![CDATA[@guid]]></xpath>
+                <xpath part="provider" rank="1"><![CDATA[itemMeta/provider/@qcode]]></xpath>
+                <xpath part="provider" rank="2"><![CDATA[itemMeta/provider/@literal]]></xpath>
+                <xpath part="provider" rank="3"><![CDATA[itemMeta/provider/name[1]]]></xpath>
+            </select>
+        </compositeXpath-->
+		<xpath part="guid"><![CDATA[//newsItem/@guid]]></xpath>
+		<xpath part="provider" rank="1"><![CDATA[//newsItem/itemMeta/provider/@qcode]]></xpath>
+		<xpath part="provider" rank="2"><![CDATA[//newsItem/itemMeta/provider/@literal]]></xpath>
+		<xpath part="provider" rank="3"><![CDATA[//newsItem/itemMeta/provider/name[1]]]></xpath>
+		<xmp>
+			<mapsTo field="RegistryId" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+				<mapsTo part-ref="guid" field="RegItemId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+				<mapsTo part-ref="provider" field="RegOrgId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<metadata name="IPTC Metadata Last Edited" cardinality="ONE">
+		<xpath rank="1"><![CDATA[//contentMeta/contentModified]]></xpath>
+		<xmp>
+			<mapsTo field="IptcLastEdited" targetType="Date" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+		</xmp>
+	</metadata>
+	<metadata name="Copyright Owner" cardinality="MANY">
+		<xpath><![CDATA[//rightsInfo/CopyrightHolder/@qcode | //rightsInfo/CopyrightHolder/name]]></xpath>
+		<xmp>
+			<mapsTo field="CopyrightOwner" targetType="Sequence" targetNamespace="http://ns.useplus.org/ldf/xmp/1.0/">
+				<mapsTo field="CopyrightOwner" targetNamespace="http://ns.useplus.org/ldf/xmp/1.0/" targetType="Text"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<!-- open issue: unclear how to map/treat metadata name="Embedded Encoded Rights Expression" cardinality="MANY">
+        <xmp>
+            <mapsTo field="EmbdEncRightsExpr" targetType="Struct" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+                <mapsTo field="EncRightsExpr" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+                <mapsTo field="RightsExprEncType" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+                <mapsTo field="RightsExprLangId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+            </mapsTo>
+        </xmp>
+    </metadata -->
+	<metadata name="Image Creator" cardinality="MANY">
+		<xpath><![CDATA[//contentMeta/creator/@qcode | //contentMeta/creator/name]]></xpath>
+		<xmp>
+			<mapsTo field="ImageCreator" targetType="Sequence" targetNamespace="http://ns.useplus.org/ldf/xmp/1.0/">
+				<mapsTo field="ImageCreator" targetNamespace="http://ns.useplus.org/ldf/xmp/1.0/" targetType="Text"/>
+			</mapsTo>
+		</xmp>
+	</metadata>
+	<characterMapping id="utf8-to-iso8859-15">
+		<replace from="ş" to="s"/>
+	</characterMapping>
+</mapping>

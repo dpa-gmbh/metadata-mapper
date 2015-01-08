@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/" xmlns:dpa="http://www.dpa.com/iptc/nar/2008-12-01/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<header>
+		<sent>2015-01-06T13:26:52+01:00</sent>
+		<catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_19.xml"/>
+		<catalogRef href="http://g2.dpa.com/catalog/catalog001.xml"/>
+		<priority>4</priority>
+		<origin>ines</origin>
+		<destination qcode="dpasrv:bdpai">dpa-i</destination>
+	</header>
+	<itemSet>
+		<newsItem conformance="power" guid="urn:newsml:dpa.com:20090101:150105-99-07656" standard="NewsML-G2" standardversion="2.18" version="2" xml:lang="en">
+			<catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_19.xml"/>
+			<catalogRef href="http://g2.dpa.com/catalog/catalog001.xml"/>
+			<rightsInfo>
+				<copyrightHolder>
+					<name>dpa</name>
+				</copyrightHolder>
+				<usageTerms>Test usage only!</usageTerms>
+			</rightsInfo>
+			<itemMeta>
+				<itemClass qcode="ninat:picture">
+					<name xml:lang="en">Picture Item(s)</name>
+				</itemClass>
+				<provider>
+					<name>dpa</name>
+					<related custom="true" rel="dparel:logo" value="dpa" valuedatatype="xs:string"/>
+				</provider>
+				<versionCreated>2015-01-06T13:26:52+01:00</versionCreated>
+				<generator versioninfo="1.0.0">mule-module-pa</generator>
+				<profile versioninfo="2.0.0">dpa-G2</profile>
+				<service qcode="dpasrv:bdpai">
+					<name role="nrol:full">dpa-i</name>
+					<name role="nrol:mnemonic">dpai</name>
+				</service>
+				<edNote>manuall added edNote (only for testing)</edNote>
+			</itemMeta>
+			<contentMeta>
+				<urgency>4</urgency>
+				<contentCreated>2015-01-05</contentCreated>
+				<contentModified>2015-01-06+01:00</contentModified>
+				<located literal="poiID" type="cpnat:poi"/>
+				<creator>
+					<name>Rainer Jensen</name>
+					<related qcode="dpaaccno:A3464">
+						<name role="nrol:mnemonic">A3464</name>
+					</related>
+				</creator>
+				<contributor>
+					<name>rje lof</name>
+				</contributor>
+				<altId type="dpatype:orgTransRef">ber637</altId>
+				<language tag="en"/>
+				<genre qcode="dpascn:9">
+					<name xml:lang="en">group</name>
+				</genre>
+				<genre qcode="dpascn:14">
+					<name xml:lang="en">night_scene</name>
+				</genre>
+				<subject qcode="subj:15040000">
+					<name xml:lang="en">motor rallying</name>
+					<broader qcode="subj:15000000">
+						<name xml:lang="en">sport</name>
+					</broader>
+				</subject>
+				<subject qcode="medtop:14000000">
+					<name xml:lang="en">society</name>
+					<sameAs qcode="subj:14000000">
+						<name xml:lang="en">social issue</name>
+					</sameAs>
+					<sameAs qcode="dpasrs:14000000">
+						<name role="nrol:full" xml:lang="en">Social Issues</name>
+						<name role="nrol:mnemonic" xml:lang="en">SOI</name>
+					</sameAs>
+					<broader qcode="dparessort:vm">
+						<name role="nrol:mnemonic" xml:lang="en">x</name>
+					</broader>
+					<broader qcode="dpacat:vm">
+						<name role="nrol:mnemonic" xml:lang="en">u</name>
+					</broader>
+				</subject>
+				<subject qcode="medtop:11000000">
+					<name xml:lang="en">politics</name>
+					<sameAs qcode="subj:11000000">
+						<name xml:lang="en">politics</name>
+					</sameAs>
+					<sameAs qcode="dpasubject:102">
+						<name xml:lang="en">politics</name>
+					</sameAs>
+					<sameAs qcode="dpasrs:11000000">
+						<name role="nrol:full" xml:lang="en">Politics</name>
+						<name role="nrol:mnemonic" xml:lang="en">POL</name>
+					</sameAs>
+					<broader qcode="dpacat:pl">
+						<name role="nrol:mnemonic" xml:lang="en">i</name>
+					</broader>
+					<broader qcode="dparessort:pl">
+						<name xml:lang="en">politics</name>
+						<name role="nrol:mnemonic" xml:lang="en">i</name>
+					</broader>
+				</subject>
+				<subject qcode="medtop:20000066">
+					<name xml:lang="en">demonstration</name>
+					<sameAs qcode="dpasubject:180">
+						<name xml:lang="en">demonstration</name>
+					</sameAs>
+					<sameAs qcode="subj:16008000">
+						<name xml:lang="en">demonstration</name>
+					</sameAs>
+					<broader qcode="medtop:20000065">
+						<name xml:lang="en">civil unrest</name>
+					</broader>
+				</subject>
+				<subject type="dpatype:category">
+					<name>WAR</name>
+				</subject>
+				<subject type="cpnat:organisation" qcode="dpaorg:xyz">
+					<name>Test Organisation</name>
+				</subject>
+				<subject type="cpnat:person" qcode="dpaperson:123">
+					<name>Willi Wacker</name>
+				</subject>
+				<subject type="cpnat:event" qcode="dpaevent:0815">
+					<name>Anti Pegida Demonstation in Berlin 05.01.2015</name>
+				</subject>
+				<keyword rank="1">pegida</keyword>
+				<keyword rank="2">anti-pegida</keyword>
+				<keyword rank="3">protestors</keyword>
+				<keyword rank="4">protests</keyword>
+				<subject literal="poiID" type="cpnat:poi"/>
+				<headline>Protests rallys against Pegida</headline>
+				<creditline>dpa</creditline>
+				<description role="drol:caption">Numerous participants have gathered in front of the unlit Brandenburg Gate during a rally against the so-called Pegida group (Patriotic Europeans Against the Islamization of the West), called for by the Turkish parish in Berlin, Germany, 5 January 2015. The lights on the monuments were switched off in support of the protest against Pegida. Photo: Rainer Jensen/dpa</description>
+				<description role="drol:modelInfo">all modelrights released</description>
+				<description role="drol:modelAge">42</description>
+			</contentMeta>
+			<assert literal="poiID">
+				<POIDetails>
+					<address>
+						<locality role="dpalocalityrole:locality">
+							<name>Berlin</name>
+						</locality>
+						<area qcode="dpaarea:3" role="dpaarearole:area">
+							<name xml:lang="en">Berlin</name>
+						</area>
+						<country qcode="dpacountry:1" type="dpatype:country">
+							<name role="nrol:display" xml:lang="en">Germany</name>
+							<name role="nrol:short" xml:lang="en">GER</name>
+							<sameAs qcode="dpageosbj:35">
+								<name>Deutschland</name>
+							</sameAs>
+							<sameAs qcode="iso3166-1a2:DE">
+								<name role="nrol:mnemonic">DE</name>
+							</sameAs>
+							<sameAs qcode="iso3166-1a3:DEU">
+								<name role="nrol:mnemonic">DEU</name>
+							</sameAs>
+							<sameAs qcode="afxgeo:GER">
+								<name role="nrol:full" xml:lang="en">Germany</name>
+								<name role="nrol:mnemonic">GER</name>
+							</sameAs>
+							<broader qcode="wldreg:r150">
+								<name xml:lang="en">Europe</name>
+							</broader>
+						</country>
+					</address>
+				</POIDetails>
+			</assert>
+			<contentSet>
+				<remoteContent contenttype="image/jpeg" href="150105-99-07656.jpeg" layoutorientation="loutorient:horizontal" residref="150105-90-013972"/>
+			</contentSet>
+		</newsItem>
+	</itemSet>
+</newsMessage>
