@@ -18,9 +18,8 @@ command-line based operations.
 Run 
 ```
 mvn package
-``
+```
 creates a jar containg all dependencies.
-
 
 # Using the Command Line Tool
 
