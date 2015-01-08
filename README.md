@@ -49,7 +49,14 @@ exiftool (http://www.sno.phy.queensu.ca/~phil/exiftool/) or the firefox plugin E
 (https://addons.mozilla.org/de/firefox/addon/exif-viewer/). It is a good idea to use multiple
 tools simultaneously to evaluate the result.
 
-
+You may provide your own metadata mapping. In this case take a look into the files
+ ```
+ example/metadata-mapping-1-0.xsd (underlying XML schema)
+ example/iptc-metadata-mapping-2014-1.2.xml (mapping based on IPTC "Photo Metadata" standard 
+   revision 1.2)  
+ ```
+ Use the parameter "-m" to specify the path to your own mapping configuration.
+  
 # License
 
 Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
