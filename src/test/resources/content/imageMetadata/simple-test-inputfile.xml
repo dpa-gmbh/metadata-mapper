@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestRecord>
+    <stringMapping>A sample string</stringMapping>
+
+    <integerMapping>12</integerMapping>
+
+    <dateMapping>2014-06-19T16:12:40+02:00</dateMapping>
+
+    <description>An example for LangAlt field</description>
+
+    <structExample>
+        <address>
+            <city>Hamburg</city>
+            <lines>
+                <line>first line</line>
+                <line>second line</line>
+            </lines>
+        </address>
+    </structExample>
+
+    <sequenceMapping>
+        <item>SeqItem 1</item>
+        <item>SeqItem 2</item>
+    </sequenceMapping>
+
+    <bagMapping>
+        <item>bag1</item>
+        <item>bag2</item>
+        <item>bag3</item>
+    </bagMapping>
+</TestRecord>

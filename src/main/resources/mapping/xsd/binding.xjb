@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          version="2.1">
+    <globalBindings choiceContentProperty="true"/>
+
+    <bindings schemaLocation="metadata-mapping-1-0.xsd" node="//xs:simpleType[@name='XMPMappingTargetType']">
+        <typesafeEnumClass name="XMPMappingTargetType"/>
+    </bindings>
+
+    <bindings schemaLocation="metadata-mapping-1-0.xsd" node="//xs:simpleType[@name = 'CardinalityType']">
+        <typesafeEnumClass name="MetadataCardinalityType"/>
+    </bindings>
+
+    <bindings schemaLocation="metadata-mapping-1-0.xsd" node="//xs:simpleType[@name = 'IIMMappingTargetType']">
+        <typesafeEnumClass name="IIMMappingTargetType"/>
+    </bindings>
+
+    <bindings schemaLocation="metadata-mapping-1-0.xsd" node="//xs:simpleType[@name = 'XPathReturnType']">
+        <typesafeEnumClass name="XPathReturnType"/>
+    </bindings>
+
+</bindings>

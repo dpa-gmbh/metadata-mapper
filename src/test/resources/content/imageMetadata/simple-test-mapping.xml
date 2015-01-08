@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping name="default" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/">
+    <config>
+        <timezone>Europe/Berlin</timezone>
+        <iim charset="iso8859-15" defaultReplaceChar="·"/>
+        <xmp charset="utf-8" defaultReplaceChar="·"/>
+    </config>
+
+    <metadata name="stringMapping" cardinality="ONE">
+        <xpath rank="1"><![CDATA[//stringMapping]]></xpath>
+        <xmp>
+            <mapsTo field="Credit" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
+        </xmp>
+    </metadata>
+
+    <metadata name="IntegerMapping" cardinality="ONE">
+        <xpath><![CDATA[//integerMapping]]></xpath>
+        <xmp>
+            <mapsTo targetType="Integer" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Urgency"/>
+        </xmp>
+    </metadata>
+
+    <metadata name="DateMapping" cardinality="ONE">
+        <xpath rank="1"><![CDATA[//dateMapping]]></xpath>
+        <xmp>
+            <mapsTo field="IptcLastEdited" targetType="Date" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+        </xmp>
+    </metadata>
+
+    <metadata name="LangAltMapping" cardinality="ONE">
+        <xpath part="description"><![CDATA[//description]]></xpath>
+
+        <xmp>
+            <mapsTo part-ref="description" targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="description"/>
+        </xmp>
+    </metadata>
+
+
+
+    <metadata name="StructMapping" cardinality="ONE">
+        <xpath part="city"><![CDATA[//structExample/address/city]]></xpath>
+        <xpath part="lines"><![CDATA[//structExample/address/lines/line]]></xpath>
+        <xmp>
+            <mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct" field="CreatorContactInfo">
+                <mapsTo part-ref="city" field="CiAdrCity" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+                <mapsTo part-ref="lines" field="CiAdrExtadr" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"
+                        targetType="Text">
+                    <mapsTo part-ref="lines" field="CiAdrExtadr" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"
+                            targetType="Text"/>
+                </mapsTo>
+            </mapsTo>
+        </xmp>
+    </metadata>
+
+    <metadata name="SequenceMapping" cardinality="MANY">
+        <xpath><![CDATA[//sequenceMapping/item]]></xpath>
+        <xmp>
+            <mapsTo field="ImageCreator" targetType="Sequence" targetNamespace="http://ns.useplus.org/ldf/xmp/1.0/">
+                <mapsTo field="ImageCreator" targetNamespace="http://ns.useplus.org/ldf/xmp/1.0/" targetType="Text"/>
+            </mapsTo>
+        </xmp>
+    </metadata>
+
+    <metadata name="bagMapping" cardinality="MANY">
+        <xpath><![CDATA[//bagMapping/item]]></xpath>
+        <xmp>
+            <mapsTo field="OrganisationInImageName" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+                <mapsTo field="OrganisationInImageName" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+            </mapsTo>
+        </xmp>
+    </metadata>
+</mapping>
