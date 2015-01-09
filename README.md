@@ -58,6 +58,7 @@ You may provide your own metadata mapping. In this case take a look into the fil
  Use the parameter "-m" to specify the path to your own mapping configuration.
   
 # License
+The MIT License (MIT) (http://opensource.org/licenses/MIT)
 
 Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
 
