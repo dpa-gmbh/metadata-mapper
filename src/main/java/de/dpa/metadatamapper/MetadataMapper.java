@@ -1,18 +1,11 @@
 package de.dpa.metadatamapper;
 
-import com.google.common.io.ByteStreams;
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
-import de.dpa.metadatamapper.common.ResourceUtil;
-import de.dpa.metadatamapper.imaging.G2ToMetadataMapper;
-import de.dpa.metadatamapper.imaging.ImageMetadataOperation;
-import de.dpa.metadatamapper.imaging.MetadataMappingConfigReader;
-import de.dpa.metadatamapper.imaging.common.ImageMetadata;
-import de.dpa.metadatamapper.imaging.common.XmlUtils;
-import de.dpa.metadatamapper.imaging.configuration.generated.Mapping;
-import org.w3c.dom.Document;
+import de.dpa.metadatamapper.imaging.ImageMetadataUtil;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author oliver langer
@@ -28,6 +21,9 @@ public class MetadataMapper
     @Argument(alias = "d", required = true, description = "filename of input G2 document")
     private static String g2doc;
 
+    @Argument(alias = "k", required = false, description = "keep existing metadata. By default existing metadata will be removed")
+    private static Boolean keepExistingMetadata = false;
+
     public static final String DEFAULT_MAPPING = "mapping/mapping-default.xml";
 
     @Argument(alias = "m", required = false, description = "")
@@ -38,32 +34,26 @@ public class MetadataMapper
         System.out.print("Mapping metadata taken from \"" + g2doc + "\" into image given by input file \"" + inputImage
                 + "\", writing result to output file \"" + outputImage + "\". ");
 
-        InputStream mappingInpuStream;
-
+        ImageMetadataUtil imageMetadataUtil = ImageMetadataUtil.modifyImageAt(inputImage);
+        
         if( mapping == null )
         {
-            System.out.println( "Using default mapping.");
-            mappingInpuStream = ResourceUtil.resourceAsStream( "/mapping/mapping-default.xml", MetadataMapper.class);
+            System.out.println("Using default mapping.");
+            imageMetadataUtil.withIPTCMapping();
         }
         else
         {
-            System.out.println( "Using mapping file \"" + mapping + "\".");
-            mappingInpuStream = new FileInputStream( mapping);
+            System.out.println("Using mapping file \"" + mapping + "\".");
+            imageMetadataUtil.withPathToMapping( mapping);
         }
 
-        Mapping configuredMapping = new MetadataMappingConfigReader().readConfig(mappingInpuStream);
-
-        FileInputStream imageInputStream = new FileInputStream(inputImage);
-        FileOutputStream imageOutputStream = new FileOutputStream(outputImage);
-        String g2xml = new String( ByteStreams.toByteArray(new FileInputStream( g2doc )) );
-        Document g2DOM = XmlUtils.toDocument(g2xml);
-
-        ImageMetadata imageMetadata = new ImageMetadata();
-
-        new G2ToMetadataMapper( configuredMapping).mapToImageMetadata( g2DOM, imageMetadata );
-
-        new ImageMetadataOperation().writeMetadata( imageInputStream, imageMetadata, imageOutputStream );
-        imageOutputStream.close();
+        if( !keepExistingMetadata )
+        {
+            imageMetadataUtil.removeMetadataFirst();
+        }
+        
+        imageMetadataUtil.withPathToXMLDocument( g2doc )
+                .mapToImage( outputImage );
     }
 
     private static boolean parameterValidate() throws IOException

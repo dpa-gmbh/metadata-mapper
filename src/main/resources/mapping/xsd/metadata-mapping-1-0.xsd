@@ -270,7 +270,7 @@
 	</xs:element>
 	<xs:complexType name="CharacterMappingType">
 		<xs:sequence>
-			<xs:element name="replace" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="character" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:attribute name="from" type="xs:string" use="required">
 						<xs:annotation>
