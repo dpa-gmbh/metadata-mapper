@@ -1,3 +1,5 @@
+The MIT License (MIT) (http://opensource.org/licenses/MIT)
+
 Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
