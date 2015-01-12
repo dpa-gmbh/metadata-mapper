@@ -1,11 +1,16 @@
 package de.dpa.metadatamapper.common;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 
 /**
  * @author oliver langer
  */
-public class CharacterMapping
+public class CharacterMappingTable implements StringCharacterMapping
 {
     /**
      * first simple approach:
@@ -17,22 +22,47 @@ public class CharacterMapping
      */
     private int codePointMapping[];
     private static int NO_MAPPING_ENTRY = -1;
+    private Charset targetCharset;
+
+    /**
+     * if a character cannot be mapped into the given targetCharset then this code point will be used.
+     */
+    private byte[] targetCharsetMappingFallbackChars;
+    private String targetCharsetMappingFallbackAppendString;
 
     public static CharacterMappingBuilder aCharacterMapping()
     {
         return new CharacterMappingBuilder();
     }
 
-    private CharacterMapping(final int codePointMapping[])
+    private CharacterMappingTable(final int[] codePointMapping, final Charset targetCharset,
+            final String targetCharsetMappingFallbackString)
     {
         this.codePointMapping = codePointMapping;
+        this.targetCharset = targetCharset;
+        if (targetCharset != null)
+        {
+            targetCharsetMappingFallbackChars = Arrays
+                    .copyOf(targetCharsetMappingFallbackString.getBytes(targetCharset),
+                            targetCharsetMappingFallbackString.getBytes(targetCharset).length);
+            this.targetCharsetMappingFallbackAppendString = targetCharsetMappingFallbackString;
+        }
     }
 
-    public String map(final String inputString)
+    @Override public String map(final String inputString)
     {
         if (inputString == null || inputString.length() == 0)
         {
             return inputString;
+        }
+
+        CharsetEncoder charsetEncoder = null;
+        if (targetCharset != null)
+        {
+            charsetEncoder = targetCharset.newEncoder();
+            charsetEncoder.replaceWith(targetCharsetMappingFallbackChars);
+            charsetEncoder.onMalformedInput(CodingErrorAction.REPLACE);
+            charsetEncoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
         }
 
         final StringBuilder sb = new StringBuilder();
@@ -44,7 +74,27 @@ public class CharacterMapping
             int mappedCodepointValue = codePointMapping[currentCodePoint];
             if (mappedCodepointValue == NO_MAPPING_ENTRY)
             {
-                sb.appendCodePoint(currentCodePoint);
+                if (targetCharset != null)
+                {
+                    /**
+                     * try to map it to target charset. If not possible then use fallback mapping character
+                     */
+                    CharBuffer charBuffer = CharBuffer.wrap(Character.toChars(currentCodePoint));
+                    //noinspection ConstantConditions
+                    if (charsetEncoder.canEncode(charBuffer))
+                    {
+                        ByteBuffer encodedBuffer = targetCharset.encode(charBuffer);
+                        sb.append(new String(encodedBuffer.array()));
+                    }
+                    else
+                    {
+                        sb.append(targetCharsetMappingFallbackAppendString);
+                    }
+                }
+                else
+                {
+                    sb.appendCodePoint(currentCodePoint);
+                }
             }
             else
             {
@@ -96,6 +146,8 @@ public class CharacterMapping
     public static class CharacterMappingBuilder
     {
         private int codePointMapping[];
+        private Charset targetCharset = null;
+        private String targetCharsetMappingFallbackCharacter = null;
 
         public CharacterMappingBuilder()
         {
@@ -135,10 +187,22 @@ public class CharacterMapping
             return this;
         }
 
-        public CharacterMapping build()
+        public CharacterMappingBuilder restrictToCharsetUsingDefaultChar(final String charsetName,
+                String targetCharsetMappingFallbackCharacter)
         {
-            return new CharacterMapping(codePointMapping);
+            if (targetCharsetMappingFallbackCharacter == null)
+            {
+                throw new IllegalArgumentException("fallback mapping character must not be null");
+            }
+            targetCharset = Charset.forName(charsetName);
+            this.targetCharsetMappingFallbackCharacter = targetCharsetMappingFallbackCharacter;
 
+            return this;
+        }
+
+        public CharacterMappingTable build()
+        {
+            return new CharacterMappingTable(codePointMapping, targetCharset, targetCharsetMappingFallbackCharacter);
         }
     }
 

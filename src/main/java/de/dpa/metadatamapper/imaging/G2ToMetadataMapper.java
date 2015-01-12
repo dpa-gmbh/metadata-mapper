@@ -29,13 +29,26 @@ public class G2ToMetadataMapper
     private static Logger logger = LoggerFactory.getLogger(G2ToMetadataMapper.class);
 
     private final List<MetadataProcessingInfo> metadataProcessingInfos;
-
+    private final ConfigType mappingConfig;
+    
     public G2ToMetadataMapper(final Mapping mapping)
     {
+        mappingConfig = mapping.getConfig();
         metadataProcessingInfos = new ArrayList<>();
         for (Mapping.Metadata metadataMapping : mapping.getMetadata())
         {
             metadataProcessingInfos.add(new MetadataProcessingInfo(metadataMapping));
+        }
+        /*if( mapping.getConfig() != null )
+        {
+            readConfig( );
+        }*/
+    }
+
+    private void readConfig(final ConfigType config)
+    {
+        if( config.getIim() != null && config.getIim().getCharacterMappingRef() != null )
+        {
         }
     }
 
@@ -45,13 +58,14 @@ public class G2ToMetadataMapper
         {
             logger.debug("Processing mapping " + metadataProcessingInfo.getMappingName());
             ListMultimap<String, String> partnameToSelectedValue = metadataProcessingInfo.selectXPathValues(document);
-            mapToIIM(imageMetadata, partnameToSelectedValue, metadataProcessingInfo.getIIMapping());
+            mapToIIM(mappingConfig.getIim(), imageMetadata, partnameToSelectedValue, metadataProcessingInfo.getIIMapping());
 
-            mapToXMP(imageMetadata, partnameToSelectedValue, metadataProcessingInfo.getXMPMapping());
+            mapToXMP(mappingConfig.getXmp(), imageMetadata, partnameToSelectedValue, metadataProcessingInfo.getXMPMapping());
         }
     }
 
-    private void mapToXMP(final ImageMetadata imageMetadata, final ListMultimap<String, String> partnameToSelectedValue,
+    private void mapToXMP(final ConfigType.Xmp config, final ImageMetadata imageMetadata,
+            final ListMultimap<String, String> partnameToSelectedValue,
             final XMPMapping xmpMapping)
     {
         if (xmpMapping == null)
@@ -202,7 +216,8 @@ public class G2ToMetadataMapper
         }
     }
 
-    private void mapToIIM(final ImageMetadata imageMetadata, final ListMultimap<String, String> partnameToSelectedValue,
+    private void mapToIIM(final ConfigType.Iim config, final ImageMetadata imageMetadata,
+            final ListMultimap<String, String> partnameToSelectedValue,
             final IIMMapping iiMapping)
     {
         if (iiMapping == null)
@@ -220,12 +235,13 @@ public class G2ToMetadataMapper
 
             if (partnameToSelectedValue.containsKey(partRef))
             {
-                mapToIIM(imageMetadata, partnameToSelectedValue.get(partRef), mapsTo);
+                mapToIIM(config, imageMetadata, partnameToSelectedValue.get(partRef), mapsTo);
             }
         }
     }
 
-    private void mapToIIM(final ImageMetadata imageMetadata, final List<String> valueList, final IIMMapping.MapsTo mappingInfo)
+    private void mapToIIM(final ConfigType.Iim config, final ImageMetadata imageMetadata, final List<String> valueList,
+            final IIMMapping.MapsTo mappingInfo)
     {
         if (valueList == null || valueList.isEmpty())
         {

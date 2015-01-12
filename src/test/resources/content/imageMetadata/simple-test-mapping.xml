@@ -2,7 +2,7 @@
 <mapping name="default" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/">
     <config>
         <timezone>Europe/Berlin</timezone>
-        <iim charset="iso8859-15" defaultReplaceChar="·"/>
+        <iim charset="iso8859-15" characterMappingRef="utf8-to-iso8859-15" defaultReplaceChar="·"/>
         <xmp charset="utf-8" defaultReplaceChar="·"/>
     </config>
 
@@ -34,7 +34,6 @@
             <mapsTo part-ref="description" targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="description"/>
         </xmp>
     </metadata>
-
 
 
     <metadata name="StructMapping" cardinality="ONE">
@@ -69,4 +68,12 @@
             </mapsTo>
         </xmp>
     </metadata>
+
+    <characterMapping id="utf8-to-iso8859-15">
+        <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
+        <character from="0xa8" to="0x22" comment="from ¨; to=&quot;"/>
+        <character from="0xb4" to="0x27" comment="from ´; to='"/>
+        <character from="0x201d" to="0x22" comment="from ”; to=&quot;"/>
+        <character from="0x201e" to="0x22" comment="from „; to=&quot;"/>
+    </characterMapping>
 </mapping>

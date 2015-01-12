@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 sp2 (x64) (http://www.altova.com) by Matthias Gebert (dpa Deutsche Presse-Agentur GmbH) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" targetNamespace="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+<xs:schema 
+        xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+        xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb/2.1"
+        targetNamespace="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"
+        elementFormDefault="qualified" 
+        attributeFormDefault="unqualified" 
+        version="1.0">
 	<xs:complexType name="ConfigType">
 		<xs:sequence>
 			<xs:element name="timezone" type="xs:string">
@@ -21,6 +28,11 @@
 					<xs:attribute name="characterMappingRef" type="xs:IDREF" use="optional">
 						<xs:annotation>
 							<xs:documentation>Reference onto a character mapping table to replace e.g. diacritc characters to the target namespace (see characterMapping type)</xs:documentation>
+                                <xs:appinfo>
+                                    <jaxb:property>
+                                        <jaxb:baseType name="CharacterMappingType"/>
+                                    </jaxb:property>
+                                </xs:appinfo>
 						</xs:annotation>
 					</xs:attribute>
 					<xs:attribute name="defaultReplaceChar" type="xs:string" use="optional">
