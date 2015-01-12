@@ -12,6 +12,7 @@ public class CharacterMapping
         characterMap = new char[Character.MAX_VALUE];
     }
     
+    /*
     public void addMapping( final String fromHex16BitValue, final String toHex16BitValue )
     {
         int from = Integer.parseInt(fromHex16BitValue, 16);
@@ -24,4 +25,5 @@ public class CharacterMapping
       String s = "bla";
         s.ch
     }
+    */
 }
