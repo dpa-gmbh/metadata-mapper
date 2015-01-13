@@ -8,9 +8,17 @@ import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 
 /**
+ * <p>This class maps all characters of a given input string to an output string. The mapping is based on code points
+ * allowing up to 4-byte unicodes.</p>
+ *
+ * <p>The class supports the restriction of the mapping to a certain character set. If such a character set is specified
+ * ({@link CharacterMappingBuilder#restrictToCharsetUsingDefaultChar(String, String)}) then the fallback replacement character
+ * hs to be specified too. This character is used in case an input character cannot be mapped or is malformed </p>
+ * 
+ *
  * @author oliver langer
  */
-public class CharacterMappingTable implements StringCharacterMapping
+public class StringCharacterMappingTable implements StringCharacterMapping
 {
     /**
      * first simple approach:
@@ -28,6 +36,12 @@ public class CharacterMappingTable implements StringCharacterMapping
      * if a character cannot be mapped into the given targetCharset then this code point will be used.
      */
     private byte[] targetCharsetMappingFallbackChars;
+
+    /**
+     * for optimization reason we store the string version of {@link #targetCharsetMappingFallbackChars}
+     * as well because in the mapping function {@link #map(String)} we have to append this string in case
+     * of replacements and we want to avoid unnecessary object creations. 
+     */
     private String targetCharsetMappingFallbackAppendString;
 
     public static CharacterMappingBuilder aCharacterMapping()
@@ -35,7 +49,7 @@ public class CharacterMappingTable implements StringCharacterMapping
         return new CharacterMappingBuilder();
     }
 
-    private CharacterMappingTable(final int[] codePointMapping, final Charset targetCharset,
+    private StringCharacterMappingTable(final int[] codePointMapping, final Charset targetCharset,
             final String targetCharsetMappingFallbackString)
     {
         this.codePointMapping = codePointMapping;
@@ -49,6 +63,7 @@ public class CharacterMappingTable implements StringCharacterMapping
         }
     }
 
+    
     @Override public String map(final String inputString)
     {
         if (inputString == null || inputString.length() == 0)
@@ -200,9 +215,9 @@ public class CharacterMappingTable implements StringCharacterMapping
             return this;
         }
 
-        public CharacterMappingTable build()
+        public StringCharacterMappingTable build()
         {
-            return new CharacterMappingTable(codePointMapping, targetCharset, targetCharsetMappingFallbackCharacter);
+            return new StringCharacterMappingTable(codePointMapping, targetCharset, targetCharsetMappingFallbackCharacter);
         }
     }
 

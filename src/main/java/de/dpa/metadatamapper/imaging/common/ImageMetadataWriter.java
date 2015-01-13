@@ -57,7 +57,7 @@ public class ImageMetadataWriter
 
             for (String value : imageMetadata.getIptcEntries().get(key))
             {
-                iptcRecords.add(new IptcRecord(iptcType, value.getBytes("iso8859-15"), value));
+                iptcRecords.add(new IptcRecord(iptcType, value.getBytes(imageMetadata.getIimCharset()), value));
             }
         }
 

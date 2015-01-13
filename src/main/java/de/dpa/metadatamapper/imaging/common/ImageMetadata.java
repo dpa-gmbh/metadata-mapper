@@ -15,6 +15,10 @@ import java.util.List;
  */
 public class ImageMetadata implements Serializable
 {
+    private String iimCharset = "iso8859-15";
+    private String exifCharset = "iso8859-15";
+    private String xmpCharset = "utf-8";
+    
     private ListMultimap<String,String> exifEntries = ArrayListMultimap.create();
     private ListMultimap<String,String> iptcEntries = ArrayListMultimap.create();
     private List<XMPMetadata> xmpMetadata = new ArrayList<>();
@@ -53,6 +57,36 @@ public class ImageMetadata implements Serializable
         return xmpMetadata;
     }
 
+    public String getIimCharset()
+    {
+        return iimCharset;
+    }
+
+    public void setIimCharset(final String iimCharset)
+    {
+        this.iimCharset = iimCharset;
+    }
+
+    public String getExifCharset()
+    {
+        return exifCharset;
+    }
+
+    public void setExifCharset(final String exifCharset)
+    {
+        this.exifCharset = exifCharset;
+    }
+
+    public String getXmpCharset()
+    {
+        return xmpCharset;
+    }
+
+    public void setXmpCharset(final String xmpCharset)
+    {
+        this.xmpCharset = xmpCharset;
+    }
+
     private Gson createGson()
     {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -84,11 +118,23 @@ public class ImageMetadata implements Serializable
 
         final ImageMetadata that = (ImageMetadata) o;
 
+        if (exifCharset != null ? !exifCharset.equals(that.exifCharset) : that.exifCharset != null)
+        {
+            return false;
+        }
         if (exifEntries != null ? !exifEntries.equals(that.exifEntries) : that.exifEntries != null)
         {
             return false;
         }
+        if (iimCharset != null ? !iimCharset.equals(that.iimCharset) : that.iimCharset != null)
+        {
+            return false;
+        }
         if (iptcEntries != null ? !iptcEntries.equals(that.iptcEntries) : that.iptcEntries != null)
+        {
+            return false;
+        }
+        if (xmpCharset != null ? !xmpCharset.equals(that.xmpCharset) : that.xmpCharset != null)
         {
             return false;
         }
@@ -103,7 +149,10 @@ public class ImageMetadata implements Serializable
     @Override
     public int hashCode()
     {
-        int result = exifEntries != null ? exifEntries.hashCode() : 0;
+        int result = iimCharset != null ? iimCharset.hashCode() : 0;
+        result = 31 * result + (exifCharset != null ? exifCharset.hashCode() : 0);
+        result = 31 * result + (xmpCharset != null ? xmpCharset.hashCode() : 0);
+        result = 31 * result + (exifEntries != null ? exifEntries.hashCode() : 0);
         result = 31 * result + (iptcEntries != null ? iptcEntries.hashCode() : 0);
         result = 31 * result + (xmpMetadata != null ? xmpMetadata.hashCode() : 0);
         return result;

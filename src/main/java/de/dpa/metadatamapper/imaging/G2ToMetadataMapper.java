@@ -3,6 +3,7 @@ package de.dpa.metadatamapper.imaging;
 import com.google.common.base.Strings;
 import com.google.common.collect.ListMultimap;
 import de.dpa.metadatamapper.common.ExtXPathException;
+import de.dpa.metadatamapper.common.StringCharacterMapping;
 import de.dpa.metadatamapper.imaging.common.DateTimeUtils;
 import de.dpa.metadatamapper.imaging.common.ImageMetadata;
 import de.dpa.metadatamapper.imaging.configuration.generated.*;
@@ -29,27 +30,74 @@ public class G2ToMetadataMapper
     private static Logger logger = LoggerFactory.getLogger(G2ToMetadataMapper.class);
 
     private final List<MetadataProcessingInfo> metadataProcessingInfos;
-    private final ConfigType mappingConfig;
-    
+    private StringCharacterMapping iimStringCharacterMapping = null;
+    private String iimCharacterCharset = "iso8859-1";
+    private StringCharacterMapping xmpStringCharacterMapping = null;
+    private String xmpCharacterCharset = "utf-8";
+
     public G2ToMetadataMapper(final Mapping mapping)
     {
-        mappingConfig = mapping.getConfig();
         metadataProcessingInfos = new ArrayList<>();
         for (Mapping.Metadata metadataMapping : mapping.getMetadata())
         {
             metadataProcessingInfos.add(new MetadataProcessingInfo(metadataMapping));
         }
-        /*if( mapping.getConfig() != null )
+        if (mapping.getConfig() != null)
         {
-            readConfig( );
-        }*/
+            readIIMConfig(mapping.getConfig());
+            readXMPConfig(mapping.getConfig());
+        }
     }
 
-    private void readConfig(final ConfigType config)
+    private void readXMPConfig(final ConfigType config)
     {
-        if( config.getIim() != null && config.getIim().getCharacterMappingRef() != null )
+        if (config.getXmp() != null)
         {
+            final CharacterMappingType mappingConfig;
+            if (config.getXmp().getCharacterMappingRef() != null)
+            {
+                mappingConfig = (CharacterMappingType) config.getXmp().getCharacterMappingRef();
+            }
+            else
+            {
+                mappingConfig = null;
+            }
+
+            xmpStringCharacterMapping = ConfigStringCharacterMappingBuilder.stringCharacterMappingBuilder()
+                    .withMappingConfigurartion(mappingConfig)
+                    .withTargetCharsetAndFallbackReplacementChar(config.getXmp().getCharset(), config.getXmp().getDefaultReplaceChar())
+                    .build();
+            if (config.getXmp().getCharset() != null)
+            {
+                xmpCharacterCharset = config.getXmp().getCharset();
+            }
         }
+    }
+
+    private void readIIMConfig(final ConfigType config)
+    {
+
+        if (config.getIim() != null)
+        {
+            final CharacterMappingType mappingConfig;
+            if (config.getIim().getCharacterMappingRef() != null)
+            {
+                mappingConfig = (CharacterMappingType) config.getIim().getCharacterMappingRef();
+            }
+            else
+            {
+                mappingConfig = null;
+            }
+            iimStringCharacterMapping = ConfigStringCharacterMappingBuilder.stringCharacterMappingBuilder()
+                    .withMappingConfigurartion(mappingConfig)
+                    .withTargetCharsetAndFallbackReplacementChar(config.getIim().getCharset(), config.getIim().getDefaultReplaceChar())
+                    .build();
+            if (config.getIim().getCharset() != null)
+            {
+                iimCharacterCharset = config.getIim().getCharset();
+            }
+        }
+
     }
 
     public void mapToImageMetadata(final Document document, final ImageMetadata imageMetadata) throws ExtXPathException
@@ -58,13 +106,15 @@ public class G2ToMetadataMapper
         {
             logger.debug("Processing mapping " + metadataProcessingInfo.getMappingName());
             ListMultimap<String, String> partnameToSelectedValue = metadataProcessingInfo.selectXPathValues(document);
-            mapToIIM(mappingConfig.getIim(), imageMetadata, partnameToSelectedValue, metadataProcessingInfo.getIIMapping());
+            imageMetadata.setIimCharset(iimCharacterCharset);
+            mapToIIM(imageMetadata, partnameToSelectedValue, metadataProcessingInfo.getIIMapping());
 
-            mapToXMP(mappingConfig.getXmp(), imageMetadata, partnameToSelectedValue, metadataProcessingInfo.getXMPMapping());
+            imageMetadata.setXmpCharset(xmpCharacterCharset);
+            mapToXMP(imageMetadata, partnameToSelectedValue, metadataProcessingInfo.getXMPMapping());
         }
     }
 
-    private void mapToXMP(final ConfigType.Xmp config, final ImageMetadata imageMetadata,
+    private void mapToXMP(final ImageMetadata imageMetadata,
             final ListMultimap<String, String> partnameToSelectedValue,
             final XMPMapping xmpMapping)
     {
@@ -117,7 +167,7 @@ public class G2ToMetadataMapper
         case TEXT:
             for (String value : partnameToSelectedValue.get(partReference))
             {
-                collection.add(new XMPString(xmpMapsTo.getTargetNamespace(), xmpMapsTo.getField(), value));
+                collection.add(new XMPString(xmpMapsTo.getTargetNamespace(), xmpMapsTo.getField(), xmpStringCharacterMapping.map(value)));
                 if (!multipleValuesValid)
                 {
                     // only one element for the root collection
@@ -131,7 +181,7 @@ public class G2ToMetadataMapper
                 try
                 {
                     collection.add(new XMPInteger(xmpMapsTo.getTargetNamespace(), xmpMapsTo.getField(),
-                            Integer.parseInt(value)));
+                            Integer.parseInt(xmpStringCharacterMapping.map(value))));
                 }
                 catch (NumberFormatException ex)
                 {
@@ -147,7 +197,8 @@ public class G2ToMetadataMapper
         case LANG_ALT:
             for (String value : partnameToSelectedValue.get(partReference))
             {
-                collection.add(new XMPLocalizedText(xmpMapsTo.getTargetNamespace(), xmpMapsTo.getField(), "x-default", value));
+                collection.add(new XMPLocalizedText(xmpMapsTo.getTargetNamespace(), xmpMapsTo.getField(), "x-default",
+                        xmpStringCharacterMapping.map(value)));
                 if (!multipleValuesValid)
                 {
                     // only one element for the root collection
@@ -160,7 +211,7 @@ public class G2ToMetadataMapper
             {
                 for (String value : partnameToSelectedValue.get(partReference))
                 {
-                    Date date = DateTimeUtils.parseDate(value);
+                    Date date = DateTimeUtils.parseDate(xmpStringCharacterMapping.map(value));
                     collection.add(new XMPDate(xmpMapsTo.getTargetNamespace(), xmpMapsTo.getField(), date));
                     if (!multipleValuesValid)
                     {
@@ -216,7 +267,7 @@ public class G2ToMetadataMapper
         }
     }
 
-    private void mapToIIM(final ConfigType.Iim config, final ImageMetadata imageMetadata,
+    private void mapToIIM(final ImageMetadata imageMetadata,
             final ListMultimap<String, String> partnameToSelectedValue,
             final IIMMapping iiMapping)
     {
@@ -235,12 +286,12 @@ public class G2ToMetadataMapper
 
             if (partnameToSelectedValue.containsKey(partRef))
             {
-                mapToIIM(config, imageMetadata, partnameToSelectedValue.get(partRef), mapsTo);
+                mapToIIM(imageMetadata, partnameToSelectedValue.get(partRef), mapsTo);
             }
         }
     }
 
-    private void mapToIIM(final ConfigType.Iim config, final ImageMetadata imageMetadata, final List<String> valueList,
+    private void mapToIIM(final ImageMetadata imageMetadata, final List<String> valueList,
             final IIMMapping.MapsTo mappingInfo)
     {
         if (valueList == null || valueList.isEmpty())
@@ -259,12 +310,12 @@ public class G2ToMetadataMapper
         {
             for (String value : valueList)
             {
-                imageMetadata.addIPTCEntry(iptcType.getName(), value);
+                imageMetadata.addIPTCEntry(iptcType.getName(), iimStringCharacterMapping.map(value));
             }
         }
         else
         {
-            imageMetadata.addIPTCEntry(iptcType.getName(), valueList.get(0));
+            imageMetadata.addIPTCEntry(iptcType.getName(), iimStringCharacterMapping.map(valueList.get(0)));
         }
     }
 }

@@ -44,12 +44,18 @@
 			</xs:element>
 			<xs:element name="xmp">
 				<xs:complexType>
-					<xs:attribute name="charset" type="xs:string" use="required">
-						<xs:annotation>
-							<xs:documentation>Characterset used within the XMP representation</xs:documentation>
-						</xs:annotation>
+					<xs:attribute name="charset" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>Characterset used within the XMP representation</xs:documentation>
+                                </xs:annotation>
+                                <xs:enumeration value="utf-8"/>
+                            </xs:restriction>
+                            
+                        </xs:simpleType>
 					</xs:attribute>
-					<xs:attribute name="characterMapping" type="xs:IDREF" use="optional">
+					<xs:attribute name="characterMappingRef" type="xs:IDREF" use="optional">
 						<xs:annotation>
 							<xs:documentation>Reference onto a character mapping table to replace e.g. diacritc characters to the target namespace (see characterMapping type)</xs:documentation>
 						</xs:annotation>

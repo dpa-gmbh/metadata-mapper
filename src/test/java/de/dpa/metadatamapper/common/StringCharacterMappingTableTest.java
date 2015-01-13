@@ -6,18 +6,18 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-public class CharacterMappingTableTest
+public class StringCharacterMappingTableTest
 {
     @Test
     public void shouldLeaveStringAsIs()
     {
         // given
-        CharacterMappingTable characterMappingTable = CharacterMappingTable.aCharacterMapping().build();
+        StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping().build();
 
         final String stringToMap = "abcdefg52512ЄЅІЇЈЌЎёєѕіїјћќў";
 
         // when
-        String mappedString = characterMappingTable.map(stringToMap);
+        String mappedString = stringCharacterMappingTable.map(stringToMap);
 
         // then
         assertThat(mappedString, is(notNullValue()));
@@ -29,12 +29,12 @@ public class CharacterMappingTableTest
     {
         // given
         final String stringToMap = "AABABC";
-        CharacterMappingTable characterMappingTable = CharacterMappingTable.aCharacterMapping()
+        StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
                 .addCodepointMapping("0x41", "0x44")
                 .build();
 
         // when
-        String mappedString = characterMappingTable.map(stringToMap);
+        String mappedString = stringCharacterMappingTable.map(stringToMap);
 
         // then
         assertThat(mappedString, is(notNullValue()));
@@ -49,13 +49,13 @@ public class CharacterMappingTableTest
          has highSurrogate: 55364	=> D844
          has lowSurrogate: 56412 => DC5C
          */
-        CharacterMappingTable characterMappingTable = CharacterMappingTable.aCharacterMapping()
+        StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
                 .addCodepointMapping(135260, 198)
                 .build();
         final String stringToMap = "Supplement\uD844\uDC5Cry";
 
         // when
-        String mappedString = characterMappingTable.map(stringToMap);
+        String mappedString = stringCharacterMappingTable.map(stringToMap);
 
         // then
         assertThat(mappedString, is(notNullValue()));
@@ -86,28 +86,28 @@ public class CharacterMappingTableTest
         final String src = (src01 + src02 + src03 + src04 + src05 + src06);
         final String dst = (dst01 + dst02 + dst03 + dst04 + dst05 + dst06);
 
-        CharacterMappingTable characterMappingTable = CharacterMappingTable.aCharacterMapping()
+        StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
                 .addMultiCharacterMapping(src, dst)
                 .build();
 
         // when then
-        assertThat(characterMappingTable.map(src01), is(dst01));
-        assertThat(characterMappingTable.map(src02), is(dst02));
-        assertThat(characterMappingTable.map(src03), is(dst03));
-        System.out.println(characterMappingTable);
+        assertThat(stringCharacterMappingTable.map(src01), is(dst01));
+        assertThat(stringCharacterMappingTable.map(src02), is(dst02));
+        assertThat(stringCharacterMappingTable.map(src03), is(dst03));
+        System.out.println(stringCharacterMappingTable);
     }
 
     @Test
     public void shouldMapToTargetCharset()
     {
         // given
-        CharacterMappingTable characterMappingTable = CharacterMappingTable.aCharacterMapping()
+        StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
                 .restrictToCharsetUsingDefaultChar("iso8859-15", "A").build();
 
         final String srcString = "abcdefg";
 
         // when
-        String mappedStr = characterMappingTable.map(srcString);
+        String mappedStr = stringCharacterMappingTable.map(srcString);
         
         // then
         assertThat( mappedStr, is( srcString ) );
@@ -117,14 +117,14 @@ public class CharacterMappingTableTest
     public void shouldUseReplacementCharacterIfNotMapable()
     {
         // given
-        CharacterMappingTable characterMappingTable = CharacterMappingTable.aCharacterMapping()
+        StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
                 .restrictToCharsetUsingDefaultChar("iso8859-15", "A").build();
 
         final String srcString = "String with unmapable char:" + new String( Character.toChars(5122 /* ᐂ */)) + "XXX";
         final String expectedString = "String with unmapable char:AXXX";
 
         // when
-        String mappedStr = characterMappingTable.map(srcString);
+        String mappedStr = stringCharacterMappingTable.map(srcString);
 
         // then
         assertThat( mappedStr, is( expectedString ) );
@@ -134,16 +134,16 @@ public class CharacterMappingTableTest
     public void shouldUseMappingAndReplacement()
     {
         // given
-        CharacterMappingTable characterMappingTable = CharacterMappingTable.aCharacterMapping()
+        StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
                 .restrictToCharsetUsingDefaultChar("iso8859-15", "·")
-                .addCodepointMapping( 5120 , 65 ).build();
+                .addCodepointMapping(5120, 65).build();
 
         final String srcString = "String with unmapable char:" + new String( Character.toChars(5122 /* ᐂ */)) 
                 + " and mapable char: " + new String( Character.toChars(5120));
         final String expectedString = "String with unmapable char:· and mapable char: A";
 
         // when
-        String mappedStr = characterMappingTable.map(srcString);
+        String mappedStr = stringCharacterMappingTable.map(srcString);
 
         // then
         assertThat( mappedStr, is( expectedString ) );
