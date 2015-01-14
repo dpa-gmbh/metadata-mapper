@@ -28,7 +28,7 @@ Calling the tool
 java -jar target/metadata-mapper-1.0-SNAPSHOT.jar
 
 ** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
-Usage: de.dpa.metadatamapper.MetadataMapper
+Usage: de.dpa.oss.metadatamapper.MetadataMapper
   -inputImage (-i) [String] filename of input image
   -outputImage (-o) [String] filename of resulting image
   -g2doc (-d) [String] filename of input G2 document

@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Main-Class: de.dpa.metadatamapper.MetadataMapper
+Main-Class: de.dpa.oss.metadata.mapper.MetadataMapper
 Implementation-Title: Metadata Mapper
 
