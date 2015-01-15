@@ -10,6 +10,12 @@ fields of XMP and IIM image metadata. In this way the metadata mapper knows whic
 out of the input XML file and how to map it to image metadata of the input JPEG file. The mapping
 configuration is documented in [TODO].
 
+XML documents may contain encodings which are not suitable for the target image metadata field. 
+Or in some cases you may have XML documents with mixed character sets and you do not want
+take over this mixture in the metadata of image. In such cases you may want to map and encode 
+characters accordingly. The metadata mapper also supports configurable encoding and mapping 
+of characters. 
+
 The implementation contains a mapping configuration which supports extraction of content 
 out of NewsML G2 Profile 2 compliant documents and mapping it to to IIM and XMP fields
 according to IPTC "Photo Metadata" standard revision 1.2, October 2014. The source code contains 
