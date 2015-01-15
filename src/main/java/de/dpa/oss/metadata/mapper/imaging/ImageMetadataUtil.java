@@ -2,14 +2,15 @@ package de.dpa.oss.metadata.mapper.imaging;
 
 import com.adobe.xmp.XMPException;
 import com.google.common.io.ByteStreams;
-import de.dpa.oss.metadata.mapper.MetadataMapper;
-import de.dpa.oss.metadata.mapper.common.ExtXPathException;
 import de.dpa.oss.common.ResourceUtil;
+import de.dpa.oss.metadata.mapper.common.ExtXPathException;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import javax.xml.bind.JAXBException;
@@ -20,6 +21,9 @@ import java.io.*;
  */
 public class ImageMetadataUtil
 {
+    private static Logger logger = LoggerFactory.getLogger(ImageMetadataUtil.class);
+    public static final String DPA_MAPPING_RESOURCE = "/mapping/dpa-mapping.xml";
+    private static Mapping dpaMapping = null;
     private final FileInputStream imageInputStream;
     private Document xmlDocument = null;
     private Mapping mapping = null;
@@ -44,8 +48,7 @@ public class ImageMetadataUtil
 
     public ImageMetadataUtil withIPTCDPAMapping() throws JAXBException
     {
-        InputStream mappingInputStream = ResourceUtil.resourceAsStream("/mapping/dpa-mapping.xml", MetadataMapper.class);
-        this.mapping = new MetadataMappingConfigReader().readConfig(mappingInputStream);
+        this.mapping = getDPAMapping();
         return this;
     }
 
@@ -61,7 +64,7 @@ public class ImageMetadataUtil
         this.removeMetadata = true;
         return this;
     }
-    
+
     public void mapToImage(final String pathToResultingImage)
             throws IOException, ImageWriteException, XMPException, ExtXPathException, ImageReadException
     {
@@ -81,13 +84,13 @@ public class ImageMetadataUtil
         {
             throw new IllegalArgumentException("At least one parameter (image input, image output, source xml, mapping) is missing");
         }
-        
+
         InputStream inputStream;
-        
-        if( removeMetadata )
+
+        if (removeMetadata)
         {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            new ImageMetadataOperation().removeAllMetadata( imageInputStream, byteArrayOutputStream);
+            new ImageMetadataOperation().removeAllMetadata(imageInputStream, byteArrayOutputStream);
             inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
             byteArrayOutputStream.reset();
             byteArrayOutputStream.close();
@@ -96,10 +99,39 @@ public class ImageMetadataUtil
         {
             inputStream = this.imageInputStream;
         }
-        
+
         ImageMetadata imageMetadata = new ImageMetadata();
         new G2ToMetadataMapper(mapping).mapToImageMetadata(xmlDocument, imageMetadata);
         new ImageMetadataOperation().writeMetadata(inputStream, imageMetadata, imageOutput);
+    }
+
+    private static synchronized Mapping readDPAMapping()
+    {
+        if (dpaMapping == null)
+        {
+            InputStream mappingConfig = ResourceUtil.resourceAsStream(DPA_MAPPING_RESOURCE, ImageMetadataUtil.class);
+            try
+            {
+                dpaMapping = new MetadataMappingConfigReader().readConfig(mappingConfig);
+            }
+            catch (JAXBException e)
+            {
+                logger.error("Reading dpa mapping file failed: " + DPA_MAPPING_RESOURCE);
+                dpaMapping = new Mapping();
+            }
+        }
+
+        return dpaMapping;
+    }
+
+    public static Mapping getDPAMapping()
+    {
+        if (dpaMapping == null)
+        {
+            readDPAMapping();
+        }
+
+        return dpaMapping;
     }
 }
 
