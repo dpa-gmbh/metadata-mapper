@@ -1,20 +1,17 @@
 package de.dpa.oss.common;
 
-import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 
 /**
  * <p>This class maps all characters of a given input string to an output string. The mapping is based on code points
  * allowing up to 4-byte unicodes.</p>
- *
+ * <p/>
  * <p>The class supports the restriction of the mapping to a certain character set. If such a character set is specified
- * ({@link CharacterMappingBuilder#restrictToCharsetUsingDefaultChar(String, String)}) then the fallback replacement character
+ * ({@link StringCharacterMappingTableBuilder#restrictToCharsetUsingDefaultChar(String, String)}) then the fallback replacement character
  * hs to be specified too. This character is used in case an input character cannot be mapped or is malformed </p>
- * 
  *
  * @author oliver langer
  */
@@ -33,20 +30,14 @@ public class StringCharacterMappingTable implements StringCharacterMapping
     private Charset targetCharset;
 
     /**
-     * if a character cannot be mapped into the given targetCharset then this code point will be used.
+     * characters of this string will be used during mapping in case a character cannot be mapped
+     * or is somehow malformed. 
      */
-    private byte[] targetCharsetMappingFallbackChars;
+    private String targetCharsetMappingFallbackAppendString = "?";
 
-    /**
-     * for optimization reason we store the string version of {@link #targetCharsetMappingFallbackChars}
-     * as well because in the mapping function {@link #map(String)} we have to append this string in case
-     * of replacements and we want to avoid unnecessary object creations. 
-     */
-    private String targetCharsetMappingFallbackAppendString;
-
-    public static CharacterMappingBuilder aCharacterMapping()
+    public static StringCharacterMappingTableBuilder aCharacterMapping( )
     {
-        return new CharacterMappingBuilder();
+        return new StringCharacterMappingTableBuilder();
     }
 
     private StringCharacterMappingTable(final int[] codePointMapping, final Charset targetCharset,
@@ -56,14 +47,10 @@ public class StringCharacterMappingTable implements StringCharacterMapping
         this.targetCharset = targetCharset;
         if (targetCharset != null)
         {
-            targetCharsetMappingFallbackChars = Arrays
-                    .copyOf(targetCharsetMappingFallbackString.getBytes(targetCharset),
-                            targetCharsetMappingFallbackString.getBytes(targetCharset).length);
             this.targetCharsetMappingFallbackAppendString = targetCharsetMappingFallbackString;
         }
     }
 
-    
     @Override public String map(final String inputString)
     {
         if (inputString == null || inputString.length() == 0)
@@ -71,16 +58,17 @@ public class StringCharacterMappingTable implements StringCharacterMapping
             return inputString;
         }
 
-        CharsetEncoder charsetEncoder = null;
+        final CharsetEncoder charsetEncoder;
         if (targetCharset != null)
         {
             charsetEncoder = targetCharset.newEncoder();
-            charsetEncoder.replaceWith(targetCharsetMappingFallbackChars);
-            charsetEncoder.onMalformedInput(CodingErrorAction.REPLACE);
-            charsetEncoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
+        }
+        else
+        {
+            charsetEncoder = Charset.defaultCharset().newEncoder();
         }
 
-        final StringBuilder sb = new StringBuilder();
+        final StringBuilder utf16StringRepresentation = new StringBuilder();
 
         CodepointIterator codepointIterator = CodepointIterator.iterate(inputString);
         while (codepointIterator.hasNext())
@@ -94,30 +82,44 @@ public class StringCharacterMappingTable implements StringCharacterMapping
                     /**
                      * try to map it to target charset. If not possible then use fallback mapping character
                      */
-                    CharBuffer charBuffer = CharBuffer.wrap(Character.toChars(currentCodePoint));
-                    //noinspection ConstantConditions
-                    if (charsetEncoder.canEncode(charBuffer))
+                    CharBuffer utf16CharBuffer = CharBuffer.wrap(Character.toChars(currentCodePoint));
+                    if (charsetEncoder.canEncode(utf16CharBuffer))
                     {
-                        ByteBuffer encodedBuffer = targetCharset.encode(charBuffer);
-                        sb.append(new String(encodedBuffer.array()));
+                        utf16StringRepresentation.append(utf16CharBuffer);
                     }
                     else
                     {
-                        sb.append(targetCharsetMappingFallbackAppendString);
+                        utf16StringRepresentation.append(targetCharsetMappingFallbackAppendString);
                     }
                 }
                 else
                 {
-                    sb.appendCodePoint(currentCodePoint);
+                    CharBuffer utf16CharBuffer = CharBuffer.wrap(Character.toChars(currentCodePoint));
+                    if (charsetEncoder.canEncode(utf16CharBuffer))
+                    {
+                        utf16StringRepresentation.append( utf16CharBuffer );
+                    }
+                    else
+                    {
+                        utf16StringRepresentation.append(targetCharsetMappingFallbackAppendString);
+                    }
                 }
             }
             else
             {
-                sb.appendCodePoint(mappedCodepointValue);
+                CharBuffer utf16CharBuffer = CharBuffer.wrap(Character.toChars(mappedCodepointValue));
+                if (charsetEncoder.canEncode(utf16CharBuffer))
+                {
+                    utf16StringRepresentation.append(utf16CharBuffer);
+                }
+                else
+                {
+                    utf16StringRepresentation.append(targetCharsetMappingFallbackAppendString);
+                }
             }
         }
 
-        return sb.toString();
+        return utf16StringRepresentation.toString();
     }
 
     @Override public String toString()
@@ -158,19 +160,19 @@ public class StringCharacterMappingTable implements StringCharacterMapping
         return sb.toString();
     }
 
-    public static class CharacterMappingBuilder
+    public static class StringCharacterMappingTableBuilder
     {
         private int codePointMapping[];
         private Charset targetCharset = null;
         private String targetCharsetMappingFallbackCharacter = null;
 
-        public CharacterMappingBuilder()
+        public StringCharacterMappingTableBuilder()
         {
             codePointMapping = new int[Character.MAX_CODE_POINT];
             Arrays.fill(codePointMapping, NO_MAPPING_ENTRY);
         }
 
-        public CharacterMappingBuilder addCodepointMapping(final String fromHex16BitCodepoint, final String toHex16BitCodepoint)
+        public StringCharacterMappingTableBuilder addCodepointMapping(final String fromHex16BitCodepoint, final String toHex16BitCodepoint)
         {
             int fromCodepoint = hexToInt(fromHex16BitCodepoint);
             int toCodepoint = hexToInt(toHex16BitCodepoint);
@@ -178,7 +180,7 @@ public class StringCharacterMappingTable implements StringCharacterMapping
             return this;
         }
 
-        public CharacterMappingBuilder addCodepointMapping(final int fromCodepoint, final int toCodePoint)
+        public StringCharacterMappingTableBuilder addCodepointMapping(final int fromCodepoint, final int toCodePoint)
         {
             codePointMapping[fromCodepoint] = toCodePoint;
             return this;
@@ -189,7 +191,7 @@ public class StringCharacterMappingTable implements StringCharacterMapping
          * string it adds a mapping to the corresponding code point of the target string. It is a 1:1 mapping
          * and therefor expects equal numbers of code points for source and target string.
          */
-        public CharacterMappingBuilder addMultiCharacterMapping(final String sourceCharacters, final String targetCharacters)
+        public StringCharacterMappingTableBuilder addMultiCharacterMapping(final String sourceCharacters, final String targetCharacters)
         {
             CodepointIterator cpSrc = CodepointIterator.iterate(sourceCharacters);
             CodepointIterator cpDest = CodepointIterator.iterate(targetCharacters);
@@ -202,7 +204,15 @@ public class StringCharacterMappingTable implements StringCharacterMapping
             return this;
         }
 
-        public CharacterMappingBuilder restrictToCharsetUsingDefaultChar(final String charsetName,
+        /**
+         * * 
+         * @param charsetName name of the target charset
+         * @param targetCharsetMappingFallbackCharacter during mapping of a character this string will be used instead of
+         *                                              the character in case it can not be encoded into the target charset encoding.
+         *                                              reasons may be: not part of the target charset or char is malformed
+         * @return
+         */
+        public StringCharacterMappingTableBuilder restrictToCharsetUsingDefaultChar(final String charsetName,
                 String targetCharsetMappingFallbackCharacter)
         {
             if (targetCharsetMappingFallbackCharacter == null)
@@ -215,6 +225,17 @@ public class StringCharacterMappingTable implements StringCharacterMapping
             return this;
         }
 
+        /**
+         *  
+         * @param targetCharsetMappingFallbackCharacter during mapping of a character this string will be used instead of
+         *                                              the character in case it can not be encoded into the target charset encoding.
+         */
+        public StringCharacterMappingTableBuilder withFallbackReplacementCharacter(final String targetCharsetMappingFallbackCharacter)
+        {
+            this.targetCharsetMappingFallbackCharacter = targetCharsetMappingFallbackCharacter; 
+            return this;
+        }
+        
         public StringCharacterMappingTable build()
         {
             return new StringCharacterMappingTable(codePointMapping, targetCharset, targetCharsetMappingFallbackCharacter);

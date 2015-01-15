@@ -26,6 +26,22 @@ public class StringCharacterMappingTableTest
     }
 
     @Test
+    public void shouldLeaveStringAsIsUsingNonUTF8Encoding()
+    {
+        // given
+        StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
+                .restrictToCharsetUsingDefaultChar( "iso8859-15","").build();
+
+        final String stringToMap = "äöüÄÖÜ";
+
+        // when
+        String mappedString = stringCharacterMappingTable.map(stringToMap);
+
+        // then
+        assertThat(mappedString, is(notNullValue()));
+        assertThat(mappedString, is(stringToMap));
+    }
+    @Test
     public void shouldMapBasicMultilingualPlane()
     {
         // given
@@ -130,7 +146,7 @@ public class StringCharacterMappingTableTest
         // then
         assertThat( mappedStr, is( expectedString ) );
     }
-
+    
     @Test
     public void shouldUseMappingAndReplacement()
     {

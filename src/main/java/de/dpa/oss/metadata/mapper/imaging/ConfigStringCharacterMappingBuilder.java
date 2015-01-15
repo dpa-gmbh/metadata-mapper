@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
  */
 public class ConfigStringCharacterMappingBuilder
 {
-    private StringCharacterMappingTable.CharacterMappingBuilder characterMappingBuilder;
+    private StringCharacterMappingTable.StringCharacterMappingTableBuilder characterMappingBuilder;
     private String targetCharsetName = null;
     private String fallbackReplacementChar = null;
     private boolean hasMappingTable = false;

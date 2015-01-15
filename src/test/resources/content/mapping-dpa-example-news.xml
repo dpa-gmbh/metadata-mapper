@@ -127,6 +127,7 @@
 				<keyword rank="2">anti-pegida</keyword>
 				<keyword rank="3">protestors</keyword>
 				<keyword rank="4">protests</keyword>
+				<keyword rank="4">äöüÄÖÜ</keyword>
 				<subject literal="poiID" type="cpnat:poi"/>
 				<headline>Protests rallys against Pegida</headline>
 				<creditline>dpa</creditline>
