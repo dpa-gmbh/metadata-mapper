@@ -1,16 +1,19 @@
 # About
 
-The metadata mapper is capable of extracting metadata out of an XML document and write this data 
-into corresponding Information Interchange Model (IIM) records and Extensible Metadata 
-Platform (XMP) entries of a given JPEG image. 
+The metadata mapper writes image metadata by extracting content elements from an XML 
+document and mapping these elements to corresponding fields of the Information Interchange 
+Model (IIM) records and Extensible Metadata Platform (XMP) of an JPEG image.
+ 
+A metadata mapping is based on three files: an input XML, a JPEG file and a mapping configuration
+file. The configuration contains XPath expressions and relates them to primitive and complex 
+fields of XMP and IIM image metadata. In this way the metadata mapper knows which content to extract
+out of the input XML file and how to map it to image metadata of the input JPEG file. The mapping
+configuration is documented in [TODO].
 
-The extraction of metadata and its corresponding transformation to IIM and XMP has to be specified 
-by a mapping. The implementation contains a mapping transforming data out of NewsML G2 Profile 2 
-compliant documents to IIM and XMP according to IPTC "Photo Metadata" standard revision 1.2, 
-October 2014. Custom mappings can be specified using a given XML schema.
-
-The implementation contains an API (ImageMetadataOperation) as well as a Tool supporting simple
-command-line based operations.
+The implementation contains a mapping configuration which supports extraction of content 
+out of NewsML G2 Profile 2 compliant documents and mapping it to to IIM and XMP fields
+according to IPTC "Photo Metadata" standard revision 1.2, October 2014. The source code contains 
+an API (ImageMetadataOperation) as well as a Tool supporting simple command-line based operations.
 
 
 # Building the Command Line Tool
