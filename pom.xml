@@ -25,10 +25,25 @@
             <artifactId>xmpcore</artifactId>
             <version>5.1.0</version>
         </dependency>
+
+        <!-- TODO remove when loading commons-imaging from a maven repository
+        dependency of commons-imaging. -->
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <!--dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-imaging</artifactId>
             <version>1.0</version>
+        </dependency-->
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-imaging</artifactId>
+            <version>1.0-dpa-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -218,10 +233,37 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            
+
+            <!-- TODO
+              This plugin installs the customized version of apache imaging into
+              the local repository. Remove this plugin when the modified version of
+              apache imaging is available via a repository
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-external</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <file>${basedir}/lib/commons-imaging-1.0-dpa-SNAPSHOT.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>org.apache.commons</groupId>
+                            <artifactId>commons-imaging</artifactId>
+                            <version>1.0-dpa-SNAPSHOT</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
 
 
-        
     </build>
 </project>
