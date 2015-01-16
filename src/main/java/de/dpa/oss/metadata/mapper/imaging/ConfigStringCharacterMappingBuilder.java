@@ -75,6 +75,23 @@ public class ConfigStringCharacterMappingBuilder
         {
             return characterMappingBuilder.build();
         }
-                
+    }
+    
+    public StringCharacterMappingTable buildTable()
+    {
+
+        /**
+         * if there is no mapping defined and if charset utf-8 is used then a simplified string character mapper 
+         * is returned.
+         */
+        if( !hasMappingTable && (targetCharsetName == null || Charset.forName("utf-8").aliases().contains(
+                targetCharsetName.toLowerCase())))
+        {
+            return StringCharacterMappingTable.aCharacterMapping().build();
+        }
+        else
+        {
+            return characterMappingBuilder.build();
+        }
     }
 }

@@ -4,6 +4,9 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.Arrays;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>This class maps all characters of a given input string to an output string. The mapping is based on code points
@@ -31,11 +34,11 @@ public class StringCharacterMappingTable implements StringCharacterMapping
 
     /**
      * characters of this string will be used during mapping in case a character cannot be mapped
-     * or is somehow malformed. 
+     * or is somehow malformed.
      */
     private String targetCharsetMappingFallbackAppendString = "?";
 
-    public static StringCharacterMappingTableBuilder aCharacterMapping( )
+    public static StringCharacterMappingTableBuilder aCharacterMapping()
     {
         return new StringCharacterMappingTableBuilder();
     }
@@ -97,7 +100,7 @@ public class StringCharacterMappingTable implements StringCharacterMapping
                     CharBuffer utf16CharBuffer = CharBuffer.wrap(Character.toChars(currentCodePoint));
                     if (charsetEncoder.canEncode(utf16CharBuffer))
                     {
-                        utf16StringRepresentation.append( utf16CharBuffer );
+                        utf16StringRepresentation.append(utf16CharBuffer);
                     }
                     else
                     {
@@ -122,41 +125,74 @@ public class StringCharacterMappingTable implements StringCharacterMapping
         return utf16StringRepresentation.toString();
     }
 
-    @Override public String toString()
+    /**
+     * Returns the mapping table as specially formatted string
+     *
+     * @param formatString corresponding to {@link Formatter} with the following arguments:
+     *                     <ul>
+     *                     <li>
+     *                     1: unicode value of the source character
+     *                     </li>
+     *                     <li>
+     *                     2: source character
+     *                     </li>
+     *                     <li>
+     *                     3: unicode value of the mapped character
+     *                     </li>
+     *                     <li>
+     *                     4: mapped character
+     *                     </li>
+     *                     </ul>
+     * @param codepointToAlternativeOutput if the character of codepoint is not suitable for the output an alternative character/string
+     *                                     may be used given by this map.                                     
+     * @return table of mapping
+     */
+    public String toString(final String formatString, final Map<Integer,String> codepointToAlternativeOutput )
     {
         StringBuilder sb = new StringBuilder();
+        final Formatter formatter = new Formatter(sb);
 
-        sb.append("<characterMapping>");
         for (int i = 0; i < Character.MAX_CODE_POINT; i++)
         {
             int mapTo = codePointMapping[i];
             if (mapTo != NO_MAPPING_ENTRY)
             {
-                String sourceString = new String(Character.toChars(i));
-                if (sourceString.equals("\""))
+                final String sourceString;
+                if( codepointToAlternativeOutput.containsKey(i))
                 {
-                    sourceString = "&quot;";
+                    sourceString = codepointToAlternativeOutput.get(i);
                 }
-
-                String targetString = new String(Character.toChars(mapTo));
-                if (targetString.equals("\""))
+                else
                 {
-                    targetString = "&quot;";
+                    sourceString = new String(Character.toChars(i));
                 }
-
-                sb.append("  <character from=\"0x").append(Integer.toHexString(i))
-                        .append("\" to=\"0x")
-                        .append(Integer.toHexString(mapTo))
-                        .append("\"")
-                        .append(" comment=\"from ")
-                        .append(sourceString)
-                        .append("; to=")
-                        .append(targetString)
-                        .append("\"/>");
-                sb.append("\n");
+                
+                final String targetString;
+                if(codepointToAlternativeOutput.containsKey(mapTo))
+                {
+                    targetString = codepointToAlternativeOutput.get(mapTo);
+                }
+                else
+                {
+                    targetString = new String(Character.toChars(mapTo));
+                }
+                formatter.format(formatString, Integer.toHexString(i), sourceString, Integer.toHexString(mapTo), targetString);
             }
         }
-        sb.append("</characterMapping>");
+        return sb.toString();
+    }
+
+    @Override public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<characterMapping>");
+        HashMap<Integer, String> codepointToAlternativeOutput = new HashMap<>();
+        codepointToAlternativeOutput.put( "\"".codePointAt(0), "&quot;");
+        sb.append(toString("<character from=\"0x%1s\" to=\"ox%3s\" comment=\"from %2s; to%4s\"/>",
+                codepointToAlternativeOutput));
+        sb.append( "</characterMapping>");
+
         return sb.toString();
     }
 
@@ -205,12 +241,12 @@ public class StringCharacterMappingTable implements StringCharacterMapping
         }
 
         /**
-         * * 
-         * @param charsetName name of the target charset
+         * *
+         *
+         * @param charsetName                           name of the target charset
          * @param targetCharsetMappingFallbackCharacter during mapping of a character this string will be used instead of
          *                                              the character in case it can not be encoded into the target charset encoding.
          *                                              reasons may be: not part of the target charset or char is malformed
-         * @return
          */
         public StringCharacterMappingTableBuilder restrictToCharsetUsingDefaultChar(final String charsetName,
                 String targetCharsetMappingFallbackCharacter)
@@ -225,17 +261,6 @@ public class StringCharacterMappingTable implements StringCharacterMapping
             return this;
         }
 
-        /**
-         *  
-         * @param targetCharsetMappingFallbackCharacter during mapping of a character this string will be used instead of
-         *                                              the character in case it can not be encoded into the target charset encoding.
-         */
-        public StringCharacterMappingTableBuilder withFallbackReplacementCharacter(final String targetCharsetMappingFallbackCharacter)
-        {
-            this.targetCharsetMappingFallbackCharacter = targetCharsetMappingFallbackCharacter; 
-            return this;
-        }
-        
         public StringCharacterMappingTable build()
         {
             return new StringCharacterMappingTable(codePointMapping, targetCharset, targetCharsetMappingFallbackCharacter);

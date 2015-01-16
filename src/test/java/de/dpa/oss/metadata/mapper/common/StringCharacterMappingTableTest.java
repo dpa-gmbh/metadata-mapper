@@ -3,6 +3,9 @@ package de.dpa.oss.metadata.mapper.common;
 import de.dpa.oss.common.StringCharacterMappingTable;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -30,7 +33,7 @@ public class StringCharacterMappingTableTest
     {
         // given
         StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
-                .restrictToCharsetUsingDefaultChar( "iso8859-15","").build();
+                .restrictToCharsetUsingDefaultChar("iso8859-15", "").build();
 
         final String stringToMap = "äöüÄÖÜ";
 
@@ -41,6 +44,7 @@ public class StringCharacterMappingTableTest
         assertThat(mappedString, is(notNullValue()));
         assertThat(mappedString, is(stringToMap));
     }
+
     @Test
     public void shouldMapBasicMultilingualPlane()
     {
@@ -125,9 +129,9 @@ public class StringCharacterMappingTableTest
 
         // when
         String mappedStr = stringCharacterMappingTable.map(srcString);
-        
+
         // then
-        assertThat( mappedStr, is( srcString ) );
+        assertThat(mappedStr, is(srcString));
     }
 
     @Test
@@ -137,16 +141,16 @@ public class StringCharacterMappingTableTest
         StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
                 .restrictToCharsetUsingDefaultChar("iso8859-15", "A").build();
 
-        final String srcString = "String with unmapable char:" + new String( Character.toChars(5122 /* ᐂ */)) + "XXX";
+        final String srcString = "String with unmapable char:" + new String(Character.toChars(5122 /* ᐂ */)) + "XXX";
         final String expectedString = "String with unmapable char:AXXX";
 
         // when
         String mappedStr = stringCharacterMappingTable.map(srcString);
 
         // then
-        assertThat( mappedStr, is( expectedString ) );
+        assertThat(mappedStr, is(expectedString));
     }
-    
+
     @Test
     public void shouldUseMappingAndReplacement()
     {
@@ -155,14 +159,41 @@ public class StringCharacterMappingTableTest
                 .restrictToCharsetUsingDefaultChar("iso8859-15", "·")
                 .addCodepointMapping(5120, 65).build();
 
-        final String srcString = "String with unmapable char:" + new String( Character.toChars(5122 /* ᐂ */)) 
-                + " and mapable char: " + new String( Character.toChars(5120));
+        final String srcString = "String with unmapable char:" + new String(Character.toChars(5122 /* ᐂ */))
+                + " and mapable char: " + new String(Character.toChars(5120));
         final String expectedString = "String with unmapable char:· and mapable char: A";
 
         // when
         String mappedStr = stringCharacterMappingTable.map(srcString);
 
         // then
-        assertThat( mappedStr, is( expectedString ) );
+        assertThat(mappedStr, is(expectedString));
+    }
+
+    @Test
+    public void shouldCreateFormattedMappingTable()
+    {
+        // given
+        final String src = "abc<>d";
+        final String dst = "ABC{}D";
+
+        StringCharacterMappingTable mappingTable = StringCharacterMappingTable.aCharacterMapping()
+                .addMultiCharacterMapping(src, dst)
+                .build();
+
+        // when
+        Map<Integer, String> codepointAlternativeCharacters = new HashMap<>();
+        codepointAlternativeCharacters.put(">".codePointAt(0), "&gt;");
+        codepointAlternativeCharacters.put("<".codePointAt(0), "&lt;");
+        String formattedTable = mappingTable.toString("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n",
+                codepointAlternativeCharacters);
+        
+        // then
+        assertThat( formattedTable, is("<tr><td>3c</td><td>&lt;</td><td>7b</td><td>{</td></tr>\n"
+                + "<tr><td>3e</td><td>&gt;</td><td>7d</td><td>}</td></tr>\n"
+                + "<tr><td>61</td><td>a</td><td>41</td><td>A</td></tr>\n"
+                + "<tr><td>62</td><td>b</td><td>42</td><td>B</td></tr>\n"
+                + "<tr><td>63</td><td>c</td><td>43</td><td>C</td></tr>\n"
+                + "<tr><td>64</td><td>d</td><td>44</td><td>D</td></tr>\n"));
     }
 }
