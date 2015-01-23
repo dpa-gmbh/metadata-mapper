@@ -28,4 +28,19 @@
         <item>bag2</item>
         <item>bag3</item>
     </bagMapping>
+
+    <bagOfStruct>
+        <author>Author first book</author>
+        <author>Author second book</author>
+        <book>
+            <title>Title of First Book</title>
+            <invNo>1</invNo>
+        </book>
+        <book>
+            <title>Title of Second Book</title>
+            <invNo>2</invNo>
+        </book>
+        <artwork>keyword1</artwork>
+        <artwork>keyword2</artwork>
+    </bagOfStruct>
 </TestRecord>

@@ -39,7 +39,7 @@
     <metadata name="StructMapping" cardinality="ONE">
         <xpath part="city"><![CDATA[//structExample/address/city]]></xpath>
         <xpath part="lines"><![CDATA[//structExample/address/lines/line]]></xpath>
-        <xmp>
+        <xmp>                    ArtworkOrObject
             <mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct" field="CreatorContactInfo">
                 <mapsTo part-ref="city" field="CiAdrCity" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
                 <mapsTo part-ref="lines" field="CiAdrExtadr" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"
@@ -68,6 +68,43 @@
             </mapsTo>
         </xmp>
     </metadata>
+
+    <!--metadata name="bagOfStructMapping" cardinality="ONE">
+        <xpath part="author"><![CDATA[//bagOfStruct/author]]></xpath>
+        <xpath part="title"><![CDATA[//bagOfStruct/book/title]]></xpath>
+        <xpath part="invNo"><![CDATA[//bagOfStruct/book/invNo]]></xpath>
+        <xpath part="artwork"><![CDATA[//bagOfStruct/artwork]]></xpath>
+
+        <sclice slice-id="rootSlice" part-refs="author,title,invNo">
+            <sliceItem part="slice.title" part-ref="title"/>
+            <sliceItem part="slice.author" part-ref="author"/>
+            <sliceItem part="slice.invNo" part-ref="invNo"/>
+            <slice slice-id="subSlice" part-refs="artwork">
+                <sliceItem part="slice.artwork" part-ref="artwork"/>
+            </slice>
+        </sclice>
+
+        <xmp>
+            <mapsTo field="ArtworkOrObject" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Bag">
+                <forEachSlice slice-ref="rootSlice">
+                    <mapsTo field="AOCopyrightNotice"
+                            targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"
+                            targetType="Struct">
+                        <mapsTo part-ref="slice.title" field="AOTitle" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="LangAlt" />
+                        <mapsTo field="AOCreator" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Sequence">
+                            <mapsTo part-ref="slice.author" field="AOCreator" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+                        </mapsTo>
+                        <mapsTo part-ref="slice.invNo" field="AOSourceInvNo" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text" />
+                    </mapsTo>
+                    <forEachSubSlice slice-ref="subSlice">
+                        <mapsTo forEachSlice-ref="subSlice" field="ArtworkOrObject" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Bag">
+                            <mapsTo field="ArtworkOrObject" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+                        </mapsTo>
+                    </forEachSubSlice>
+                </forEachSlice>
+            </mapsTo>
+        </xmp>
+    </metadata-->
 
     <characterMapping id="utf8-to-iso8859-15">
         <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
