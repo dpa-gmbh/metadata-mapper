@@ -26,7 +26,7 @@ an API (ImageMetadataOperation) as well as a Tool supporting simple command-line
 
 Run 
 ```
-mvn package
+mvn validate package
 ```
 creates a jar containg all dependencies.
 

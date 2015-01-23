@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestRecord>
+    <returnedAsNode>A string node</returnedAsNode>
+    <returnedAsString>A text returned as string</returnedAsString>
+
+    <nodes>
+        <node>str1</node>
+        <node>str2</node>
+    </nodes>
+</TestRecord>

@@ -2,7 +2,6 @@ package de.dpa.oss.metadata.mapper;
 
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
-import de.dpa.oss.common.StringCharacterMapping;
 import de.dpa.oss.common.StringCharacterMappingTable;
 import de.dpa.oss.metadata.mapper.imaging.ConfigStringCharacterMappingBuilder;
 import de.dpa.oss.metadata.mapper.imaging.ImageMetadataUtil;
@@ -116,7 +115,7 @@ public class MetadataMapper
         }
         else
         {
-            mappingTable = ImageMetadataUtil.readMapping(mapping);
+            mappingTable = ImageMetadataUtil.readMappingFile(mapping);
         }
 
         Map<Integer, String> codepointAlternativeCharacters = new HashMap<>();

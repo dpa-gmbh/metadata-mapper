@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping name="default" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/">
+    <config>
+        <timezone>Europe/Berlin</timezone>
+        <iim charset="iso8859-15"/>
+        <xmp charset="utf-8"/>
+    </config>
+
+    <metadata name="xpathReturnsNode" cardinality="ONE">
+        <xpath part="example" rank="1"><![CDATA[//returnedAsNode]]></xpath>
+        <xmp>
+            <mapsTo field="Credit" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
+        </xmp>
+    </metadata>
+
+    <metadata name="xpathReturnsString" cardinality="MANY">
+        <xpath part="example" returnType="STRING"><![CDATA[substring(//returnedAsString,3,44)]]></xpath>
+        <xmp>
+            <mapsTo field="Credit" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
+        </xmp>
+    </metadata>
+
+</mapping>

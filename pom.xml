@@ -21,9 +21,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.adobe</groupId>
+            <groupId>com.adobe.xmp</groupId>
             <artifactId>xmpcore</artifactId>
-            <version>5.1.0</version>
+            <version>5.1.2</version>
         </dependency>
 
         <!-- TODO remove when loading commons-imaging from a maven repository
@@ -166,6 +166,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -237,10 +238,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
                 <executions>
                     <execution>
                         <id>install-external</id>
-                        <phase>clean</phase>
+                        <phase>validate</phase>
                         <configuration>
                             <file>${basedir}/lib/commons-imaging-1.0-dpa-SNAPSHOT.jar</file>
                             <repositoryLayout>default</repositoryLayout>

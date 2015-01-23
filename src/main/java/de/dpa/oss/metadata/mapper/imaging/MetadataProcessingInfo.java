@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 import java.util.*;
 
 /**
@@ -50,6 +53,10 @@ public class MetadataProcessingInfo
         return toReturn;
     }
 
+    /**
+     *
+     * @return a map where the part maps to the selected values
+     */
     public ListMultimap<String, String> selectXPathValues(final Document document) throws ExtXPathException
     {
         ListMultimap<String, String> partnameToValue = ArrayListMultimap.create();

@@ -54,7 +54,7 @@ public class ImageMetadataUtil
 
     public ImageMetadataUtil withPathToMapping(final String pathToMapping) throws FileNotFoundException, JAXBException
     {
-        this.mapping = readMapping(pathToMapping);
+        this.mapping = readMappingFile(pathToMapping);
         return this;
     }
 
@@ -104,10 +104,19 @@ public class ImageMetadataUtil
         new ImageMetadataOperation().writeMetadata(inputStream, imageMetadata, imageOutput);
     }
 
-    public static Mapping readMapping(final String path) throws FileNotFoundException, JAXBException
+    public static Mapping readMappingResource(final String resourcePath, Object caller ) throws FileNotFoundException, JAXBException
     {
-        FileInputStream mappingInputStream = new FileInputStream(path);
-        return new MetadataMappingConfigReader().readConfig(mappingInputStream);
+        return readMapping( ResourceUtil.resourceAsStream(resourcePath, caller.getClass()) );
+    }
+
+    public static Mapping readMappingFile(final String path) throws FileNotFoundException, JAXBException
+    {
+        return readMapping( new FileInputStream(path) );
+    }
+
+    public static Mapping readMapping( final InputStream is ) throws JAXBException
+    {
+        return new MetadataMappingConfigReader().readConfig(is);
     }
     
     private static synchronized Mapping readDPAMapping()
