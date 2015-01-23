@@ -1,6 +1,6 @@
 package de.dpa.oss.metadata.mapper.imaging.common;
 
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.Strings;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -123,7 +123,7 @@ public class DateTimeUtils
     public static Date toDate(String iso8601) throws ParseException
     {
         Date date = null;
-        if (StringUtils.trimToNull(iso8601) != null)
+        if (trimToNull(iso8601) != null)
         {
             StringBuilder builder = new StringBuilder(iso8601);
             builder.deleteCharAt(22);
@@ -141,7 +141,7 @@ public class DateTimeUtils
         }
 
         String d = new SimpleDateFormat(DateTimeUtils.FORMAT_DATE).format(date);
-        if (!StringUtils.isEmpty(time))
+        if (!Strings.isNullOrEmpty(time))
         {
             StringBuilder timeBuilder = new StringBuilder(time);
 
@@ -173,7 +173,7 @@ public class DateTimeUtils
             dateBuilder.insert(4, "-");
             dateBuilder.insert(7, "-");
 
-            if (StringUtils.trimToNull(time) == null)
+            if (trimToNull(time) == null)
             {
                 timeBuilder = new StringBuilder("00:00:00+02:00");
             }
@@ -195,7 +195,7 @@ public class DateTimeUtils
             }
             return dateBuilder.toString() + "T" + timeBuilder.toString();
         }
-        return StringUtils.EMPTY;
+        return "";
     }
 
     public static String formatISO8601(Date date)
@@ -209,7 +209,7 @@ public class DateTimeUtils
 
     public static String cleanDirtyTime(String time)
     {
-        time = StringUtils.trimToEmpty(time);
+        time = trimTo(time,"");
 
         StringBuilder sb = new StringBuilder(time);
 
@@ -255,7 +255,7 @@ public class DateTimeUtils
         }
         else
         {
-            time = StringUtils.EMPTY;
+            time = "";
         }
 
         return time;
@@ -332,4 +332,33 @@ public class DateTimeUtils
         return tz == null ? false : DateTimeUtils.SUPPORTED_TZ.contains(tz);
     }
 
+    public static String trimTo( final String str, String strIfNullOrEmpty )
+    {
+        final String toReturn;
+
+        if( str != null )
+        {
+            final String trimedString;
+            trimedString = str.trim();
+            if(Strings.isNullOrEmpty( trimedString ) )
+            {
+                toReturn = strIfNullOrEmpty;
+            }
+            else
+            {
+                toReturn = trimedString;
+            }
+        }
+        else
+        {
+            toReturn = strIfNullOrEmpty;
+        }
+
+        return toReturn;
+    }
+
+    public static String trimToNull( final String str )
+    {
+        return trimTo( str,null);
+    }
 }
