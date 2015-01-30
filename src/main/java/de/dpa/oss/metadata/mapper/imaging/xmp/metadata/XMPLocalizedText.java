@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
  */
 public class XMPLocalizedText extends XMPNamedBase
 {
-
+    public static final String DEFAULT_LANGUAGE = "x-default";
     private final String languageRFC3066IDOrXDefault;
     private final String localizedText;
 
@@ -17,7 +17,7 @@ public class XMPLocalizedText extends XMPNamedBase
     {
         super(namespace, name);
         this.localizedText = localizedText;
-        this.languageRFC3066IDOrXDefault = "x-default";
+        this.languageRFC3066IDOrXDefault = DEFAULT_LANGUAGE;
     }
 
     public XMPLocalizedText(final String namespace, final String name, final String languageRFC3066IDOrXDefault, final String localizedText)

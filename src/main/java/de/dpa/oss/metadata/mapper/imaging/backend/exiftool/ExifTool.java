@@ -15,6 +15,8 @@ package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
  * limitations under the License.
  */
 
+import com.google.common.collect.ListMultimap;
+
 import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -1211,12 +1213,12 @@ public class ExifTool {
         return resultMap;
     }
 
-    public void setImageMeta(File image, Map<String, String> tags)
+    public void setImageMeta(File image, ListMultimap<String, String> tags)
             throws IllegalArgumentException, SecurityException, IOException {
         setImageMeta(image, Format.NUMERIC, tags);
     }
 
-    public void setImageMeta(File image, Format format, Map<String, String> tags )
+    public void setImageMeta(File image, Format format, ListMultimap<String, String> tags )
             throws IllegalArgumentException, SecurityException, IOException {
         if (image == null)
             throw new IllegalArgumentException(
@@ -1282,7 +1284,7 @@ public class ExifTool {
 
             streams.writer.write("-S\n"); // compact output
 
-            for ( Map.Entry<String,String> entry :tags.entrySet() ) {
+            for ( Map.Entry<String,String> entry :tags.entries() ) {
                 streams.writer.write('-');
                 streams.writer.write(entry.getKey());
                 streams.writer.write("='");
@@ -1315,8 +1317,8 @@ public class ExifTool {
 
             args.add("-S"); // compact output
 
-            for ( Map.Entry<String,String> entry :tags.entrySet() )
-                args.add("-" + entry.getKey() + "='" + entry.getValue() + "'" );
+            for ( Map.Entry<String,String> entry :tags.entries() )
+                args.add("-" + entry.getKey() + "=" + entry.getValue()  );
 
             args.add(image.getAbsolutePath());
 

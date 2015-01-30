@@ -4,11 +4,16 @@ import com.adobe.xmp.XMPDateTime;
 import com.adobe.xmp.XMPDateTimeFactory;
 import com.adobe.xmp.XMPException;
 import com.adobe.xmp.XMPUtils;
+import com.google.common.base.Strings;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.io.ByteStreams;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.*;
 
 import java.io.*;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @author oliver langer
@@ -25,9 +30,9 @@ public class ExifToolBackend
     void writeMetadata(final InputStream inputStream, final de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata imageMetadata,
             final OutputStream outputStream) throws XMPException
     {
-        Map<String, String> tagToValues = new HashMap<>();
+        ListMultimap<String, String> tagToValues = ArrayListMultimap.create();
         EntryWriter entryWriter = new RootEntryWriter(tagToValues);
-        xmpToTagValues(imageMetadata.getXmpMetadata(), tagToValues, entryWriter);
+        xmpToTagValues(imageMetadata.getXmpMetadata(), entryWriter);
 
         ExifTool exifTool = new ExifTool();
 
@@ -54,7 +59,7 @@ public class ExifToolBackend
 
     }
 
-    private void xmpToTagValues(final List<XMPMetadata> xmpMetadata, final Map<String, String> tagToValues, final EntryWriter entryWriter)
+    private void xmpToTagValues(final List<XMPMetadata> xmpMetadata, final EntryWriter entryWriter)
             throws XMPException
     {
         for (XMPMetadata metadata : xmpMetadata)
@@ -76,7 +81,15 @@ public class ExifToolBackend
 
             @Override public Void visitLocalizedText(final XMPLocalizedText entry) throws XMPException
             {
-                entryWriter.write(entry.getName(), entry.getLocalizedText());
+                if( !Strings.isNullOrEmpty(entry.getLanguageRFC3066IDOrXDefault())
+                        && !XMPLocalizedText.DEFAULT_LANGUAGE.equalsIgnoreCase(entry.getLanguageRFC3066IDOrXDefault()) )
+                {
+                    entryWriter.write(entry.getLanguageRFC3066IDOrXDefault(), entry.getLocalizedText());
+                }
+                else
+                {
+                    entryWriter.write( null, entry.getLocalizedText());
+                }
                 return null;
             }
 
@@ -115,48 +128,49 @@ public class ExifToolBackend
 
             @Override public Void visitStruct(final XMPStruct entry) throws XMPException
             {
-                StructEntryWriter structEntryWriter = StructEntryWriter.beginStruct();
+                EntryWriter structEntryWriter = entryWriter.beginStruct( entry.getName());
                 for (XMPMetadata item : entry.getMetadata())
                 {
                     xmpToTagValue(structEntryWriter,item);
                 }
-                String structString = structEntryWriter.endStruct();
-                entryWriter.write( entry.getName(), structString );
+                structEntryWriter.endStruct();
                 return null;
             }
 
             @Override public Void visitBag(final XMPBag entry) throws XMPException
             {
-                ArrayEntryWriter arrayEntryWriter = new ArrayEntryWriter();
+                EntryWriter arrayEntryWriter = entryWriter.beginArray(entry.getName());
                 for (XMPMetadata item : entry.getItems())
                 {
                     xmpToTagValue(arrayEntryWriter,item);
                 }
-                entryWriter.write(entry.getName(), arrayEntryWriter.endArray());
+
+                arrayEntryWriter.endArray();
 
                 return null;
             }
 
             @Override public Void visitSequence(final XMPSequence entry) throws XMPException
             {
-                ArrayEntryWriter arrayEntryWriter = new ArrayEntryWriter();
+                EntryWriter arrayEntryWriter = entryWriter.beginArray(entry.getName());
                 for (XMPMetadata item : entry.getItems())
                 {
                     xmpToTagValue(arrayEntryWriter,item);
                 }
-                entryWriter.write(entry.getName(), arrayEntryWriter.endArray());
+
+                arrayEntryWriter.endArray();
 
                 return null;
             }
 
             @Override public Void visitAlternatives(final XMPAlternatives entry) throws XMPException
             {
-                ArrayEntryWriter arrayEntryWriter = new ArrayEntryWriter();
+                EntryWriter langAltEntryWriter = entryWriter.beginLangAlt(entry.getName());
                 for (XMPMetadata item : entry.getItems())
                 {
-                    xmpToTagValue(arrayEntryWriter,item);
+                    xmpToTagValue(langAltEntryWriter,item);
                 }
-                entryWriter.write(entry.getName(), arrayEntryWriter.endArray());
+                langAltEntryWriter.endLangAlt();
 
                 return null;
             }

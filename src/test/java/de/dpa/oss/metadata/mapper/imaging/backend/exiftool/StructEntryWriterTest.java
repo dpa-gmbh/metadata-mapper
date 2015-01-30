@@ -9,6 +9,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 public class StructEntryWriterTest
 {
+    /*
     @Test
     public void shouldCreateSimpleStruct()
     {
@@ -41,5 +42,5 @@ public class StructEntryWriterTest
         assertThat( structString, is(notNullValue()));
         assertThat( structString, is( "{field1=value1}"));
 
-    }
+    }   */
 }
