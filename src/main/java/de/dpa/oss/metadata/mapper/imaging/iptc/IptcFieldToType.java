@@ -1,7 +1,5 @@
 package de.dpa.oss.metadata.mapper.imaging.iptc;
 
-import org.apache.commons.imaging.formats.jpeg.iptc.IptcTypes;
-
 import java.util.HashMap;
 import java.util.Map;
 

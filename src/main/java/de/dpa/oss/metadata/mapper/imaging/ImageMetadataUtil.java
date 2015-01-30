@@ -7,14 +7,13 @@ import de.dpa.oss.metadata.mapper.common.ExtXPathException;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
-import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.ImageWriteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import javax.xml.bind.JAXBException;
 import java.io.*;
+import java.util.TimeZone;
 
 /**
  * @author oliver langer
@@ -24,6 +23,7 @@ public class ImageMetadataUtil
     private static Logger logger = LoggerFactory.getLogger(ImageMetadataUtil.class);
     public static final String DPA_MAPPING_RESOURCE = "/mapping/dpa-mapping.xml";
     private static Mapping dpaMapping = null;
+    private TimeZone timeZone = TimeZone.getDefault();
     private final FileInputStream imageInputStream;
     private Document xmlDocument = null;
     private Mapping mapping = null;
@@ -37,6 +37,12 @@ public class ImageMetadataUtil
     public ImageMetadataUtil(final String pathToSourceImage) throws FileNotFoundException
     {
         imageInputStream = new FileInputStream(pathToSourceImage);
+    }
+
+    public ImageMetadataUtil withTimeZone( final TimeZone timeZone)
+    {
+        this.timeZone = timeZone;
+        return this;
     }
 
     public ImageMetadataUtil withPathToXMLDocument(final String pathToXMLDocument) throws Exception
@@ -65,7 +71,7 @@ public class ImageMetadataUtil
     }
 
     public void mapToImage(final String pathToResultingImage)
-            throws IOException, ImageWriteException, XMPException, ExtXPathException, ImageReadException
+            throws IOException, XMPException, ExtXPathException
     {
         try (FileOutputStream fileOutputStream = new FileOutputStream(pathToResultingImage))
         {
@@ -77,7 +83,7 @@ public class ImageMetadataUtil
      * Note: does not close the output stream
      */
     public void mapToImage(final OutputStream imageOutput)
-            throws ExtXPathException, ImageWriteException, ImageReadException, XMPException, IOException
+            throws ExtXPathException, XMPException, IOException
     {
         if (imageOutput == null || xmlDocument == null || mapping == null)
         {
@@ -89,7 +95,7 @@ public class ImageMetadataUtil
         if (removeMetadata)
         {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            new ImageMetadataOperation().removeAllMetadata(imageInputStream, byteArrayOutputStream);
+            new ImageMetadataOperation(timeZone).removeAllMetadata(imageInputStream, byteArrayOutputStream);
             inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
             byteArrayOutputStream.reset();
             byteArrayOutputStream.close();
@@ -101,7 +107,7 @@ public class ImageMetadataUtil
 
         ImageMetadata imageMetadata = new ImageMetadata();
         new G2ToMetadataMapper(mapping).mapToImageMetadata(xmlDocument, imageMetadata);
-        new ImageMetadataOperation().writeMetadata(inputStream, imageMetadata, imageOutput);
+        new ImageMetadataOperation(timeZone).writeMetadata(inputStream, imageMetadata, imageOutput);
     }
 
     public static Mapping readMappingResource(final String resourcePath, Object caller ) throws FileNotFoundException, JAXBException

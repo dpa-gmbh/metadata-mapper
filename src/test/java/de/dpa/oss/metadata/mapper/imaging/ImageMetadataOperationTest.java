@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.TimeZone;
 
 public class ImageMetadataOperationTest
 {
@@ -26,7 +27,7 @@ public class ImageMetadataOperationTest
         new G2ToMetadataMapper( ImageMetadataUtil.getDPAMapping()).mapToImageMetadata(document, imageMetadata);
 
         // when
-        new ImageMetadataOperation().writeMetadata( imageInputStream, imageMetadata, fileOutputStream);
+        new ImageMetadataOperation(TimeZone.getDefault()).writeMetadata(imageInputStream, imageMetadata, fileOutputStream);
         fileOutputStream.flush();
         fileOutputStream.close();
     }
@@ -47,7 +48,7 @@ public class ImageMetadataOperationTest
         new G2ToMetadataMapper( mapping ).mapToImageMetadata(document, imageMetadata);
 
         // when
-        new ImageMetadataOperation().writeMetadata( imageInputStream, imageMetadata, fileOutputStream);
+        new ImageMetadataOperation(TimeZone.getDefault()).writeMetadata( imageInputStream, imageMetadata, fileOutputStream);
         fileOutputStream.flush();
         fileOutputStream.close();
 

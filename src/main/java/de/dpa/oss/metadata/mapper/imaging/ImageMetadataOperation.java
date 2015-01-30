@@ -1,30 +1,13 @@
 package de.dpa.oss.metadata.mapper.imaging;
 
 import com.adobe.xmp.XMPException;
-import com.adobe.xmp.XMPMeta;
-import com.adobe.xmp.XMPMetaFactory;
-import com.google.common.io.ByteStreams;
-import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadataWriter;
-import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.XMPMetadata;
-import de.dpa.oss.metadata.mapper.imaging.xmp.parser.XMPMetadataFactory;
-import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.ImageWriteException;
-import org.apache.commons.imaging.Imaging;
-import org.apache.commons.imaging.common.IImageMetadata;
-import org.apache.commons.imaging.common.ImageMetadata;
-import org.apache.commons.imaging.common.bytesource.ByteSourceArray;
-import org.apache.commons.imaging.formats.jpeg.JpegImageParser;
-import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
-import org.apache.commons.imaging.formats.jpeg.iptc.JpegIptcRewriter;
-import org.apache.commons.imaging.formats.jpeg.xmp.JpegXmpRewriter;
-import org.apache.commons.imaging.formats.tiff.TiffField;
-import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
-import org.apache.commons.imaging.util.IoUtils;
-import org.apache.log4j.Logger;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolBackend;
+import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.TimeZone;
 
 /**
@@ -32,124 +15,26 @@ import java.util.TimeZone;
  */
 public class ImageMetadataOperation
 {
-    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-    private final TimeZone timezone;
+    private TimeZone timeZone;
 
-    public static Logger logger = Logger.getLogger(ImageMetadataOperation.class);
-
-    public ImageMetadataOperation()
+    public ImageMetadataOperation(final TimeZone timeZone)
     {
-        timezone = UTC;
+        this.timeZone = timeZone;
     }
 
-    public ImageMetadataOperation(final TimeZone timezone)
+    public void setTimeZone(final TimeZone timeZone)
     {
-        this.timezone = timezone;
+        this.timeZone = timeZone;
     }
 
-    protected void removeIPTCMetadata(final InputStream inputStream, final OutputStream outputStream)
-            throws ImageWriteException, ImageReadException, IOException
+    public void writeMetadata(final InputStream inputStream, final ImageMetadata imageMetadata, final OutputStream imageOutput)
+            throws XMPException
     {
-        new JpegIptcRewriter().removeIPTC(inputStream, outputStream);
+        new ExifToolBackend(timeZone).writeMetadata(inputStream,imageMetadata,imageOutput);
     }
 
-    protected void removeExifMetadata(final InputStream inputStream, final OutputStream outputStream)
-            throws ImageWriteException, ImageReadException, IOException
+    public void removeAllMetadata(final FileInputStream imageInputStream, final ByteArrayOutputStream byteArrayOutputStream)
     {
-        new ExifRewriter().removeExifMetadata(inputStream, outputStream);
-    }
-
-    protected void removeXMPMetadata(final InputStream inputStream, final OutputStream outputStream) throws IOException, ImageReadException
-    {
-        new JpegXmpRewriter().removeXmpXml(inputStream, outputStream);
-    }
-
-    public de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata readMetaData(final InputStream imageData) throws Exception
-    {
-
-        byte[] imageBuffer = ByteStreams.toByteArray(imageData);
-        imageData.close();
-
-        de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata toReturn = new de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata();
-        try
-        {
-            readIPTCAndExifMetadata(imageBuffer, toReturn);
-        }
-        catch (Throwable t)
-        {
-            logger.warn("Error while reading IPTC and/or EXIF image meta data: " + t);
-        }
-
-        try
-        {
-            readXMPMetadata(imageBuffer, toReturn);
-        }
-        catch (Throwable t)
-        {
-            logger.warn("Error while reading XMP image meta data: " + t);
-        }
-
-        return toReturn;
-    }
-
-    private void readXMPMetadata(final byte[] imageData, final de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata imageMetadata)
-            throws XMPException, IOException, ImageReadException
-    {
-
-        String xmpXml = new JpegImageParser().getXmpXml(new ByteSourceArray(imageData), new HashMap<String, Object>());
-
-        XMPMeta metaData = XMPMetaFactory.parse(new ByteArrayInputStream(xmpXml.getBytes()));
-
-        List<XMPMetadata> xmpMetadatas = new XMPMetadataFactory().buildXMPMetadata(metaData.iterator());
-        imageMetadata.addXMPMetadata(xmpMetadatas);
-    }
-
-    protected void readIPTCAndExifMetadata(final byte[] imageData, final de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata imageMetadata)
-            throws Exception
-    {
-        IImageMetadata metaDataRecord = Imaging.getMetadata(imageData, null);
-
-        for (IImageMetadata.IImageMetadataItem item : metaDataRecord.getItems())
-        {
-            if (item instanceof TiffImageMetadata.Item)
-            {
-                TiffField tiffField = ((TiffImageMetadata.Item) item).getTiffField();
-                imageMetadata.addExifEntry(tiffField.getTagName(), tiffField.getValue().toString());
-            }
-            else
-            {
-                if (item instanceof ImageMetadata.Item)
-                {
-                    ImageMetadata.Item genericItem = (ImageMetadata.Item) item;
-                    imageMetadata.addIPTCEntry(genericItem.getKeyword(), genericItem.getText());
-                }
-            }
-        }
-    }
-
-    public void removeAllMetadata(final InputStream inputStream, final OutputStream outputStream)
-            throws ImageWriteException, ImageReadException, IOException
-    {
-        ByteArrayOutputStream bufferWithoutIPTC = new ByteArrayOutputStream();
-        removeIPTCMetadata(inputStream, bufferWithoutIPTC);
-        ByteArrayOutputStream bufferWithoutIPCTAndExif = new ByteArrayOutputStream();
-        removeExifMetadata(new ByteArrayInputStream(bufferWithoutIPTC.toByteArray()), bufferWithoutIPCTAndExif);
-
-        boolean canThrow = false;
-        try
-        {
-            removeXMPMetadata(new ByteArrayInputStream(bufferWithoutIPCTAndExif.toByteArray()), outputStream);
-            canThrow = true;
-        }
-        finally
-        {
-            IoUtils.closeQuietly(canThrow, outputStream);
-        }
-    }
-
-    public void writeMetadata(final InputStream inputStream, final de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata imageMetadata,
-            final OutputStream outputStream) throws ImageWriteException, IOException, XMPException, ImageReadException
-    {
-        new ImageMetadataWriter(new JpegXmpRewriter(), new JpegIptcRewriter(),timezone).write(inputStream, imageMetadata, outputStream);
+        // TODO
     }
 }

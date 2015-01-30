@@ -2,15 +2,15 @@ package de.dpa.oss.metadata.mapper.imaging;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ListMultimap;
-import de.dpa.oss.metadata.mapper.common.ExtXPathException;
 import de.dpa.oss.common.StringCharacterMapping;
+import de.dpa.oss.metadata.mapper.common.ExtXPathException;
 import de.dpa.oss.metadata.mapper.imaging.common.DateTimeUtils;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.*;
 import de.dpa.oss.metadata.mapper.imaging.iptc.IptcFieldToType;
+import de.dpa.oss.metadata.mapper.imaging.iptc.IptcType;
+import de.dpa.oss.metadata.mapper.imaging.iptc.IptcTypes;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.*;
-import org.apache.commons.imaging.formats.jpeg.iptc.IptcType;
-import org.apache.commons.imaging.formats.jpeg.iptc.IptcTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

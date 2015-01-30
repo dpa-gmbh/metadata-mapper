@@ -29,8 +29,8 @@ public class MetadataMapper
     @Argument(alias = "d", required = true, description = "filename of input G2 document")
     private static String g2doc;
 
-    @Argument(alias = "k", required = false, description = "keep existing metadata. By default existing metadata will be removed")
-    private static Boolean keepExistingMetadata = false;
+    //@Argument(alias = "k", required = false, description = "keep existing metadata. By default existing metadata will be removed")
+    //private static Boolean keepExistingMetadata = false;
 
     public static final String DEFAULT_MAPPING = "mapping/dpa-mapping.xml";
 
@@ -59,10 +59,11 @@ public class MetadataMapper
             imageMetadataUtil.withPathToMapping(mapping);
         }
 
+        /**
         if (!keepExistingMetadata)
         {
             imageMetadataUtil.removeMetadataFirst();
-        }
+        }*/
 
         imageMetadataUtil.withPathToXMLDocument(g2doc)
                 .mapToImage(outputImage);

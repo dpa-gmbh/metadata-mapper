@@ -27,7 +27,7 @@ public class ExifToolBackend
         this.timeZone = timeZone;
     }
 
-    void writeMetadata(final InputStream inputStream, final de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata imageMetadata,
+    public void writeMetadata(final InputStream inputStream, final de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata imageMetadata,
             final OutputStream outputStream) throws XMPException
     {
         ListMultimap<String, String> tagToValues = ArrayListMultimap.create();
@@ -39,19 +39,19 @@ public class ExifToolBackend
         File tempImageFile = null;
         try
         {
-            tempImageFile = File.createTempFile( "metadata-mapper", "tmpimage");
+            tempImageFile = File.createTempFile("metadata-mapper", "tmpimage");
             FileOutputStream fileOutputStream = new FileOutputStream(tempImageFile);
-            ByteStreams.copy( inputStream, fileOutputStream);
+            ByteStreams.copy(inputStream, fileOutputStream);
             fileOutputStream.flush();
             fileOutputStream.close();
             exifTool.setImageMeta(tempImageFile, tagToValues);
-            ByteStreams.copy( new FileInputStream(tempImageFile),outputStream);
+            ByteStreams.copy(new FileInputStream(tempImageFile), outputStream);
             tempImageFile.delete();
 
         }
         catch (Throwable t)
         {
-            if( tempImageFile != null )
+            if (tempImageFile != null)
             {
                 tempImageFile.delete();
             }
@@ -81,14 +81,14 @@ public class ExifToolBackend
 
             @Override public Void visitLocalizedText(final XMPLocalizedText entry) throws XMPException
             {
-                if( !Strings.isNullOrEmpty(entry.getLanguageRFC3066IDOrXDefault())
-                        && !XMPLocalizedText.DEFAULT_LANGUAGE.equalsIgnoreCase(entry.getLanguageRFC3066IDOrXDefault()) )
+                if (!Strings.isNullOrEmpty(entry.getLanguageRFC3066IDOrXDefault())
+                        && !XMPLocalizedText.DEFAULT_LANGUAGE.equalsIgnoreCase(entry.getLanguageRFC3066IDOrXDefault()))
                 {
                     entryWriter.write(entry.getLanguageRFC3066IDOrXDefault(), entry.getLocalizedText());
                 }
                 else
                 {
-                    entryWriter.write( null, entry.getLocalizedText());
+                    entryWriter.write(null, entry.getLocalizedText());
                 }
                 return null;
             }
@@ -101,7 +101,7 @@ public class ExifToolBackend
 
             @Override public Void visitDate(final XMPDate entry) throws XMPException
             {
-                if( entry.getDate() != null )
+                if (entry.getDate() != null)
                 {
                     GregorianCalendar calendar = new GregorianCalendar(timeZone);
                     calendar.setTime(entry.getDate());
@@ -128,10 +128,10 @@ public class ExifToolBackend
 
             @Override public Void visitStruct(final XMPStruct entry) throws XMPException
             {
-                EntryWriter structEntryWriter = entryWriter.beginStruct( entry.getName());
+                EntryWriter structEntryWriter = entryWriter.beginStruct(entry.getName());
                 for (XMPMetadata item : entry.getMetadata())
                 {
-                    xmpToTagValue(structEntryWriter,item);
+                    xmpToTagValue(structEntryWriter, item);
                 }
                 structEntryWriter.endStruct();
                 return null;
@@ -142,7 +142,7 @@ public class ExifToolBackend
                 EntryWriter arrayEntryWriter = entryWriter.beginArray(entry.getName());
                 for (XMPMetadata item : entry.getItems())
                 {
-                    xmpToTagValue(arrayEntryWriter,item);
+                    xmpToTagValue(arrayEntryWriter, item);
                 }
 
                 arrayEntryWriter.endArray();
@@ -155,7 +155,7 @@ public class ExifToolBackend
                 EntryWriter arrayEntryWriter = entryWriter.beginArray(entry.getName());
                 for (XMPMetadata item : entry.getItems())
                 {
-                    xmpToTagValue(arrayEntryWriter,item);
+                    xmpToTagValue(arrayEntryWriter, item);
                 }
 
                 arrayEntryWriter.endArray();
@@ -168,7 +168,7 @@ public class ExifToolBackend
                 EntryWriter langAltEntryWriter = entryWriter.beginLangAlt(entry.getName());
                 for (XMPMetadata item : entry.getItems())
                 {
-                    xmpToTagValue(langAltEntryWriter,item);
+                    xmpToTagValue(langAltEntryWriter, item);
                 }
                 langAltEntryWriter.endLangAlt();
 
