@@ -4,9 +4,15 @@ import com.adobe.xmp.XMPException;
 import com.google.common.io.ByteStreams;
 import de.dpa.oss.common.ResourceUtil;
 import de.dpa.oss.metadata.mapper.common.ExtXPathException;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.common.XmlUtils;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMappingTargetType;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMapsTo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -21,6 +27,7 @@ import java.util.TimeZone;
 public class ImageMetadataUtil
 {
     private static Logger logger = LoggerFactory.getLogger(ImageMetadataUtil.class);
+    private static TagInfo tagInfo = null;
     public static final String DPA_MAPPING_RESOURCE = "/mapping/dpa-mapping.xml";
     private static Mapping dpaMapping = null;
     private TimeZone timeZone = TimeZone.getDefault();
@@ -39,7 +46,7 @@ public class ImageMetadataUtil
         imageInputStream = new FileInputStream(pathToSourceImage);
     }
 
-    public ImageMetadataUtil withTimeZone( final TimeZone timeZone)
+    public ImageMetadataUtil withTimeZone(final TimeZone timeZone)
     {
         this.timeZone = timeZone;
         return this;
@@ -110,21 +117,21 @@ public class ImageMetadataUtil
         new ImageMetadataOperation(timeZone).writeMetadata(inputStream, imageMetadata, imageOutput);
     }
 
-    public static Mapping readMappingResource(final String resourcePath, Object caller ) throws FileNotFoundException, JAXBException
+    public static Mapping readMappingResource(final String resourcePath, Object caller) throws FileNotFoundException, JAXBException
     {
-        return readMapping( ResourceUtil.resourceAsStream(resourcePath, caller.getClass()) );
+        return readMapping(ResourceUtil.resourceAsStream(resourcePath, caller.getClass()));
     }
 
     public static Mapping readMappingFile(final String path) throws FileNotFoundException, JAXBException
     {
-        return readMapping( new FileInputStream(path) );
+        return readMapping(new FileInputStream(path));
     }
 
-    public static Mapping readMapping( final InputStream is ) throws JAXBException
+    public static Mapping readMapping(final InputStream is) throws JAXBException
     {
         return new MetadataMappingConfigReader().readConfig(is);
     }
-    
+
     private static synchronized Mapping readDPAMapping()
     {
         if (dpaMapping == null)
@@ -152,6 +159,88 @@ public class ImageMetadataUtil
         }
 
         return dpaMapping;
+    }
+
+    protected static synchronized TagInfo getExifToolTagInfo() throws ExifToolIntegrationException
+    {
+        if (tagInfo == null)
+        {
+            // todo cache somehow
+            tagInfo = new ExifTool().getSupportedTagsOfGroups();
+        }
+
+        return tagInfo;
+    }
+
+    /**
+     * Validates the given configuration. In case of an validation error an {@link ConfigValidationException} is thrown
+     *
+     * @param mappingToValidate
+     * @throws ExifToolIntegrationException
+     * @throws ConfigValidationException
+     */
+    public static void validate(final Mapping mappingToValidate)
+            throws ExifToolIntegrationException, ConfigValidationException
+    {
+        TagInfo tagInfo = ImageMetadataUtil.getExifToolTagInfo();
+
+        for (Mapping.Metadata metadata : mappingToValidate.getMetadata())
+        {
+            if (metadata.getXmp() != null)
+            {
+                for (XMPMapsTo xmpMapsTo : metadata.getXmp().getMapsTo())
+                {
+                    validateXMPElements(metadata, tagInfo, xmpMapsTo, "");
+                }
+            }
+            if (metadata.getIim() != null)
+            {
+                for (IIMMapping.MapsTo iimMapsTo : metadata.getIim().getMapsTo())
+                {
+                    if (!tagInfo.hasGroupContainingTagWithId(ConfigToExifToolTagNames.IPTC_APPLICATION_TAGGROUP_NAME,
+                            iimMapsTo.getDataset().toString()))
+                    {
+                        throw new ConfigValidationException(metadata.getName(), ConfigToExifToolTagNames.IPTC_APPLICATION_TAGGROUP_NAME,
+                                iimMapsTo.getField());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * exiftool uses a compound name scheme: A member of a struct has its structure name as prefix.
+     */
+    private static void validateXMPElements(final Mapping.Metadata metadata, final TagInfo tagInfo, final XMPMapsTo mappingItem,
+            final String strPrefix)
+            throws ConfigValidationException
+    {
+        String targetNamespace = mappingItem.getTargetNamespace();
+        String tagGroupname = ConfigToExifToolTagNames.getTagGroupnameByConfigNamespace(targetNamespace);
+
+        if (!tagInfo.hasGroupContainingTagWithId(tagGroupname, strPrefix + mappingItem.getField()))
+        {
+            throw new ConfigValidationException(metadata.getName(), mappingItem.getTargetNamespace(), strPrefix+mappingItem.getField() );
+        }
+
+        if( mappingItem.getTargetType() == XMPMappingTargetType.STRUCT || mappingItem.getTargetType() == XMPMappingTargetType.SEQUENCE
+                || mappingItem.getTargetType() == XMPMappingTargetType.BAG )
+        {
+            final String prefix;
+            if( mappingItem.getTargetType() == XMPMappingTargetType.STRUCT )
+            {
+                prefix = strPrefix + mappingItem.getField();
+            }
+            else
+            {
+                prefix = strPrefix;
+            }
+
+            for (XMPMapsTo child : mappingItem.getMapsTo())
+            {
+                validateXMPElements(metadata, tagInfo, child, prefix);
+            }
+        }
     }
 }
 

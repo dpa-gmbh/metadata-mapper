@@ -8,6 +8,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.io.ByteStreams;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline.EntryWriter;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline.RootEntryWriter;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.*;
 
 import java.io.*;

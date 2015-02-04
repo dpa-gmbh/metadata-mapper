@@ -16,7 +16,17 @@ package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
  */
 
 import com.google.common.collect.ListMultimap;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroupBuilder;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -1363,6 +1373,166 @@ public class ExifTool {
                     (System.currentTimeMillis() - startTime), tags.size());
     }
 
+    public TagInfo getSupportedTagsOfGroups()
+            throws ExifToolIntegrationException
+    {
+        final Format format = Format.NUMERIC;
+
+        boolean stayOpen = featureSet.contains(Feature.STAY_OPEN);
+
+        // Clear process args
+        args.clear();
+
+        TagInfo toReturn = null;
+        try
+        {
+
+            if (stayOpen)
+            {
+                log("\tUsing ExifTool in daemon mode (-stay_open True)...");
+
+                // Always reset the cleanup task.
+                resetCleanupTask();
+
+			/*
+			 * If this is our first time calling getImageMeta with a stayOpen
+			 * connection, set up the persistent process and run it so it is
+			 * ready to receive commands from us.
+			 */
+                if (streams == null)
+                {
+                    log("\tStarting daemon ExifTool process and creating read/write streams (this only happens once)...");
+
+                    args.add(EXIF_TOOL_PATH);
+                    args.add("-stay_open");
+                    args.add("True");
+                    args.add("-@");
+                    args.add("-");
+
+                    // Begin the persistent ExifTool process.
+                    streams = startExifToolProcess(args);
+                }
+
+                log("\tStreaming arguments to ExifTool process...");
+
+                if (format == Format.NUMERIC)
+                    streams.writer.write("-n\n"); // numeric output
+
+                streams.writer.write("-S\n"); // compact output
+                args.add("-listx"); // database of tags
+                args.add("-S"); // compact version
+
+                log("\tExecuting ExifTool...");
+
+                // Begin tracking the duration ExifTool takes to respond.
+                // Run ExifTool on our file with all the given arguments.
+                streams.writer.write("-execute\n");
+                streams.writer.flush();
+            }
+            else
+            {
+                log("\tUsing ExifTool in non-daemon mode (-stay_open False)...");
+
+			/*
+			 * Since we are not using a stayOpen process, we need to setup the
+			 * execution arguments completely each time.
+			 */
+                args.add(EXIF_TOOL_PATH);
+
+                if (format == Format.NUMERIC)
+                    args.add("-n"); // numeric output
+
+                args.add("-listx"); // database of tags
+                args.add("-S"); // compact output
+
+                // Run the ExifTool with our args.
+                streams = startExifToolProcess(args);
+
+            }
+
+            log("\tReading response back from ExifTool...");
+
+            String line = null;
+
+            StringBuilder sb = new StringBuilder();
+            while ((line = streams.reader.readLine()) != null)
+            {
+			/*
+			 * When using a persistent ExifTool process, it terminates its
+			 * output to us with a "{ready}" clause on a new line, we need to
+			 * look for it and break from this loop when we see it otherwise
+			 * this process will hang indefinitely blocking on the input stream
+			 * with no data to read.
+			 */
+                sb.append(line);
+                if (stayOpen && line.equals("{ready}"))
+                    break;
+            }
+
+		/*
+		 * If we are not using a persistent ExifTool process, then after running
+		 * the command above, the process exited in which case we need to clean
+		 * our streams up since it no longer exists. If we were using a
+		 * persistent ExifTool process, leave the streams open for future calls.
+		 */
+            if (!stayOpen)
+                streams.close();
+
+            toReturn = parseTagInfoFromXMLInput(sb.toString());
+        }
+        catch (ParserConfigurationException | SAXException e )
+        {
+            throw new ExifToolIntegrationException( "DOM parser setup DOM failed", e );
+        }
+        catch (IOException e)
+        {
+            throw new ExifToolIntegrationException( e );
+        }
+        return toReturn;
+    }
+
+    private TagInfo parseTagInfoFromXMLInput(final String xmlInput) throws ParserConfigurationException, SAXException, IOException
+    {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setIgnoringElementContentWhitespace(true);
+        DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+        Document document = documentBuilder.parse(new ByteArrayInputStream(xmlInput.getBytes()));
+
+        TagInfo tagInfo = new TagInfo();
+        /*
+         * read all tables
+         */
+        NodeList tableNodes = document.getDocumentElement().getChildNodes();
+        for( int i = 0; i < tableNodes.getLength(); i++)
+        {
+            Node table = tableNodes.item(i);
+            NamedNodeMap attributes = table.getAttributes();
+            TagGroupBuilder tagGroupBuilder = TagGroupBuilder.aTagGroup()
+                    .withName(attributes.getNamedItem("name").getTextContent())
+                    .withInformationType(attributes.getNamedItem("g0").getTextContent())
+                    .withSpecificLocation(attributes.getNamedItem("g1").getTextContent());
+
+            NodeList tagNodes = table.getChildNodes();
+            for( int j = 0; j < tagNodes.getLength(); j++ )
+            {
+                Node tag = tagNodes.item(j);
+                if( tag.getNodeType() != Node.ELEMENT_NODE )
+                {
+                    continue;
+                }
+
+                NamedNodeMap tagAttributes = tag.getAttributes();
+                tagGroupBuilder.addTagGroupItem(tagAttributes.getNamedItem("id").getTextContent(),
+                        tagAttributes.getNamedItem("name").getTextContent(),
+                        tagAttributes.getNamedItem("type").getTextContent(),
+                        Boolean.parseBoolean(tagAttributes.getNamedItem("writable").getTextContent()));
+            }
+            tagInfo.add(tagGroupBuilder.build());
+        }
+
+        return tagInfo;
+    }
+
     /**
      * Helper method used to make canceling the current task and scheduling a
      * new one easier.
@@ -1434,7 +1604,10 @@ public class ExifTool {
                             + feature
                             + "] requires version "
                             + feature.version
-                            + " or higher of the native ExifTool program. The version of ExifTool referenced by the system property 'exiftool.path' is not high enough. You can either upgrade the install of ExifTool or avoid using this feature to workaround this exception.");
+                            + " or higher of the native ExifTool program. The version of ExifTool referenced by the system property "
+                            + "'exiftool.path' is not high enough. You can either upgrade the install of ExifTool or avoid using this "
+                            + "feature to workaround this exception.");
+            this.feature = feature;
         }
 
         public Feature getFeature() {

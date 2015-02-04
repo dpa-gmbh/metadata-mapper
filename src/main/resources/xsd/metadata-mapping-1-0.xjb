@@ -4,6 +4,10 @@
           version="2.1" schemaLocation="metadata-mapping-1-0.xsd">
     <globalBindings choiceContentProperty="true"/>
 
+    <schemaBindings>
+        <package name="de.dpa.oss.metadata.mapper.imaging.configuration.generated" />
+    </schemaBindings>
+
     <bindings schemaLocation="metadata-mapping-1-0.xsd" node="//xs:simpleType[@name='XMPMappingTargetType']">
         <typesafeEnumClass name="XMPMappingTargetType"/>
     </bindings>

@@ -1,8 +1,5 @@
 package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
 
-import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ArrayEntryWriter;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

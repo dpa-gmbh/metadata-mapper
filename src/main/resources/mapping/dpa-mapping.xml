@@ -53,7 +53,7 @@
 			<mapsTo dataset="100" field="Country/Primary Location Code" targetType="STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="CountryCode" targetType="Text"/>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="CountryCode" targetType="Text"/>
 		</xmp>
 	</metadata>
 	<metadata name="Headline" cardinality="ONE">
@@ -82,7 +82,7 @@
 			<mapsTo dataset="4" field="Object Attribute Reference" targetType="STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="IntellectualGenre"/>
+			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="IntellectualGenre"/>
 		</xmp>
 	</metadata>
 	<metadata name="Keywords" cardinality="MANY">
@@ -91,8 +91,8 @@
 			<mapsTo dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo field="Subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/">
-				<mapsTo field="Subject" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+			<mapsTo field="subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/">
+				<mapsTo field="subject" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
 			</mapsTo>
 		</xmp>
 	</metadata>
@@ -112,8 +112,8 @@
 	<metadata name="Scene Code" cardinality="MANY">
 		<xpath rank="1"><![CDATA[//contentMeta/genre/@qcode]]></xpath>
 		<xmp>
-			<mapsTo targetNamespace="http://purl.org/dc/elements/1.1/" field="Scene" targetType="Bag">
-				<mapsTo field="Scene" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="Scene" targetType="Bag">
+				<mapsTo field="Scene" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
 			</mapsTo>
 		</xmp>
 	</metadata>
@@ -123,8 +123,8 @@
 			<mapsTo field="Subject Reference" dataset="12" targetType="LIST_OF_STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="SubjectCode" targetType="Bag">
-				<mapsTo field="SubjectCode" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="SubjectCode" targetType="Bag">
+				<mapsTo field="SubjectCode" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
 			</mapsTo>
 		</xmp>
 	</metadata>
@@ -134,7 +134,7 @@
 			<mapsTo field="Sublocation" dataset="92" targetType="STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="Location" targetType="Text"/>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="Location" targetType="Text"/>
 		</xmp>
 	</metadata>
 	<metadata name="Date Created" cardinality="ONE">
@@ -326,7 +326,9 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
+    <!-- TODO review mapping. See bug #18 and notes below -->
 	<metadata name="CV-Term About Image" cardinality="MANY">
+
 		<!--compositeXpath>
                 <from><![CDATA[//contentMeta/subject]]></from>
                 <select>
@@ -334,14 +336,16 @@
                     <xpath part="name"><![CDATA[./name]]></xpath>
                 </select>
             </compositeXpath-->
-		<xmp>
-			<mapsTo field="aboutCVterm" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
-				<mapsTo field="aboutCVterm" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct">
+		<!--xmp-->
+            <!-- TODO: Specification refers to 'aboutCVterm' which could not be found in either ext namespace nor by exiftool
+                 TODO 2: unable to find CVTermId -->
+			<!--mapsTo field="CVterm" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+				<mapsTo field="CVterm" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct"-->
 					<!-- IPTC says "mapping to URI"? -->
-					<mapsTo field="CvTermId" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+					<!--mapsTo field="CVTermId" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
 				</mapsTo>
-			</mapsTo>
-		</xmp>
+			</mapsTo-->
+		<!--/xmp-->
 	</metadata>
 	<metadata name="Location Shown" cardinality="ONE">
 		<!--compositeXpath rank="1">
@@ -441,8 +445,10 @@
 		<xpath part="provider" rank="3"><![CDATA[//newsItem/itemMeta/provider/name[1]]]></xpath>
 		<xmp>
 			<mapsTo field="RegistryId" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
-				<mapsTo part-ref="guid" field="RegItemId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
-				<mapsTo part-ref="provider" field="RegOrgId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+                <mapsTo field="RegistryId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct">
+				    <mapsTo part-ref="guid" field="RegItemId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+				    <mapsTo part-ref="provider" field="RegOrgId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+                </mapsTo>
 			</mapsTo>
 		</xmp>
 	</metadata>

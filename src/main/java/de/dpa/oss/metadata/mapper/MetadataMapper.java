@@ -4,12 +4,18 @@ import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
 import de.dpa.oss.common.StringCharacterMappingTable;
 import de.dpa.oss.metadata.mapper.imaging.ConfigStringCharacterMappingBuilder;
+import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
 import de.dpa.oss.metadata.mapper.imaging.ImageMetadataUtil;
+import de.dpa.oss.metadata.mapper.imaging.MetadataMappingConfigReader;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CharacterMappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,6 +34,9 @@ public class MetadataMapper
 
     @Argument(alias = "d", required = true, description = "filename of input G2 document")
     private static String g2doc;
+
+    @Argument(alias = "v", required = false, description = "Validate mapping configuration file")
+    private static boolean validateConfig = false;
 
     //@Argument(alias = "k", required = false, description = "keep existing metadata. By default existing metadata will be removed")
     //private static Boolean keepExistingMetadata = false;
@@ -171,6 +180,26 @@ public class MetadataMapper
         }
     }
 
+    private static void validateConfig()
+            throws FileNotFoundException, JAXBException, ExifToolIntegrationException, ConfigValidationException
+    {
+        if( mapping == null )
+        {
+            System.out.println( "* No mapping file to validate" );
+            Args.usage(MetadataMapper.class);
+            System.exit(1);
+        }
+
+        File file = new File(mapping);
+        if( ! (file.exists() && file.isFile()))
+        {
+            System.out.println("* Unable to read mapping config: " + mapping );
+        }
+
+        Mapping mappingToValidate = ImageMetadataUtil.readMappingFile( mapping );
+        ImageMetadataUtil.validate( mappingToValidate );
+    }
+
     public static void main(String argv[])
     {
         System.out.println("** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH");
@@ -186,6 +215,10 @@ public class MetadataMapper
 
         try
         {
+            if( validateConfig )
+            {
+                validateConfig();
+            }
             if (parameterValidate())
             {
                 if (print == null)

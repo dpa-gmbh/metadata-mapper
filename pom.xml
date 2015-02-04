@@ -97,11 +97,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <schemaDirectory>src/main/resources/mapping/xsd</schemaDirectory>
-                    <schemaIncludes>
-                        <include>metadata-mapping-1-0.xsd</include>
-                    </schemaIncludes>
-                    <bindingDirectory>src/main/resources/mapping/xsd</bindingDirectory>
+                    <schemaDirectory>src/main/resources/xsd</schemaDirectory>
+                    <bindingDirectory>src/main/resources/xsd</bindingDirectory>
                     <bindingIncludes>
                         <include>*.xjb</include>
                     </bindingIncludes>
@@ -110,7 +107,6 @@
                     </args>
                     <forceRegenerate>true</forceRegenerate>
                     <generateDirectory>target/generated/jaxb2</generateDirectory>
-                    <generatePackage>de.dpa.oss.metadata.mapper.imaging.configuration.generated</generatePackage>
                     <cleanPackageDirectories>true</cleanPackageDirectories>
                 </configuration>
             </plugin>

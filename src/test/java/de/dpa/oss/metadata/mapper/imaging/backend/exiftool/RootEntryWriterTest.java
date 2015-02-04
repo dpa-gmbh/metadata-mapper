@@ -2,6 +2,7 @@ package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline.RootEntryWriter;
 import org.junit.Test;
 
 import java.util.List;
