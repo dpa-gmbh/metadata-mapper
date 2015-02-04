@@ -1,4 +1,4 @@
-package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
+package de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;

@@ -1,4 +1,4 @@
-package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
+package de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -9,17 +9,17 @@ import java.util.List;
 /**
  * @author oliver langer
  */
-public class ArrayEntryWriter extends BaseEntryWriter implements EntryWriter
+public class StructEntryWriter extends BaseEntryWriter implements EntryWriter
 {
-    final StringBuilder sb;
-    final String arrayKey;
-    final BaseEntryWriter previousEntryWriter;
+    private BaseEntryWriter callingEntryWriter;
+    private String key;
+    private final StringBuilder sb;
 
-    public ArrayEntryWriter(final BaseEntryWriter previousEntryWriter, final String arrayKey)
+    public StructEntryWriter(final BaseEntryWriter callingEntryWriter, final String key)
     {
-        this.previousEntryWriter = previousEntryWriter;
-        this.arrayKey = arrayKey;
-        sb = new StringBuilder("[");
+        this.callingEntryWriter = callingEntryWriter;
+        this.key = key;
+        this.sb = new StringBuilder("{");
     }
 
     private void separateEntriesIfNecessary()
@@ -32,32 +32,28 @@ public class ArrayEntryWriter extends BaseEntryWriter implements EntryWriter
 
     @Override public EntryWriter write(final String key, final String value)
     {
-        return write(value);
-    }
-
-    @Override public EntryWriter write(final String value)
-    {
         separateEntriesIfNecessary();
-        sb.append(value);
+        sb.append( key ).append('=').append(value);
         return this;
-    }
-
-    public EntryWriter endArray()
-    {
-        previousEntryWriter.write(arrayKey,this);
-        return previousEntryWriter;
     }
 
     @Override public List<ListMultimap<String, String>> getKeyValueMaps()
     {
         ListMultimap<String, String> toReturn = ArrayListMultimap.create();
-        toReturn.put(arrayKey,sb.toString()+"]");
-        return Arrays.asList(toReturn);
+        toReturn.put( key, sb.toString() + "}" );
 
+        return Arrays.asList(toReturn);
     }
+
+    public EntryWriter endStruct()
+    {
+        callingEntryWriter.write( key, this );
+        return callingEntryWriter;
+    }
+
     @Override public EntryWriter beginArray(final String key)
     {
-        return new ArrayEntryWriter(this, key);
+        return new ArrayEntryWriter(this,key);
     }
 
     @Override public EntryWriter beginStruct(final String key)

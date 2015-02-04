@@ -1,4 +1,4 @@
-package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
+package de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline;
 
 /**
  * @author oliver langer

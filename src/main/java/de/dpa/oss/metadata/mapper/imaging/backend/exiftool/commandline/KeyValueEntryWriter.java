@@ -1,8 +1,4 @@
-package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
-
-import com.google.common.collect.ListMultimap;
-
-import java.util.List;
+package de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline;
 
 /**
  * @author oliver langer
