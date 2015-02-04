@@ -37,12 +37,14 @@ Calling the tool
 java -jar target/metadata-mapper-1.0-SNAPSHOT.jar
 
 ** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
-Usage: de.dpa.oss.metadatamapper.MetadataMapper
+Usage: de.dpa.oss.metadata.mapper.MetadataMapper
   -inputImage (-i) [String] filename of input image
   -outputImage (-o) [String] filename of resulting image
   -g2doc (-d) [String] filename of input G2 document
-  -mapping (-m) [String] 
-```
+  -validateMapping (-v) [String] Validate given mapping file
+  -mapping (-m) [String] filename of mapping file. By default it uses dpa mapping
+  -printCharacterMappingTable (-c) [flag] Outputs configured character mapping table. Does not perform any mapping. Uses default mapping file if argument -m is omittet
+``
 
 The distribution contains samples in *./example*. Call the tool using these samples as
 follows:

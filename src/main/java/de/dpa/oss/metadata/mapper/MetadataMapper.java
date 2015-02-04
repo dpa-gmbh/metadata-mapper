@@ -32,7 +32,7 @@ public class MetadataMapper
     private static String g2doc = null;
 
     @Argument(alias = "v", required = false, description = "Validate given mapping file")
-    private static String mappingFileToValidate = null;
+    private static String validateMapping = null;
 
     //@Argument(alias = "k", required = false, description = "keep existing metadata. By default existing metadata will be removed")
     //private static Boolean keepExistingMetadata = false;
@@ -178,25 +178,25 @@ public class MetadataMapper
     private static void validateConfig()
             throws FileNotFoundException, JAXBException, ExifToolIntegrationException, ConfigValidationException
     {
-        if (mappingFileToValidate == null)
+        if (validateMapping == null)
         {
             System.err.println("* ERROR: No mapping file to validate");
             Args.usage(MetadataMapper.class);
             System.exit(1);
         }
 
-        File file = new File(mappingFileToValidate);
+        File file = new File(validateMapping);
         if (!(file.exists() && file.isFile()))
         {
-            System.err.println("* ERROR: Unable to read mapping config: " + mappingFileToValidate);
+            System.err.println("* ERROR: Unable to read mapping config: " + validateMapping);
         }
 
-        Mapping mappingToValidate = ImageMetadataUtil.readMappingFile(mappingFileToValidate);
+        Mapping mappingToValidate = ImageMetadataUtil.readMappingFile(validateMapping);
         try
         {
             ImageMetadataUtil.validate(mappingToValidate);
 
-            System.out.println("Mapping file \"" + mappingFileToValidate + "\" validated successfully.");
+            System.out.println("Mapping file \"" + validateMapping + "\" validated successfully.");
             System.exit(0);
         }
         catch (ConfigValidationException ex)
