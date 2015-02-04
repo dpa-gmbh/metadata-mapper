@@ -18,9 +18,9 @@ public class RootEntryWriter extends BaseEntryWriter implements EntryWriter
         this.tagToValue = tagToValue;
     }
 
-    @Override public EntryWriter write(final String key, final String value)
+    @Override public EntryWriter write(final String namespaceRef, final String key, final String value)
     {
-        tagToValue.put(key, value);
+        tagToValue.put(buildKey(namespaceRef,key), value);
         return this;
     }
 
@@ -29,19 +29,19 @@ public class RootEntryWriter extends BaseEntryWriter implements EntryWriter
         return Arrays.asList(tagToValue);
     }
 
-    @Override public EntryWriter beginArray(final String key)
+    @Override public EntryWriter beginArray(final String namespaceRef, final String key)
     {
-        return new RootArrayEntryWriter(this, key);
+        return new RootArrayEntryWriter(this, namespaceRef, key);
     }
 
-    @Override public EntryWriter beginStruct(final String key)
+    @Override public EntryWriter beginStruct(final String namespaceRef, final String key)
     {
-        return new StructEntryWriter(this, key);
+        return new StructEntryWriter(this, namespaceRef, key);
     }
 
-    @Override public EntryWriter beginLangAlt(final String key)
+    @Override public EntryWriter beginLangAlt(final String namespaceRef, final String key)
     {
-        return new LangAltEntryWriter(this,key);
+        return new LangAltEntryWriter(this, namespaceRef, key);
     }
 }
 

@@ -1,5 +1,6 @@
 package de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ListMultimap;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public abstract class BaseEntryWriter implements EntryWriter
 {
-    protected EntryWriter write(final String key, final EntryWriter entryWriter)
+    protected EntryWriter write(final String namespaceRef, final String key, final EntryWriter entryWriter)
     {
         if( entryWriter != null )
         {
@@ -19,7 +20,7 @@ public abstract class BaseEntryWriter implements EntryWriter
             {
                 for (Map.Entry<String,String> keyValueentry : keyValueMap.entries())
                 {
-                    write(keyValueentry.getKey(), keyValueentry.getValue());
+                    write(namespaceRef, keyValueentry.getKey(), keyValueentry.getValue());
                 }
             }
         }
@@ -32,7 +33,7 @@ public abstract class BaseEntryWriter implements EntryWriter
         throw new UnsupportedOperationException();
     }
 
-    @Override public EntryWriter beginArray(final String key)
+    @Override public EntryWriter beginArray(final String namespaceRef, final String key)
     {
         throw new UnsupportedOperationException();
     }
@@ -47,7 +48,7 @@ public abstract class BaseEntryWriter implements EntryWriter
         throw new UnsupportedOperationException();
     }
 
-    @Override public EntryWriter beginStruct(final String key)
+    @Override public EntryWriter beginStruct(final String namespaceRef, final String key)
     {
         throw new UnsupportedOperationException();
     }
@@ -57,7 +58,7 @@ public abstract class BaseEntryWriter implements EntryWriter
         throw new UnsupportedOperationException();
     }
 
-    @Override public EntryWriter beginLangAlt(final String key)
+    @Override public EntryWriter beginLangAlt(final String namespaceRef, final String key)
     {
         throw new UnsupportedOperationException();
     }
@@ -65,5 +66,17 @@ public abstract class BaseEntryWriter implements EntryWriter
     @Override public EntryWriter endLangAlt()
     {
         throw new UnsupportedOperationException();
+    }
+
+    protected String buildKey( final String namespaceRef, final String key )
+    {
+        if(Strings.isNullOrEmpty(namespaceRef))
+        {
+            return key;
+        }
+        else
+        {
+            return namespaceRef+":"+key;
+        }
     }
 }

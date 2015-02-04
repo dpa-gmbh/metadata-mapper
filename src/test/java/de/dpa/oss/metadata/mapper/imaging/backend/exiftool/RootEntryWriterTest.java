@@ -23,14 +23,14 @@ public class RootEntryWriterTest
 
         RootEntryWriter rootEntryWriter = new RootEntryWriter(keyValues);
         // when
-        rootEntryWriter.write( "key", "value");
+        rootEntryWriter.write("namespace", "key", "value");
         List<ListMultimap<String, String>> keyValueMaps = rootEntryWriter.getKeyValueMaps();
 
         // then
         assertThat( keyValueMaps, hasSize(1));
         ListMultimap<String,String> entries = keyValueMaps.get(0);
-        assertThat( entries.get( "key"), is(notNullValue()));
-        assertThat(entries.get("key"), hasItem("value"));
+        assertThat( entries.get( "namespace:key"), is(notNullValue()));
+        assertThat(entries.get("namespace:key"), hasItem("value"));
     }
 
     @Test
@@ -43,14 +43,14 @@ public class RootEntryWriterTest
         RootEntryWriter rootEntryWriter = new RootEntryWriter(keyValues);
 
         // when
-        rootEntryWriter.beginArray("array").write( "entry1" ).write( "entry2").endArray();
+        rootEntryWriter.beginArray("namespaceRef", "array").write( "entry1" ).write( "entry2").endArray();
         List<ListMultimap<String, String>> keyValueMaps = rootEntryWriter.getKeyValueMaps();
 
         // then
         assertThat(keyValueMaps, hasSize(1));
         ListMultimap<String,String> entries = keyValueMaps.get(0);
-        assertThat(entries.get( "array"), hasSize(2));
-        List<String> structs = entries.get("array");
+        assertThat(entries.get( "namespaceRef:array"), hasSize(2));
+        List<String> structs = entries.get("namespaceRef:array");
         assertThat(structs.get(0), is("entry1"));
         assertThat(structs.get(1), is("entry2"));
     }
@@ -66,10 +66,10 @@ public class RootEntryWriterTest
 
         // when
         rootEntryWriter
-                .beginArray( "arrayOfStruct")
-                .beginStruct("arrayStruct1").write( "arrayStructKey1", "arrayStructVal1")
+                .beginArray("namespaceRef", "arrayOfStruct")
+                .beginStruct("namespaceRef", "arrayStruct1").write("namespaceRef", "arrayStructKey1", "arrayStructVal1")
                 .endStruct()
-                .beginStruct("arrayStruct2").write( "arrayStructKey2", "arrayStructVal2")
+                .beginStruct("namespaceRef", "arrayStruct2").write("namespaceRef", "arrayStructKey2", "arrayStructVal2")
                 .endStruct()
                 .endArray();
         List<ListMultimap<String, String>> keyValueMaps = rootEntryWriter.getKeyValueMaps();
@@ -77,8 +77,8 @@ public class RootEntryWriterTest
         // then
         assertThat(keyValueMaps,hasSize(1));
         ListMultimap<String,String> entries = keyValueMaps.get(0);
-        assertThat(entries.get( "arrayOfStruct"), hasSize(2));
-        List<String> structs = entries.get("arrayOfStruct");
+        assertThat(entries.get( "namespaceRef:arrayOfStruct"), hasSize(2));
+        List<String> structs = entries.get("namespaceRef:arrayOfStruct");
         assertThat(structs.get(0), is("{arrayStructKey1=arrayStructVal1}"));
         assertThat(structs.get(1), is("{arrayStructKey2=arrayStructVal2}"));
     }
@@ -93,18 +93,18 @@ public class RootEntryWriterTest
         RootEntryWriter rootEntryWriter = new RootEntryWriter(keyValues);
 
         // when
-        rootEntryWriter.write("simpleKey", "value");
-        rootEntryWriter.beginArray("array").write( "entry1" ).write( "entry2").endArray();
-        rootEntryWriter.beginStruct("ssimpleSruct").write( "structKey1", "structValue1").write( "structKey2", "structValue2").endStruct();
-        rootEntryWriter.beginStruct("structWithArray").write( "structKey3", "structValue3")
-                .beginArray("structArray").write("structArrayVal1").write("structArrayVal2").endArray()
-                .write("structKey4", "structValue4").endStruct();
-        rootEntryWriter.beginLangAlt("title").write("de", "titel").write("en", "title").endLangAlt();
+        rootEntryWriter.write("namespaceRef", "simpleKey", "value");
+        rootEntryWriter.beginArray("namespaceRef", "array").write( "entry1" ).write( "entry2").endArray();
+        rootEntryWriter.beginStruct("namespaceRef", "ssimpleSruct").write("namespaceRef", "structKey1", "structValue1").write("namespaceRef", "structKey2", "structValue2").endStruct();
+        rootEntryWriter.beginStruct("namespaceRef", "structWithArray").write("namespaceRef", "structKey3", "structValue3")
+                .beginArray("namespaceRef", "structArray").write("structArrayVal1").write("structArrayVal2").endArray()
+                .write("namespaceRef", "structKey4", "structValue4").endStruct();
+        rootEntryWriter.beginLangAlt("namespaceRef", "title").write("namespaceRef", "de", "titel").write("namespaceRef", "en", "title").endLangAlt();
         rootEntryWriter
-                .beginArray( "arrayOfStruct")
-                    .beginStruct("arrayStruct1").write( "arrayStructKey1", "arrayStructVal1")
+                .beginArray("namespaceRef", "arrayOfStruct")
+                    .beginStruct("namespaceRef", "arrayStruct1").write("namespaceRef", "arrayStructKey1", "arrayStructVal1")
                     .endStruct()
-                    .beginStruct("arrayStruct2").write( "arrayStructKey2", "arrayStructVal2")
+                    .beginStruct("namespaceRef", "arrayStruct2").write("namespaceRef", "arrayStructKey2", "arrayStructVal2")
                     .endStruct()
                 .endArray();
         List<ListMultimap<String, String>> keyValueMaps = rootEntryWriter.getKeyValueMaps();

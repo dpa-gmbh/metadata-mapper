@@ -9,21 +9,21 @@ import java.util.List;
  */
 public interface EntryWriter
 {
-    EntryWriter write(final String key, final String value);
+    EntryWriter write(final String namespaceRef, final String key, final String value);
 
     EntryWriter write(final String value);
 
     List<ListMultimap<String, String>> getKeyValueMaps();
 
-    EntryWriter beginArray(String key);
+    EntryWriter beginArray(final String namespaceRef, String key);
 
     EntryWriter endArray();
 
-    EntryWriter beginStruct(String key);
+    EntryWriter beginStruct(final String namespaceRef, String key);
 
     EntryWriter endStruct();
 
-    EntryWriter beginLangAlt(String key);
+    EntryWriter beginLangAlt(final String namespaceRef, String key);
 
     EntryWriter endLangAlt();
 }

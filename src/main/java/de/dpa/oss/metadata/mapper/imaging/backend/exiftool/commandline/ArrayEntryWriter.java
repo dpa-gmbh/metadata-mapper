@@ -12,12 +12,14 @@ import java.util.List;
 public class ArrayEntryWriter extends BaseEntryWriter implements EntryWriter
 {
     final StringBuilder sb;
+    private String namespaceRef;
     final String arrayKey;
     final BaseEntryWriter previousEntryWriter;
 
-    public ArrayEntryWriter(final BaseEntryWriter previousEntryWriter, final String arrayKey)
+    public ArrayEntryWriter(final BaseEntryWriter previousEntryWriter, final String namespaceRef, final String arrayKey)
     {
         this.previousEntryWriter = previousEntryWriter;
+        this.namespaceRef = namespaceRef;
         this.arrayKey = arrayKey;
         sb = new StringBuilder("[");
     }
@@ -30,7 +32,7 @@ public class ArrayEntryWriter extends BaseEntryWriter implements EntryWriter
         }
     }
 
-    @Override public EntryWriter write(final String key, final String value)
+    @Override public EntryWriter write(final String namespaceRef, final String key, final String value)
     {
         return write(value);
     }
@@ -44,7 +46,7 @@ public class ArrayEntryWriter extends BaseEntryWriter implements EntryWriter
 
     public EntryWriter endArray()
     {
-        previousEntryWriter.write(arrayKey,this);
+        previousEntryWriter.write(namespaceRef, arrayKey,this);
         return previousEntryWriter;
     }
 
@@ -55,18 +57,18 @@ public class ArrayEntryWriter extends BaseEntryWriter implements EntryWriter
         return Arrays.asList(toReturn);
 
     }
-    @Override public EntryWriter beginArray(final String key)
+    @Override public EntryWriter beginArray(final String namespaceRef, final String key)
     {
-        return new ArrayEntryWriter(this, key);
+        return new ArrayEntryWriter(this, namespaceRef, key);
     }
 
-    @Override public EntryWriter beginStruct(final String key)
+    @Override public EntryWriter beginStruct(final String namespaceRef, final String key)
     {
-        return new StructEntryWriter(this,key);
+        return new StructEntryWriter(this, namespaceRef, key);
     }
 
-    @Override public EntryWriter beginLangAlt(final String key)
+    @Override public EntryWriter beginLangAlt(final String namespaceRef, final String key)
     {
-        return new LangAltEntryWriter(this,key);
+        return new LangAltEntryWriter(this, namespaceRef, key);
     }
 }

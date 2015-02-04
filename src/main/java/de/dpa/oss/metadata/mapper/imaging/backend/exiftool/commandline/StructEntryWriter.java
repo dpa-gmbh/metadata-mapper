@@ -12,12 +12,14 @@ import java.util.List;
 public class StructEntryWriter extends BaseEntryWriter implements EntryWriter
 {
     private BaseEntryWriter callingEntryWriter;
+    private String namespaceRef;
     private String key;
     private final StringBuilder sb;
 
-    public StructEntryWriter(final BaseEntryWriter callingEntryWriter, final String key)
+    public StructEntryWriter(final BaseEntryWriter callingEntryWriter, final String namespaceRef, final String key)
     {
         this.callingEntryWriter = callingEntryWriter;
+        this.namespaceRef = namespaceRef;
         this.key = key;
         this.sb = new StringBuilder("{");
     }
@@ -30,10 +32,10 @@ public class StructEntryWriter extends BaseEntryWriter implements EntryWriter
         }
     }
 
-    @Override public EntryWriter write(final String key, final String value)
+    @Override public EntryWriter write(final String namespaceRef, final String key, final String value)
     {
         separateEntriesIfNecessary();
-        sb.append( key ).append('=').append(value);
+        sb.append(key).append('=').append(value);
         return this;
     }
 
@@ -47,22 +49,28 @@ public class StructEntryWriter extends BaseEntryWriter implements EntryWriter
 
     public EntryWriter endStruct()
     {
-        callingEntryWriter.write( key, this );
+        callingEntryWriter.write(namespaceRef, key, this );
         return callingEntryWriter;
     }
 
-    @Override public EntryWriter beginArray(final String key)
+    @Override public EntryWriter beginArray(final String namespaceRef, final String key)
     {
-        return new ArrayEntryWriter(this,key);
+        /**
+         * Do not use namespace prefix inside arrays:
+         */
+        return new ArrayEntryWriter(this, null, key);
     }
 
-    @Override public EntryWriter beginStruct(final String key)
+    @Override public EntryWriter beginStruct(final String namespaceRef, final String key)
     {
-        return new StructEntryWriter(this,key);
+        return new StructEntryWriter(this, null, key);
     }
 
-    @Override public EntryWriter beginLangAlt(final String key)
+    @Override public EntryWriter beginLangAlt(final String namespaceRef, final String key)
     {
-        return new LangAltEntryWriter(this,key);
+        /**
+         * Do not use namespace prefix inside arrays:
+         */
+        return new LangAltEntryWriter(this, null, key);
     }
 }
