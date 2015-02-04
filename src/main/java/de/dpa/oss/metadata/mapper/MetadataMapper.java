@@ -6,16 +6,12 @@ import de.dpa.oss.common.StringCharacterMappingTable;
 import de.dpa.oss.metadata.mapper.imaging.ConfigStringCharacterMappingBuilder;
 import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
 import de.dpa.oss.metadata.mapper.imaging.ImageMetadataUtil;
-import de.dpa.oss.metadata.mapper.imaging.MetadataMappingConfigReader;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CharacterMappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
-import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,32 +22,38 @@ import java.util.Map;
  */
 public class MetadataMapper
 {
-    @Argument(alias = "i", required = true, description = "filename of input image")
-    private static String inputImage;
+    @Argument(alias = "i", required = false, description = "filename of input image")
+    private static String inputImage = null;
 
-    @Argument(alias = "o", required = true, description = "filename of resulting image")
-    private static String outputImage;
+    @Argument(alias = "o", required = false, description = "filename of resulting image")
+    private static String outputImage = null;
 
-    @Argument(alias = "d", required = true, description = "filename of input G2 document")
-    private static String g2doc;
+    @Argument(alias = "d", required = false, description = "filename of input G2 document")
+    private static String g2doc = null;
 
-    @Argument(alias = "v", required = false, description = "Validate mapping configuration file")
-    private static boolean validateConfig = false;
+    @Argument(alias = "v", required = false, description = "Validate given mapping file")
+    private static String mappingFileToValidate = null;
 
     //@Argument(alias = "k", required = false, description = "keep existing metadata. By default existing metadata will be removed")
     //private static Boolean keepExistingMetadata = false;
 
     public static final String DEFAULT_MAPPING = "mapping/dpa-mapping.xml";
 
-    @Argument(alias = "m", required = false, description = "")
+    @Argument(alias = "m", required = false, description = "filename of mapping file. By default it uses dpa mapping")
     private static String mapping = null;
 
-    @Argument(required = false, description = "print config infos. If given no mapping will be performed. "
-            + "Supported arguments: m - print mapping table", delimiter = ",")
-    private static String[] print = null;
+    @Argument(alias = "c", required = false, description = "Outputs configured character mapping table. Does not perform any mapping. "
+            + "Uses default mapping file if argument -m is omitted")
+    private static boolean printCharacterMappingTable = false;
 
     private static void performMapping() throws Exception
     {
+        if (!validateArgsForMapping())
+        {
+            Args.usage(MetadataMapper.class);
+            System.exit(1);
+        }
+
         System.out.print("Mapping metadata taken from \"" + g2doc + "\" into image given by input file \"" + inputImage
                 + "\", writing result to output file \"" + outputImage + "\". ");
 
@@ -69,31 +71,47 @@ public class MetadataMapper
         }
 
         /**
-        if (!keepExistingMetadata)
-        {
-            imageMetadataUtil.removeMetadataFirst();
-        }*/
+         if (!keepExistingMetadata)
+         {
+         imageMetadataUtil.removeMetadataFirst();
+         }*/
 
         imageMetadataUtil.withPathToXMLDocument(g2doc)
                 .mapToImage(outputImage);
     }
 
-    private static boolean parameterValidate() throws IOException
+    private static boolean validateArgsForMapping() throws IOException
     {
         boolean checkSuccessful = true;
 
-        File fileToCheck = new File(inputImage);
-        if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
+        if (inputImage == null)
         {
-            System.out.println("* ERROR: input image file \"" + inputImage + "\" must exists and must be readable");
+            System.err.println("* ERROR: input image file not given");
             checkSuccessful = false;
         }
-
-        fileToCheck = new File(g2doc);
-        if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
+        else
         {
-            System.out.println("* ERROR: g2 document file\"" + g2doc + "\" must exists and must be readable");
+            File fileToCheck = new File(inputImage);
+            if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
+            {
+                System.err.println("* ERROR: input image file \"" + inputImage + "\" must exists and must be readable");
+                checkSuccessful = false;
+            }
+        }
+
+        if (g2doc == null)
+        {
+            System.err.println("* ERROR: g2doc file not given");
             checkSuccessful = false;
+        }
+        else
+        {
+            File fileToCheck = new File(g2doc);
+            if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
+            {
+                System.err.println("* ERROR: g2 document file\"" + g2doc + "\" must exists and must be readable");
+                checkSuccessful = false;
+            }
         }
 
         return checkSuccessful;
@@ -116,7 +134,7 @@ public class MetadataMapper
 
     public static final String FORMATTED_OUTPUT_SUFFIX = "</tbody></table></html>";
 
-    private static void printMappingTable() throws FileNotFoundException, JAXBException
+    private static void printCharacterMappingTable() throws FileNotFoundException, JAXBException
     {
         final Mapping mappingTable;
         if (mapping == null)
@@ -157,47 +175,36 @@ public class MetadataMapper
         }
     }
 
-    private static void printMode() throws FileNotFoundException, JAXBException
-    {
-        if (print.length == 0)
-        {
-            Args.usage(MetadataMapper.class);
-            System.exit(1);
-        }
-
-        for (int i = 0; i < print.length; i++)
-        {
-            switch (print[i])
-            {
-            case "m":
-                printMappingTable();
-                break;
-            default:
-                System.out.println("* Unsuppored option for print argument: " + print[i]);
-                Args.usage(MetadataMapper.class);
-                System.exit(1);
-            }
-        }
-    }
-
     private static void validateConfig()
             throws FileNotFoundException, JAXBException, ExifToolIntegrationException, ConfigValidationException
     {
-        if( mapping == null )
+        if (mappingFileToValidate == null)
         {
-            System.out.println( "* No mapping file to validate" );
+            System.err.println("* ERROR: No mapping file to validate");
             Args.usage(MetadataMapper.class);
             System.exit(1);
         }
 
-        File file = new File(mapping);
-        if( ! (file.exists() && file.isFile()))
+        File file = new File(mappingFileToValidate);
+        if (!(file.exists() && file.isFile()))
         {
-            System.out.println("* Unable to read mapping config: " + mapping );
+            System.err.println("* ERROR: Unable to read mapping config: " + mappingFileToValidate);
         }
 
-        Mapping mappingToValidate = ImageMetadataUtil.readMappingFile( mapping );
-        ImageMetadataUtil.validate( mappingToValidate );
+        Mapping mappingToValidate = ImageMetadataUtil.readMappingFile(mappingFileToValidate);
+        try
+        {
+            ImageMetadataUtil.validate(mappingToValidate);
+
+            System.out.println("Mapping file \"" + mappingFileToValidate + "\" validated successfully.");
+            System.exit(0);
+        }
+        catch (ConfigValidationException ex)
+        {
+            System.err.println("* ERROR: Validation failed for metadata mapping named \"" + ex.getMetadataMappingName()
+                    + "\" using group reference \"" + ex.getConfiguredNamespace() + "\", field \"" + ex.getConfiguredFieldname() + "\"");
+            System.exit(1);
+        }
     }
 
     public static void main(String argv[])
@@ -215,34 +222,25 @@ public class MetadataMapper
 
         try
         {
-            if( validateConfig )
+            if (printCharacterMappingTable)
             {
-                validateConfig();
-            }
-            if (parameterValidate())
-            {
-                if (print == null)
-                {
-                    performMapping();
-                }
-                else
-                {
-                    printMode();
-                }
+                printCharacterMappingTable();
             }
             else
             {
-                System.exit(1);
+                performMapping();
             }
         }
         catch (IOException e)
         {
-            System.out.println("* ERROR while accessing giving files");
+            System.err.println("* ERROR while accessing giving files");
             System.exit(1);
         }
         catch (Exception e)
         {
-            System.out.println("Unclassified error during mapping:" + e);
+            System.err.println("* ERROR: Unclassified error during mapping:" + e);
         }
+
+        System.exit(0);
     }
 }

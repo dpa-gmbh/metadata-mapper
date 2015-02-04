@@ -2,22 +2,33 @@
 <mapping name="default" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/ file:///C:/dev/ws/service-dispatch/src/main/resources/mapping/xsd/metadata-mapping-1-0.xsd">
 	<config>
 		<timezone>Europe/Berlin</timezone>
+		<!--timezone tz="CET"/-->
 		<iim charset="iso8859-15" characterMappingRef="utf8-to-iso8859-15" defaultReplaceChar="·"/>
 		<xmp charset="utf-8" defaultReplaceChar="·"/>
 	</config>
-	<metadata name="City (legacy)" cardinality="ONE">
+    
+	<!--property name="City (legacy)" >
 		<xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/locality/name]]></xpath>
-		<xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/locality/name]]></xpath>
-		<xpath rank="3"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/locality/name]]></xpath>
-		<xpath rank="4"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/locality/name]]></xpath>
-		<xpath rank="5"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/locality/name]]></xpath>
 		<iim>
-			<mapsTo dataset="90" field="City" targetType="STRING"/>
+			<mapsTo dataset="2:90" label="City" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="City" targetType="Text"/>
 		</xmp>
-	</metadata>
+	</property-->
+    <metadata name="City (legacy)" cardinality="ONE">
+        <xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/locality/name]]></xpath>
+        <xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/locality/name]]></xpath>
+        <xpath rank="3"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/locality/name]]></xpath>
+        <xpath rank="4"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/locality/name]]></xpath>
+        <xpath rank="5"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/locality/name]]></xpath>
+        <iim>
+            <mapsTo dataset="90" field="City" targetType="STRING"/>
+        </iim>
+        <xmp>
+            <mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="City" targetType="Text"/>
+        </xmp>
+    </metadata>
 	<metadata name="Country (legacy)" cardinality="ONE">
 		<xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/country/name]]></xpath>
 		<xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/name]]></xpath>
@@ -42,7 +53,7 @@
 			<mapsTo dataset="100" field="Country/Primary Location Code" targetType="STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="CountryCode" targetType="Text"/>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="CountryCode" targetType="Text"/>
 		</xmp>
 	</metadata>
 	<metadata name="Headline" cardinality="ONE">
@@ -71,7 +82,7 @@
 			<mapsTo dataset="4" field="Object Attribute Reference" targetType="STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="IntellectualGenre"/>
+			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="IntellectualGenre"/>
 		</xmp>
 	</metadata>
 	<metadata name="Keywords" cardinality="MANY">
@@ -80,8 +91,8 @@
 			<mapsTo dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo field="Subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/">
-				<mapsTo field="Subject" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+			<mapsTo field="subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/">
+				<mapsTo field="subject" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
 			</mapsTo>
 		</xmp>
 	</metadata>
@@ -101,8 +112,8 @@
 	<metadata name="Scene Code" cardinality="MANY">
 		<xpath rank="1"><![CDATA[//contentMeta/genre/@qcode]]></xpath>
 		<xmp>
-			<mapsTo targetNamespace="http://purl.org/dc/elements/1.1/" field="Scene" targetType="Bag">
-				<mapsTo field="Scene" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="Scene" targetType="Bag">
+				<mapsTo field="Scene" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
 			</mapsTo>
 		</xmp>
 	</metadata>
@@ -112,8 +123,8 @@
 			<mapsTo field="Subject Reference" dataset="12" targetType="LIST_OF_STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="SubjectCode" targetType="Bag">
-				<mapsTo field="SubjectCode" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="SubjectCode" targetType="Bag">
+				<mapsTo field="SubjectCode" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
 			</mapsTo>
 		</xmp>
 	</metadata>
@@ -123,7 +134,7 @@
 			<mapsTo field="Sublocation" dataset="92" targetType="STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="Location" targetType="Text"/>
+			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="Location" targetType="Text"/>
 		</xmp>
 	</metadata>
 	<metadata name="Date Created" cardinality="ONE">
@@ -315,7 +326,9 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
+    <!-- TODO review mapping. See bug #18 and notes below -->
 	<metadata name="CV-Term About Image" cardinality="MANY">
+
 		<!--compositeXpath>
                 <from><![CDATA[//contentMeta/subject]]></from>
                 <select>
@@ -323,14 +336,16 @@
                     <xpath part="name"><![CDATA[./name]]></xpath>
                 </select>
             </compositeXpath-->
-		<xmp>
-			<mapsTo field="aboutCVterm" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
-				<mapsTo field="aboutCVterm" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct">
+		<!--xmp-->
+            <!-- TODO: Specification refers to 'aboutCVterm' which could not be found in either ext namespace nor by exiftool
+                 TODO 2: unable to find CVTermId -->
+			<!--mapsTo field="CVterm" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
+				<mapsTo field="CVterm" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct"-->
 					<!-- IPTC says "mapping to URI"? -->
-					<mapsTo field="CvTermId" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+					<!--mapsTo field="CVTermId" targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
 				</mapsTo>
-			</mapsTo>
-		</xmp>
+			</mapsTo-->
+		<!--/xmp-->
 	</metadata>
 	<metadata name="Location Shown" cardinality="ONE">
 		<!--compositeXpath rank="1">
@@ -430,8 +445,10 @@
 		<xpath part="provider" rank="3"><![CDATA[//newsItem/itemMeta/provider/name[1]]]></xpath>
 		<xmp>
 			<mapsTo field="RegistryId" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
-				<mapsTo part-ref="guid" field="RegItemId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
-				<mapsTo part-ref="provider" field="RegOrgId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+                <mapsTo field="RegistryId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct">
+				    <mapsTo part-ref="guid" field="RegItemId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+				    <mapsTo part-ref="provider" field="RegOrgId" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
+                </mapsTo>
 			</mapsTo>
 		</xmp>
 	</metadata>
@@ -467,6 +484,184 @@
 		</xmp>
 	</metadata>
 	<characterMapping id="utf8-to-iso8859-15">
-		<replace from="ş" to="s"/>
+        <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
+        <character from="0xa8" to="0x22" comment="from ¨; to=&quot;"/>
+        <character from="0xb4" to="0x27" comment="from ´; to='"/>
+        <character from="0x201d" to="0x22" comment="from ”; to=&quot;"/>
+        <character from="0x201e" to="0x22" comment="from „; to=&quot;"/>
+        <character from="0x156" to="0x52" comment="from Ŗ; to=R"/>
+        <character from="0x201c" to="0x22" comment="from “; to=&quot;"/>
+        <character from="0x157" to="0x72" comment="from ŗ; to=r"/>
+        <character from="0x104" to="0x41" comment="from Ą; to=A"/>
+        <character from="0x12e" to="0x49" comment="from Į; to=I"/>
+        <character from="0x100" to="0x41" comment="from Ā; to=A"/>
+        <character from="0x106" to="0x43" comment="from Ć; to=C"/>
+        <character from="0x118" to="0x45" comment="from Ę; to=E"/>
+        <character from="0x112" to="0x45" comment="from Ē; to=E"/>
+        <character from="0x10c" to="0x43" comment="from Č; to=C"/>
+        <character from="0x179" to="0x5a" comment="from Ź; to=Z"/>
+        <character from="0x116" to="0x45" comment="from Ė; to=E"/>
+        <character from="0x122" to="0x47" comment="from Ģ; to=G"/>
+        <character from="0x136" to="0x4b" comment="from Ķ; to=K"/>
+        <character from="0x12a" to="0x49" comment="from Ī; to=I"/>
+        <character from="0x13b" to="0x4c" comment="from Ļ; to=L"/>
+        <character from="0x143" to="0x4e" comment="from Ń; to=N"/>
+        <character from="0x145" to="0x4e" comment="from Ņ; to=N"/>
+        <character from="0x14c" to="0x4f" comment="from Ō; to=O"/>
+        <character from="0x172" to="0x55" comment="from Ų; to=U"/>
+        <character from="0x141" to="0x4c" comment="from Ł; to=L"/>
+        <character from="0x15a" to="0x53" comment="from Ś; to=S"/>
+        <character from="0x16a" to="0x55" comment="from Ū; to=U"/>
+        <character from="0x17b" to="0x5a" comment="from Ż; to=Z"/>
+        <character from="0x105" to="0x61" comment="from ą; to=a"/>
+        <character from="0x12f" to="0x69" comment="from į; to=i"/>
+        <character from="0x101" to="0x61" comment="from ā; to=a"/>
+        <character from="0x107" to="0x63" comment="from ć; to=c"/>
+        <character from="0x119" to="0x65" comment="from ę; to=e"/>
+        <character from="0x113" to="0x65" comment="from ē; to=e"/>
+        <character from="0x10d" to="0x63" comment="from č; to=c"/>
+        <character from="0x17a" to="0x7a" comment="from ź; to=z"/>
+        <character from="0x117" to="0x65" comment="from ė; to=e"/>
+        <character from="0x123" to="0x67" comment="from ģ; to=g"/>
+        <character from="0x137" to="0x6b" comment="from ķ; to=k"/>
+        <character from="0x12b" to="0x69" comment="from ī; to=i"/>
+        <character from="0x13c" to="0x6c" comment="from ļ; to=l"/>
+        <character from="0x144" to="0x6e" comment="from ń; to=n"/>
+        <character from="0x146" to="0x6e" comment="from ņ; to=n"/>
+        <character from="0x14d" to="0x6f" comment="from ō; to=o"/>
+        <character from="0x173" to="0x75" comment="from ų; to=u"/>
+        <character from="0x142" to="0x6c" comment="from ł; to=l"/>
+        <character from="0x15b" to="0x73" comment="from ś; to=s"/>
+        <character from="0x16b" to="0x75" comment="from ū; to=u"/>
+        <character from="0x17c" to="0x7a" comment="from ż; to=z"/>
+        <character from="0x13d" to="0x4c" comment="from Ľ; to=L"/>
+        <character from="0x15e" to="0x53" comment="from Ş; to=S"/>
+        <character from="0x164" to="0x54" comment="from Ť; to=T"/>
+        <character from="0x13e" to="0x6c" comment="from ľ; to=l"/>
+        <character from="0x15f" to="0x73" comment="from ş; to=s"/>
+        <character from="0x165" to="0x74" comment="from ť; to=t"/>
+        <character from="0x2dd" to="0x22" comment="from ˝; to=&quot;"/>
+        <character from="0x154" to="0x52" comment="from Ŕ; to=R"/>
+        <character from="0x102" to="0x41" comment="from Ă; to=A"/>
+        <character from="0x139" to="0x4c" comment="from Ĺ; to=L"/>
+        <character from="0x11a" to="0x45" comment="from Ě; to=E"/>
+        <character from="0x10e" to="0x44" comment="from Ď; to=D"/>
+        <character from="0x110" to="0xd0" comment="from Đ; to=Ð"/>
+        <character from="0x147" to="0x4e" comment="from Ň; to=N"/>
+        <character from="0x150" to="0xd6" comment="from Ő; to=Ö"/>
+        <character from="0x158" to="0x52" comment="from Ř; to=R"/>
+        <character from="0x16e" to="0x55" comment="from Ů; to=U"/>
+        <character from="0x170" to="0xdc" comment="from Ű; to=Ü"/>
+        <character from="0x162" to="0x54" comment="from Ţ; to=T"/>
+        <character from="0x155" to="0x72" comment="from ŕ; to=r"/>
+        <character from="0x103" to="0x61" comment="from ă; to=a"/>
+        <character from="0x13a" to="0x6c" comment="from ĺ; to=l"/>
+        <character from="0x11b" to="0x65" comment="from ě; to=e"/>
+        <character from="0x10f" to="0x64" comment="from ď; to=d"/>
+        <character from="0x111" to="0x64" comment="from đ; to=d"/>
+        <character from="0x148" to="0x6e" comment="from ň; to=n"/>
+        <character from="0x151" to="0xf6" comment="from ő; to=ö"/>
+        <character from="0x159" to="0x72" comment="from ř; to=r"/>
+        <character from="0x16f" to="0x75" comment="from ů; to=u"/>
+        <character from="0x171" to="0xfc" comment="from ű; to=ü"/>
+        <character from="0x163" to="0x74" comment="from ţ; to=t"/>
+        <character from="0x126" to="0x48" comment="from Ħ; to=H"/>
+        <character from="0x124" to="0x48" comment="from Ĥ; to=H"/>
+        <character from="0x130" to="0x49" comment="from İ; to=I"/>
+        <character from="0x11e" to="0x47" comment="from Ğ; to=G"/>
+        <character from="0x134" to="0x4a" comment="from Ĵ; to=J"/>
+        <character from="0x127" to="0x68" comment="from ħ; to=h"/>
+        <character from="0x125" to="0x68" comment="from ĥ; to=h"/>
+        <character from="0x131" to="0x69" comment="from ı; to=i"/>
+        <character from="0x11f" to="0x67" comment="from ğ; to=g"/>
+        <character from="0x135" to="0x6a" comment="from ĵ; to=j"/>
+        <character from="0x10a" to="0x43" comment="from Ċ; to=C"/>
+        <character from="0x108" to="0x43" comment="from Ĉ; to=C"/>
+        <character from="0x120" to="0x47" comment="from Ġ; to=G"/>
+        <character from="0x11c" to="0x47" comment="from Ĝ; to=G"/>
+        <character from="0x16c" to="0x55" comment="from Ŭ; to=U"/>
+        <character from="0x15c" to="0x53" comment="from Ŝ; to=S"/>
+        <character from="0x10b" to="0x63" comment="from ċ; to=c"/>
+        <character from="0x109" to="0x63" comment="from ĉ; to=c"/>
+        <character from="0x121" to="0x67" comment="from ġ; to=g"/>
+        <character from="0x11d" to="0x67" comment="from ĝ; to=g"/>
+        <character from="0x16d" to="0x75" comment="from ŭ; to=u"/>
+        <character from="0x15d" to="0x73" comment="from ŝ; to=s"/>
+        <character from="0x138" to="0x6b" comment="from ĸ; to=k"/>
+        <character from="0x128" to="0x49" comment="from Ĩ; to=I"/>
+        <character from="0x166" to="0x54" comment="from Ŧ; to=T"/>
+        <character from="0x129" to="0x69" comment="from ĩ; to=i"/>
+        <character from="0x167" to="0x74" comment="from ŧ; to=t"/>
+        <character from="0x14a" to="0x4e" comment="from Ŋ; to=N"/>
+        <character from="0x14b" to="0x6e" comment="from ŋ; to=n"/>
+        <character from="0x168" to="0x55" comment="from Ũ; to=U"/>
+        <character from="0x169" to="0x75" comment="from ũ; to=u"/>
+        <character from="0x401" to="0xcb" comment="from Ё; to=Ë"/>
+        <character from="0x402" to="0x54" comment="from Ђ; to=T"/>
+        <character from="0x404" to="0x45" comment="from Є; to=E"/>
+        <character from="0x405" to="0x53" comment="from Ѕ; to=S"/>
+        <character from="0x406" to="0x49" comment="from І; to=I"/>
+        <character from="0x407" to="0xcf" comment="from Ї; to=Ï"/>
+        <character from="0x408" to="0x4a" comment="from Ј; to=J"/>
+        <character from="0x40c" to="0x4b" comment="from Ќ; to=K"/>
+        <character from="0x40e" to="0x59" comment="from Ў; to=Y"/>
+        <character from="0x451" to="0xeb" comment="from ё; to=ë"/>
+        <character from="0x454" to="0x65" comment="from є; to=e"/>
+        <character from="0x455" to="0x73" comment="from ѕ; to=s"/>
+        <character from="0x456" to="0x69" comment="from і; to=i"/>
+        <character from="0x457" to="0x69" comment="from ї; to=i"/>
+        <character from="0x458" to="0x6a" comment="from ј; to=j"/>
+        <character from="0x45b" to="0x68" comment="from ћ; to=h"/>
+        <character from="0x45c" to="0x6b" comment="from ќ; to=k"/>
+        <character from="0x45e" to="0x79" comment="from ў; to=y"/>
+        <character from="0x2018" to="0x27" comment="from ‘; to='"/>
+        <character from="0x2019" to="0x27" comment="from ’; to='"/>
+        <character from="0x37a" to="0x2c" comment="from ͺ; to=,"/>
+        <character from="0x2015" to="0x2d" comment="from ―; to=-"/>
+        <character from="0x384" to="0x27" comment="from ΄; to='"/>
+        <character from="0x391" to="0x41" comment="from Α; to=A"/>
+        <character from="0x392" to="0x42" comment="from Β; to=B"/>
+        <character from="0x395" to="0x45" comment="from Ε; to=E"/>
+        <character from="0x396" to="0x5a" comment="from Ζ; to=Z"/>
+        <character from="0x397" to="0x48" comment="from Η; to=H"/>
+        <character from="0x399" to="0x49" comment="from Ι; to=I"/>
+        <character from="0x39a" to="0x4b" comment="from Κ; to=K"/>
+        <character from="0x39c" to="0x4d" comment="from Μ; to=M"/>
+        <character from="0x39d" to="0x4e" comment="from Ν; to=N"/>
+        <character from="0x39f" to="0x4f" comment="from Ο; to=O"/>
+        <character from="0x3a1" to="0x50" comment="from Ρ; to=P"/>
+        <character from="0x3a4" to="0x54" comment="from Τ; to=T"/>
+        <character from="0x3a5" to="0x59" comment="from Υ; to=Y"/>
+        <character from="0x3aa" to="0x49" comment="from Ϊ; to=I"/>
+        <character from="0x3ab" to="0x59" comment="from Ϋ; to=Y"/>
+        <character from="0x3af" to="0x69" comment="from ί; to=i"/>
+        <character from="0x3b0" to="0xfc" comment="from ΰ; to=ü"/>
+        <character from="0x3ca" to="0xef" comment="from ϊ; to=ï"/>
+        <character from="0x3cb" to="0xfc" comment="from ϋ; to=ü"/>
+        <character from="0x3cc" to="0xf3" comment="from ό; to=ó"/>
+        <character from="0x3cd" to="0x75" comment="from ύ; to=u"/>
+        <character from="0x2026" to="0x2e" comment="from …; to=."/>
+        <character from="0x2020" to="0x2b" comment="from †; to=+"/>
+        <character from="0x2021" to="0x2b" comment="from ‡; to=+"/>
+        <character from="0x2022" to="0xb7" comment="from •; to=·"/>
+        <character from="0x2013" to="0x2d" comment="from –; to=-"/>
+        <character from="0x2014" to="0x2d" comment="from —; to=-"/>
+        <character from="0xff65" to="0xb7" comment="from ･; to=·"/>
+        <character from="0x2170" to="0x69" comment="from ⅰ; to=i"/>
+        <character from="0x2122" to="0xae" comment="from ™; to=®"/>
+        <character from="0x2010" to="0x2d" comment="from ‐; to=-"/>
+        <character from="0x2011" to="0x2d" comment="from ‑; to=-"/>
+        <character from="0x2012" to="0x2d" comment="from ‒; to=-"/>
+        <character from="0x2013" to="0x2d" comment="from –; to=-"/>
+        <character from="0x2014" to="0x2d" comment="from —; to=-"/>
+        <character from="0x2212" to="0x2d" comment="from −; to=-"/>
+        <character from="0x2018" to="0x27" comment="from ‘; to='"/>
+        <character from="0x2019" to="0x27" comment="from ’; to='"/>
+        <character from="0x201a" to="0x22" comment="from ‚; to=&quot;"/>
+        <character from="0x201c" to="0x22" comment="from “; to=&quot;"/>
+        <character from="0x201d" to="0x22" comment="from ”; to=&quot;"/>
+        <character from="0x201e" to="0x22" comment="from „; to=&quot;"/>
+        <character from="0x2039" to="0x22" comment="from ‹; to=&quot;"/>
+        <character from="0x203a" to="0x22" comment="from ›; to=&quot;"/>
 	</characterMapping>
 </mapping>
