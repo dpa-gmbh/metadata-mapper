@@ -18,7 +18,8 @@ public class StringCharacterMappingTableTest
         // given
         StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping().build();
 
-        final String stringToMap = "abcdefg52512ЄЅІЇЈЌЎёєѕіїјћќў";
+		// use "simple" string to enable platform independent test case
+        final String stringToMap = "abcdefg52512àá";
 
         // when
         String mappedString = stringCharacterMappingTable.map(stringToMap);
