@@ -228,7 +228,14 @@ public class MetadataMapper
             }
             else
             {
-                performMapping();
+                if( validateMapping != null )
+                {
+                    validateConfig();
+                }
+                else
+                {
+                    performMapping();
+                }
             }
         }
         catch (IOException e)

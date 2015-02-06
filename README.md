@@ -44,7 +44,7 @@ Usage: de.dpa.oss.metadata.mapper.MetadataMapper
   -validateMapping (-v) [String] Validate given mapping file
   -mapping (-m) [String] filename of mapping file. By default it uses dpa mapping
   -printCharacterMappingTable (-c) [flag] Outputs configured character mapping table. Does not perform any mapping. Uses default mapping file if argument -m is omittet
-``
+```
 
 The distribution contains samples in *./example*. Call the tool using these samples as
 follows:
