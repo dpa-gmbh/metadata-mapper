@@ -9,7 +9,9 @@ import org.xml.sax.SAXException;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -31,5 +33,17 @@ public class ExifToolTest
         assertThat(xmpDC.getTagInfoById("creator").getType(), is("string"));
         assertThat(xmpDC.getTagInfoById("title"), is(notNullValue()));
         assertThat(xmpDC.getTagInfoById("title").getType(), is("lang-alt"));
+    }
+
+    @Test
+    public void shouldReturnListOfSupportedCharsets () throws ExifToolIntegrationException
+    {
+        // given
+        // when
+        Set<String> supportedCharsets = new ExifTool().getSupportedCharsets();
+
+        // then
+        assertThat( supportedCharsets, is(CoreMatchers.notNullValue()));
+        assertThat( supportedCharsets, hasItem("Latin"));
     }
 }

@@ -16,6 +16,7 @@ package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
  */
 
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Sets;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroupBuilder;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import org.w3c.dom.Document;
@@ -1497,9 +1498,10 @@ public class ExifTool
         return tagInfo;
     }
 
-    public Set<String> getListOfSupportedCharsets()
+    public Set<String> getSupportedCharsets() throws ExifToolIntegrationException
     {
-        return null;
+        final String listOfSupportedCharsets = runExiftool(null, "-charset");
+        return  Sets.newHashSet( listOfSupportedCharsets.replaceFirst(".*: ","").trim().split(" "));
     }
 
     /**
