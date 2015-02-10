@@ -3,12 +3,12 @@ package de.dpa.oss.metadata.mapper.imaging;
 import com.adobe.xmp.XMPException;
 import com.google.common.io.ByteStreams;
 import de.dpa.oss.common.ResourceUtil;
-import de.dpa.oss.metadata.mapper.common.ExtXPathException;
+import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
-import de.dpa.oss.metadata.mapper.imaging.common.XmlUtils;
+import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMappingTargetType;
@@ -78,7 +78,7 @@ public class ImageMetadataUtil
     }
 
     public void mapToImage(final String pathToResultingImage)
-            throws IOException, XMPException, ExtXPathException
+            throws IOException, XMPException, YAXPathExpressionException
     {
         try (FileOutputStream fileOutputStream = new FileOutputStream(pathToResultingImage))
         {
@@ -90,7 +90,7 @@ public class ImageMetadataUtil
      * Note: does not close the output stream
      */
     public void mapToImage(final OutputStream imageOutput)
-            throws ExtXPathException, XMPException, IOException
+            throws YAXPathExpressionException, XMPException, IOException
     {
         if (imageOutput == null || xmlDocument == null || mapping == null)
         {

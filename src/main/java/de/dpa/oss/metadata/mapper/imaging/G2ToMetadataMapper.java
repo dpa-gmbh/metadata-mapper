@@ -3,8 +3,8 @@ package de.dpa.oss.metadata.mapper.imaging;
 import com.google.common.base.Strings;
 import com.google.common.collect.ListMultimap;
 import de.dpa.oss.common.StringCharacterMapping;
-import de.dpa.oss.metadata.mapper.common.ExtXPathException;
-import de.dpa.oss.metadata.mapper.imaging.common.DateTimeUtils;
+import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
+import de.dpa.oss.metadata.mapper.common.DateTimeUtils;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.*;
 import de.dpa.oss.metadata.mapper.imaging.iptc.IptcFieldToType;
@@ -100,7 +100,7 @@ public class G2ToMetadataMapper
 
     }
 
-    public void mapToImageMetadata(final Document document, final ImageMetadata imageMetadata) throws ExtXPathException
+    public void mapToImageMetadata(final Document document, final ImageMetadata imageMetadata) throws YAXPathExpressionException
     {
         for (MetadataProcessingInfo metadataProcessingInfo : metadataProcessingInfos)
         {

@@ -4,7 +4,7 @@ import de.dpa.oss.common.ResourceUtil;
 import de.dpa.oss.metadata.mapper.imaging.G2ToMetadataMapper;
 import de.dpa.oss.metadata.mapper.imaging.ImageMetadataUtil;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
-import de.dpa.oss.metadata.mapper.imaging.common.XmlUtils;
+import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import org.junit.Test;
 import org.w3c.dom.Document;
 

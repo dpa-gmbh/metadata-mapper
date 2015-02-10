@@ -1,4 +1,4 @@
-package de.dpa.oss.metadata.mapper.imaging.common;
+package de.dpa.oss.metadata.mapper.common;
 
 import com.google.common.base.Strings;
 import org.apache.log4j.Logger;

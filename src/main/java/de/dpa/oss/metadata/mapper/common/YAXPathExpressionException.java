@@ -1,18 +1,19 @@
 package de.dpa.oss.metadata.mapper.common;
 
 import javax.xml.xpath.XPathException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * An XPathException which tells something about the XPath....
  * @author oliver langer
  */
-public class ExtXPathException extends XPathException
+public class YAXPathExpressionException extends XPathExpressionException
 {
     private String xpathExpression;
 
-    public ExtXPathException(final String xpathExpression, final Throwable cause)
+    public YAXPathExpressionException(final String xpathExpression, final String message, final Throwable cause)
     {
-        super(cause);
+        super("\"" + message+ "\":"+cause.getLocalizedMessage());
         this.xpathExpression = xpathExpression;
     }
 

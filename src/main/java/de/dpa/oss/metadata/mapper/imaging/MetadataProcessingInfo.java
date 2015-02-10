@@ -3,16 +3,13 @@ package de.dpa.oss.metadata.mapper.imaging;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import de.dpa.oss.metadata.mapper.common.ExtXPathException;
-import de.dpa.oss.metadata.mapper.imaging.common.XmlUtils;
+import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
+import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 import java.util.*;
 
 /**
@@ -54,10 +51,9 @@ public class MetadataProcessingInfo
     }
 
     /**
-     *
      * @return a map where the part maps to the selected values
      */
-    public ListMultimap<String, String> selectXPathValues(final Document document) throws ExtXPathException
+    public ListMultimap<String, String> selectXPathValues(final Document document) throws YAXPathExpressionException
     {
         ListMultimap<String, String> partnameToValue = ArrayListMultimap.create();
         for (String partname : partNameToOrderedXPaths.keySet())
@@ -80,7 +76,7 @@ public class MetadataProcessingInfo
     }
 
     private List<String> selectFirstMatchingXPathValues(final Document document,
-            final TreeMap<Integer, QualifiedXPath> integerQualifiedXPathTreeMap) throws ExtXPathException
+            final TreeMap<Integer, QualifiedXPath> integerQualifiedXPathTreeMap) throws YAXPathExpressionException
     {
         List<String> toReturn = new ArrayList<>();
 
@@ -109,10 +105,10 @@ public class MetadataProcessingInfo
                     }
                 }
             }
-            catch (Throwable e)
+            catch (YAXPathExpressionException e)
             {
-                logger.error("Error while evaluating XPATH \"" + qualifiedXPath.getValue() + "\": " + e);
-                throw new ExtXPathException(qualifiedXPath.getValue(), e);
+                logger.error("Error evaluating XPath expression \"" + qualifiedXPath.getValue() + "\", reason: " + e.getMessage());
+                throw e;
             }
         }
         return toReturn;

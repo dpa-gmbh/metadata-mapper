@@ -109,7 +109,7 @@
 	</metadata>
 
 	<metadata name="Scene Code" cardinality="MANY">
-		<xpath rank="1"><![CDATA[//contentMeta/genre/[starts-with(@qcode, 'scn:')]/@qcode]]></xpath>
+		<xpath rank="1"><![CDATA[//contentMeta/genre[starts-with(@qcode, 'scn:')]/@qcode]]></xpath>
 		<xpath rank="2"><![CDATA[//genre/sameAs[starts-with(@qcode, 'scn:')]/@qcode]]></xpath>
 		<xpath rank="3"><![CDATA[//genre/broader[starts-with(@qcode, 'scn:')]/@qcode]]></xpath>
 		<xmp>
@@ -163,7 +163,8 @@
 	</metadata>
 
 	<metadata name="Instructions" cardinality="ONE">
-		<xpath><![CDATA[string-join(//itemMeta/edNote, ', ')]]></xpath>
+		<!--xpath><![CDATA[string-join(//itemMeta/edNote, ', ')]]></xpath-->
+		<xpath><![CDATA[//itemMeta/edNote[1]]]></xpath>
 		<iim>
 			<mapsTo dataset="40" field="Special Instructions" targetType="STRING"/>
 		</iim>
