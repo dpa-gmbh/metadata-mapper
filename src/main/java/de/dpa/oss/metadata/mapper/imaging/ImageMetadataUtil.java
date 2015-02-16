@@ -3,12 +3,12 @@ package de.dpa.oss.metadata.mapper.imaging;
 import com.adobe.xmp.XMPException;
 import com.google.common.io.ByteStreams;
 import de.dpa.oss.common.ResourceUtil;
+import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
-import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMappingTargetType;
@@ -166,7 +166,7 @@ public class ImageMetadataUtil
         if (tagInfo == null)
         {
             // todo cache somehow
-            tagInfo = new ExifTool().getSupportedTagsOfGroups();
+            tagInfo = ExifTool.anExifTool().build().getSupportedTagsOfGroups();
         }
 
         return tagInfo;

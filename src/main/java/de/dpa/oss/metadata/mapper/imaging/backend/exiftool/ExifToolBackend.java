@@ -49,7 +49,7 @@ public class ExifToolBackend
 
         iimToTagValues(imageMetadata.getIptcEntries(), entryWriter );
 
-        ExifTool exifTool = new ExifTool();
+        ExifTool exifTool = ExifTool.anExifTool().build();
 
         File tempImageFile = null;
         try

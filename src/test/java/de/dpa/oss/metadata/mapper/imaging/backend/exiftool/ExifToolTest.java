@@ -24,7 +24,7 @@ public class ExifToolTest
     {
         // given
         // when
-        TagInfo supportedTagsOfGroups = new ExifTool().getSupportedTagsOfGroups();
+        TagInfo supportedTagsOfGroups = ExifTool.anExifTool().build().getSupportedTagsOfGroups();
         // then
         assertThat( supportedTagsOfGroups, is(notNullValue()));
         assertThat(supportedTagsOfGroups.getGroupByName("XMP::dc"), is(notNullValue()));
@@ -35,15 +35,4 @@ public class ExifToolTest
         assertThat(xmpDC.getTagInfoById("title").getType(), is("lang-alt"));
     }
 
-    @Test
-    public void shouldReturnListOfSupportedCharsets () throws ExifToolIntegrationException
-    {
-        // given
-        // when
-        Set<String> supportedCharsets = new ExifTool().getSupportedCharsets();
-
-        // then
-        assertThat( supportedCharsets, is(CoreMatchers.notNullValue()));
-        assertThat( supportedCharsets, hasItem("Latin"));
-    }
 }
