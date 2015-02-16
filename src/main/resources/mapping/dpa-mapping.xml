@@ -3,7 +3,7 @@
 	<config>
 		<timezone>Europe/Berlin</timezone>
 		<!--timezone tz="CET"/-->
-		<iim charset="iso8859" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
+		<iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
 		<xmp charset="utf-8" defaultReplaceChar="·"/>
 	</config>
 
