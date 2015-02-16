@@ -99,6 +99,12 @@ public class MetadataMapper
             }
         }
 
+        if( outputImage == null )
+        {
+            System.err.println( "* ERROR: output image (-o) not given");
+            checkSuccessful = false;
+        }
+
         if (g2doc == null)
         {
             System.err.println("* ERROR: g2doc file not given");
