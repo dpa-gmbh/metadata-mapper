@@ -1,5 +1,6 @@
 package de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
 import java.util.Arrays;
@@ -13,7 +14,12 @@ public class RootEntryWriter extends BaseEntryWriter implements EntryWriter
 
     final private ListMultimap<String, String> tagToValue;
 
-    public RootEntryWriter(final ListMultimap<String, String> tagToValue)
+    public RootEntryWriter()
+    {
+        tagToValue = ArrayListMultimap.create();
+    }
+
+    protected RootEntryWriter(final ListMultimap<String, String> tagToValue)
     {
         this.tagToValue = tagToValue;
     }
@@ -42,6 +48,11 @@ public class RootEntryWriter extends BaseEntryWriter implements EntryWriter
     @Override public EntryWriter beginLangAlt(final String namespaceRef, final String key)
     {
         return new LangAltEntryWriter(this, namespaceRef, key);
+    }
+
+    public ListMultimap<String,String> getTagToValues()
+    {
+        return tagToValue;
     }
 }
 

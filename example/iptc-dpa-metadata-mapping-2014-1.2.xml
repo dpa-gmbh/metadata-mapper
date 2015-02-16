@@ -3,7 +3,7 @@
 	<config>
 		<timezone>Europe/Berlin</timezone>
 		<!--timezone tz="CET"/-->
-		<iim charset="iso8859-15" characterMappingRef="utf8-to-iso8859-15" defaultReplaceChar="·"/>
+		<iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
 		<xmp charset="utf-8" defaultReplaceChar="·"/>
 	</config>
     
@@ -483,7 +483,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<characterMapping id="utf8-to-iso8859-15">
+	<characterMapping id="utf8-to-iso8859-1">
         <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
         <character from="0xa8" to="0x22" comment="from ¨; to=&quot;"/>
         <character from="0xb4" to="0x27" comment="from ´; to='"/>

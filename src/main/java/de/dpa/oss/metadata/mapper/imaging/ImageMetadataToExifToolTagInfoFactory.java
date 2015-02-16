@@ -1,4 +1,4 @@
-package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
+package de.dpa.oss.metadata.mapper.imaging;
 
 import com.adobe.xmp.XMPDateTime;
 import com.adobe.xmp.XMPDateTimeFactory;
@@ -7,13 +7,11 @@ import com.adobe.xmp.XMPUtils;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.google.common.io.ByteStreams;
-import de.dpa.oss.metadata.mapper.imaging.ConfigToExifToolTagNames;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline.EntryWriter;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.commandline.RootEntryWriter;
+import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.*;
 
-import java.io.*;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -21,69 +19,27 @@ import java.util.TimeZone;
 /**
  * @author oliver langer
  */
-public class ExifToolBackend
+public class ImageMetadataToExifToolTagInfoFactory
 {
-    private TimeZone timeZone;
-
-    public ExifToolBackend(final TimeZone timeZone)
+    public static ListMultimap<String,String> createExifToolTagInfo( final ImageMetadata imageMetadata, TimeZone timeZone )
+            throws XMPException
     {
-        this.timeZone = timeZone;
-    }
-
-    public void writeMetadata(final InputStream inputStream, final de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata imageMetadata,
-            final OutputStream outputStream) throws XMPException
-    {
-        ListMultimap<String, String> tagToValues = ArrayListMultimap.create();
-        EntryWriter entryWriter = new RootEntryWriter(tagToValues);
-        xmpToTagValues(imageMetadata.getXmpMetadata(), entryWriter);
-
-        ExifTool.ExifToolOptionBuilder exifToolOptionBuilder = ExifTool.exiftoolOptions();
-        switch( imageMetadata.getIimCharset())
-        {
-            case ISO_8859_1:
-                exifToolOptionBuilder.useEncodingCharsetForIPTC(ExifTool.CodedCharset.LATIN1);
-                break;
-            default:
-                exifToolOptionBuilder.useEncodingCharsetForIPTC(ExifTool.CodedCharset.UTF8);
-        }
-
+        RootEntryWriter entryWriter = new RootEntryWriter();
+        xmpToTagValues(imageMetadata.getXmpMetadata(), entryWriter,timeZone);
         iimToTagValues(imageMetadata.getIptcEntries(), entryWriter );
-
-        ExifTool exifTool = ExifTool.anExifTool().build();
-
-        File tempImageFile = null;
-        try
-        {
-            tempImageFile = File.createTempFile("metadata-mapper", "tmpimage");
-            FileOutputStream fileOutputStream = new FileOutputStream(tempImageFile);
-            ByteStreams.copy(inputStream, fileOutputStream);
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            exifTool.setImageMeta(tempImageFile, tagToValues, exifToolOptionBuilder.build());
-            ByteStreams.copy(new FileInputStream(tempImageFile), outputStream);
-            tempImageFile.delete();
-
-        }
-        catch (Throwable t)
-        {
-            if (tempImageFile != null)
-            {
-                tempImageFile.delete();
-            }
-        }
+        return entryWriter.getTagToValues();
 
     }
-
-    private void xmpToTagValues(final List<XMPMetadata> xmpMetadata, final EntryWriter entryWriter)
+    private static void xmpToTagValues(final List<XMPMetadata> xmpMetadata, final EntryWriter entryWriter, final TimeZone timeZone)
             throws XMPException
     {
         for (XMPMetadata metadata : xmpMetadata)
         {
-            xmpToTagValue(entryWriter, metadata);
+            xmpToTagValue(entryWriter, metadata, timeZone);
         }
     }
 
-    private void xmpToTagValue(final EntryWriter entryWriter, final XMPMetadata metadata)
+    private static void xmpToTagValue(final EntryWriter entryWriter, final XMPMetadata metadata, final TimeZone timeZone)
             throws XMPException
     {
         metadata.getType().accept(metadata, new XMPMetadataTypeVisitor<Void>()
@@ -152,7 +108,7 @@ public class ExifToolBackend
                         ConfigToExifToolTagNames.getExiftoolNamespaceRefForConfigNamspace(entry.getNamespace()), entry.getName());
                 for (XMPMetadata item : entry.getMetadata())
                 {
-                    xmpToTagValue(structEntryWriter, item);
+                    xmpToTagValue(structEntryWriter, item, timeZone);
                 }
                 structEntryWriter.endStruct();
                 return null;
@@ -164,7 +120,7 @@ public class ExifToolBackend
                         ConfigToExifToolTagNames.getExiftoolNamespaceRefForConfigNamspace(entry.getNamespace()), entry.getName());
                 for (XMPMetadata item : entry.getItems())
                 {
-                    xmpToTagValue(arrayEntryWriter, item);
+                    xmpToTagValue(arrayEntryWriter, item, timeZone);
                 }
 
                 arrayEntryWriter.endArray();
@@ -178,7 +134,7 @@ public class ExifToolBackend
                         ConfigToExifToolTagNames.getExiftoolNamespaceRefForConfigNamspace(entry.getNamespace()), entry.getName());
                 for (XMPMetadata item : entry.getItems())
                 {
-                    xmpToTagValue(arrayEntryWriter, item);
+                    xmpToTagValue(arrayEntryWriter, item, timeZone);
                 }
 
                 arrayEntryWriter.endArray();
@@ -192,7 +148,7 @@ public class ExifToolBackend
                         ConfigToExifToolTagNames.getExiftoolNamespaceRefForConfigNamspace(entry.getNamespace()), entry.getName());
                 for (XMPMetadata item : entry.getItems())
                 {
-                    xmpToTagValue(langAltEntryWriter, item);
+                    xmpToTagValue(langAltEntryWriter, item, timeZone);
                 }
                 langAltEntryWriter.endLangAlt();
 
@@ -201,7 +157,7 @@ public class ExifToolBackend
         });
     }
 
-    private void iimToTagValues(final ListMultimap<String, String> iptcEntries, final EntryWriter entryWriter)
+    private static void iimToTagValues(final ListMultimap<String, String> iptcEntries, final EntryWriter entryWriter)
     {
         for (String tagname : iptcEntries.keySet())
         {

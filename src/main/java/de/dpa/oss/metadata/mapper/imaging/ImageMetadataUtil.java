@@ -34,7 +34,7 @@ public class ImageMetadataUtil
     private final FileInputStream imageInputStream;
     private Document xmlDocument = null;
     private Mapping mapping = null;
-    private boolean removeMetadata = false;
+    private boolean emptyTargetTagGroups = false;
 
     public static ImageMetadataUtil modifyImageAt(final String pathToSourceImage) throws FileNotFoundException
     {
@@ -71,9 +71,9 @@ public class ImageMetadataUtil
         return this;
     }
 
-    public ImageMetadataUtil removeMetadataFirst()
+    public ImageMetadataUtil emptyTargetTagGroups()
     {
-        this.removeMetadata = true;
+        this.emptyTargetTagGroups = true;
         return this;
     }
 
@@ -97,24 +97,19 @@ public class ImageMetadataUtil
             throw new IllegalArgumentException("At least one parameter (image input, image output, source xml, mapping) is missing");
         }
 
-        InputStream inputStream;
-
-        if (removeMetadata)
-        {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            new ImageMetadataOperation(timeZone).removeAllMetadata(imageInputStream, byteArrayOutputStream);
-            inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-            byteArrayOutputStream.reset();
-            byteArrayOutputStream.close();
-        }
-        else
-        {
-            inputStream = this.imageInputStream;
-        }
-
         ImageMetadata imageMetadata = new ImageMetadata();
         new G2ToMetadataMapper(mapping).mapToImageMetadata(xmlDocument, imageMetadata);
-        new ImageMetadataOperation(timeZone).writeMetadata(inputStream, imageMetadata, imageOutput);
+        ChainedImageMetadataOperations chainedImageMetadataOperations = ChainedImageMetadataOperations
+                .modifyImage(imageInputStream, imageOutput);
+
+        if(emptyTargetTagGroups)
+        {
+            chainedImageMetadataOperations.clearMetadataGroupsReferredByMapping( imageMetadata );
+        }
+
+        chainedImageMetadataOperations.setMetadata(imageMetadata);
+        chainedImageMetadataOperations.execute(ExifTool.anExifTool().build());
+
     }
 
     public static Mapping readMappingResource(final String resourcePath, Object caller) throws FileNotFoundException, JAXBException

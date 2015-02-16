@@ -1,17 +1,17 @@
 package de.dpa.oss.metadata.mapper.imaging;
 
 import de.dpa.oss.common.ResourceUtil;
-import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
+import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.TimeZone;
 
-public class ImageMetadataOperationTest
+public class ChainedImageMetadataOperationsTest
 {
     @Test
     public void shouldMapBasedOnDPAMapping() throws Exception
@@ -27,7 +27,9 @@ public class ImageMetadataOperationTest
         new G2ToMetadataMapper( ImageMetadataUtil.getDPAMapping()).mapToImageMetadata(document, imageMetadata);
 
         // when
-        new ImageMetadataOperation(TimeZone.getDefault()).writeMetadata(imageInputStream, imageMetadata, fileOutputStream);
+        ChainedImageMetadataOperations.modifyImage(imageInputStream,fileOutputStream)
+                .setMetadata( imageMetadata)
+                .execute(ExifTool.anExifTool().build());
         fileOutputStream.flush();
         fileOutputStream.close();
     }
@@ -48,7 +50,9 @@ public class ImageMetadataOperationTest
         new G2ToMetadataMapper( mapping ).mapToImageMetadata(document, imageMetadata);
 
         // when
-        new ImageMetadataOperation(TimeZone.getDefault()).writeMetadata( imageInputStream, imageMetadata, fileOutputStream);
+        ChainedImageMetadataOperations.modifyImage(imageInputStream,fileOutputStream)
+                .setMetadata(imageMetadata)
+                .execute(ExifTool.anExifTool().build());
         fileOutputStream.flush();
         fileOutputStream.close();
 

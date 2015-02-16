@@ -37,6 +37,11 @@ public class MetadataMapper
     //@Argument(alias = "k", required = false, description = "keep existing metadata. By default existing metadata will be removed")
     //private static Boolean keepExistingMetadata = false;
 
+    @Argument(alias = "e", required = false, description = "Removes all tags from those tag groups which are used by the mapping. "
+        + "By default mapped tag values will be merged with existing tags")
+
+    private static Boolean emptyTagGroupBeforeMapping = false;
+
     public static final String DEFAULT_MAPPING = "mapping/dpa-mapping.xml";
 
     @Argument(alias = "m", required = false, description = "filename of mapping file. By default it uses dpa mapping")
@@ -54,7 +59,7 @@ public class MetadataMapper
             System.exit(1);
         }
 
-        System.out.print("Mapping metadata taken from \"" + g2doc + "\" into image given by input file \"" + inputImage
+        System.out.println("Mapping metadata taken from \"" + g2doc + "\" into image given by input file \"" + inputImage
                 + "\", writing result to output file \"" + outputImage + "\". ");
 
         ImageMetadataUtil imageMetadataUtil = ImageMetadataUtil.modifyImageAt(inputImage);
@@ -70,14 +75,15 @@ public class MetadataMapper
             imageMetadataUtil.withPathToMapping(mapping);
         }
 
-        /**
-         if (!keepExistingMetadata)
-         {
-         imageMetadataUtil.removeMetadataFirst();
-         }*/
+        if( emptyTagGroupBeforeMapping )
+        {
+            imageMetadataUtil.emptyTargetTagGroups();
+        }
 
         imageMetadataUtil.withPathToXMLDocument(g2doc)
                 .mapToImage(outputImage);
+
+        System.out.println( "Mappingperformed successfully");
     }
 
     private static boolean validateArgsForMapping() throws IOException

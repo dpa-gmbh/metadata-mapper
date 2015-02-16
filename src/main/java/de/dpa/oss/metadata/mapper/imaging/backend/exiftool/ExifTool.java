@@ -21,6 +21,7 @@ package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
  */
 
 import com.google.common.collect.ListMultimap;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroup;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroupBuilder;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import org.slf4j.Logger;
@@ -333,7 +334,7 @@ public class ExifTool
                     streams.writer.write('\n');
                 }
                 logger.debug("\tExecuting ExifTool...");
-
+                logger.debug( "Using arguments: " + cmdArgs);
                 // Begin tracking the duration ExifTool takes to respond.
                 exifToolCallElapsedTime = System.currentTimeMillis();
 
@@ -363,6 +364,7 @@ public class ExifTool
                 logger.debug("\tExecuting ExifTool...");
                 exifToolCallElapsedTime = System.currentTimeMillis();
                 // Run the ExifTool with our args.
+                logger.debug( "Using arguments: " + args );
                 streams = startExifToolProcess(args);
 
             }
@@ -524,11 +526,16 @@ public class ExifTool
             cmdArgs = new ArrayList<>();
         }
 
+        addArgsToSetImageMetadata(cmdArgs, tags);
+        runExiftool(image, cmdArgs);
+    }
+
+    private void addArgsToSetImageMetadata( final List<String> args, final ListMultimap<String, String> tags)
+    {
         for (Map.Entry<String, String> entry : tags.entries())
         {
-            cmdArgs.add("-" + entry.getKey() + "=" + entry.getValue());
+            args.add("-" + entry.getKey() + "=" + entry.getValue());
         }
-        runExiftool(image, cmdArgs);
     }
 
     /**
@@ -666,6 +673,79 @@ public class ExifTool
         public ExifTool build()
         {
             return new ExifTool(stayOpen);
+        }
+    }
+
+    public static ExifToolOperationChainBuilder modifyImage( final File image )
+
+    {
+        if (image == null)
+            throw new IllegalArgumentException(
+                    "image cannot be null and must be a valid stream of image data.");
+        if (!image.canWrite())
+            throw new SecurityException(
+                    "Unable to read the given image ["
+                            + image.getAbsolutePath()
+                            + "], ensure that the image exists at the given path and that the executing Java process has permissions to read it.");
+
+        return new ExifToolOperationChainBuilder( image );
+    }
+
+    /**
+     * This builder can only be used for operations modifying the image. For other operations refer to
+     * {@link ExifTool} directly
+     */
+    public static class ExifToolOperationChainBuilder
+    {
+        private final File inputSource;
+        private List<String> tagModifications = new ArrayList<>();
+        private List<String> codedCharsetOptions = new ArrayList<>();
+        private List<String> tagGroupsToClear = new ArrayList<>();
+
+        private ExifToolOperationChainBuilder(final File inputSource)
+        {
+            this.inputSource = inputSource;
+        }
+
+        public ExifToolOperationChainBuilder setImageMetadata(ListMultimap<String, String> tags)
+        {
+            if (tags == null || tags.size() == 0)
+                throw new IllegalArgumentException(
+                        "tags cannot be null and must contain 1 or more Tag to query the image for.");
+            for (Map.Entry<String, String> entry : tags.entries())
+            {
+                tagModifications.add("-" + entry.getKey() + "=" + entry.getValue());
+            }
+            return this;
+        }
+
+        public ExifToolOperationChainBuilder useEncodingCharsetForIPTC(final CodedCharset codedCharset)
+        {
+            this.codedCharsetOptions.add("-IPTC:codedcharacterset=" + codedCharset.getCodepageId());
+            return this;
+        }
+
+        /**
+         * Call either
+         * <pre>
+         *     exiftool -listx -S
+         * </pre>
+         * or {@link #getSupportedTagsOfGroups()} to get the list of TagGroups which contains the group name
+         * (g0 / {@link TagGroup#getName()}) and the specific location ( g1 / {@link TagGroup#getSpecificLocation()})
+         */
+        public ExifToolOperationChainBuilder clearTagGroup( final String groupName, final String specificLocation )
+        {
+            tagGroupsToClear.add( "-" + groupName + ":" + specificLocation + "=");
+            return this;
+        }
+
+        public void execute( final ExifTool exifTool ) throws ExifToolIntegrationException
+        {
+            final List<String> cmdArgs = new ArrayList<>();
+            cmdArgs.addAll( this.codedCharsetOptions);
+            cmdArgs.addAll(tagGroupsToClear);
+            cmdArgs.addAll(tagModifications);
+            exifTool.runExiftool( inputSource,cmdArgs);
         }
     }
 }

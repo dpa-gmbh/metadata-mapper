@@ -21,7 +21,7 @@ public class RootEntryWriterTest
         // given
         ListMultimap<String,String> keyValues = ArrayListMultimap.create();
 
-        RootEntryWriter rootEntryWriter = new RootEntryWriter(keyValues);
+        RootEntryWriter rootEntryWriter = new RootEntryWriter();
         // when
         rootEntryWriter.write("namespace", "key", "value");
         List<ListMultimap<String, String>> keyValueMaps = rootEntryWriter.getKeyValueMaps();
@@ -38,9 +38,9 @@ public class RootEntryWriterTest
     {
         // given
         // given
-        ListMultimap<String,String> keyValues = ArrayListMultimap.create();
 
-        RootEntryWriter rootEntryWriter = new RootEntryWriter(keyValues);
+
+        RootEntryWriter rootEntryWriter = new RootEntryWriter();
 
         // when
         rootEntryWriter.beginArray("namespaceRef", "array").write( "entry1" ).write( "entry2").endArray();
@@ -60,9 +60,7 @@ public class RootEntryWriterTest
     {
         // given
         // given
-        ListMultimap<String,String> keyValues = ArrayListMultimap.create();
-
-        RootEntryWriter rootEntryWriter = new RootEntryWriter(keyValues);
+        RootEntryWriter rootEntryWriter = new RootEntryWriter();
 
         // when
         rootEntryWriter
@@ -88,9 +86,7 @@ public class RootEntryWriterTest
     {
         // given
         // given
-        ListMultimap<String,String> keyValues = ArrayListMultimap.create();
-
-        RootEntryWriter rootEntryWriter = new RootEntryWriter(keyValues);
+        RootEntryWriter rootEntryWriter = new RootEntryWriter();
 
         // when
         rootEntryWriter.write("namespaceRef", "simpleKey", "value");
