@@ -3,6 +3,7 @@ package de.dpa.oss.metadata.mapper.imaging.common;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gson.*;
+import de.dpa.oss.metadata.mapper.imaging.EncodingCharset;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.*;
 
 import java.io.Serializable;
@@ -15,9 +16,9 @@ import java.util.List;
  */
 public class ImageMetadata implements Serializable
 {
-    private String iimCharset = "iso8859-15";
+    private EncodingCharset iimCharset = EncodingCharset.ISO_8859_1;
     private String exifCharset = "iso8859-15";
-    private String xmpCharset = "utf-8";
+    private EncodingCharset xmpCharset = EncodingCharset.UTF8;
     
     private ListMultimap<String,String> exifEntries = ArrayListMultimap.create();
     private ListMultimap<String,String> iptcEntries = ArrayListMultimap.create();
@@ -57,12 +58,12 @@ public class ImageMetadata implements Serializable
         return xmpMetadata;
     }
 
-    public String getIimCharset()
+    public EncodingCharset getIimCharset()
     {
         return iimCharset;
     }
 
-    public void setIimCharset(final String iimCharset)
+    public void setIimCharset(final EncodingCharset iimCharset)
     {
         this.iimCharset = iimCharset;
     }
@@ -77,12 +78,12 @@ public class ImageMetadata implements Serializable
         this.exifCharset = exifCharset;
     }
 
-    public String getXmpCharset()
+    public EncodingCharset getXmpCharset()
     {
         return xmpCharset;
     }
 
-    public void setXmpCharset(final String xmpCharset)
+    public void setXmpCharset(final EncodingCharset xmpCharset)
     {
         this.xmpCharset = xmpCharset;
     }

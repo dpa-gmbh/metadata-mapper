@@ -8,6 +8,7 @@
         elementFormDefault="qualified" 
         attributeFormDefault="unqualified" 
         version="1.0">
+
 	<xs:complexType name="ConfigType">
 		<xs:sequence>
 			<xs:element name="timezone" type="xs:string">
@@ -20,11 +21,7 @@
 					<xs:documentation>IIM (record 2) specific configuration</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:attribute name="charset" type="xs:string" use="required">
-						<xs:annotation>
-							<xs:documentation>Characterset used within the IIM record</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
+					<xs:attribute name="charset" type="IIMEncodingType" use="required"/>
 					<xs:attribute name="characterMappingRef" type="xs:IDREF" use="optional">
 						<xs:annotation>
 							<xs:documentation>Reference onto a character mapping table to replace e.g. diacritc characters to the target namespace (see characterMapping type)</xs:documentation>
@@ -69,7 +66,17 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:simpleType name="CardinalityType">
+    <xs:simpleType name="IIMEncodingType">
+        <xs:restriction base="xs:string">
+            <xs:annotation>
+                <xs:documentation>Characterset used within the IIM representation</xs:documentation>
+            </xs:annotation>
+            <xs:enumeration value="utf-8"/>
+            <xs:enumeration value="iso8859-1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CardinalityType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="ONE"/>
 			<xs:enumeration value="MANY"/>

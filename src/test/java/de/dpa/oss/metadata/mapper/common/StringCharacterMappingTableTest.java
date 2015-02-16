@@ -1,6 +1,7 @@
 package de.dpa.oss.metadata.mapper.common;
 
 import de.dpa.oss.common.StringCharacterMappingTable;
+import de.dpa.oss.metadata.mapper.imaging.EncodingCharset;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public class StringCharacterMappingTableTest
     {
         // given
         StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
-                .restrictToCharsetUsingDefaultChar("iso8859-15", "").build();
+                .restrictToCharsetUsingDefaultChar(EncodingCharset.ISO_8859_15, "").build();
 
         final String stringToMap = "äöüÄÖÜ";
 
@@ -124,7 +125,7 @@ public class StringCharacterMappingTableTest
     {
         // given
         StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
-                .restrictToCharsetUsingDefaultChar("iso8859-15", "A").build();
+                .restrictToCharsetUsingDefaultChar(EncodingCharset.ISO_8859_15, "A").build();
 
         final String srcString = "abcdefg";
 
@@ -140,7 +141,7 @@ public class StringCharacterMappingTableTest
     {
         // given
         StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
-                .restrictToCharsetUsingDefaultChar("iso8859-15", "A").build();
+                .restrictToCharsetUsingDefaultChar(EncodingCharset.ISO_8859_15, "A").build();
 
         final String srcString = "String with unmapable char:" + new String(Character.toChars(5122 /* ᐂ */)) + "XXX";
         final String expectedString = "String with unmapable char:AXXX";
@@ -157,7 +158,7 @@ public class StringCharacterMappingTableTest
     {
         // given
         StringCharacterMappingTable stringCharacterMappingTable = StringCharacterMappingTable.aCharacterMapping()
-                .restrictToCharsetUsingDefaultChar("iso8859-15", "·")
+                .restrictToCharsetUsingDefaultChar(EncodingCharset.ISO_8859_15, "·")
                 .addCodepointMapping(5120, 65).build();
 
         final String srcString = "String with unmapable char:" + new String(Character.toChars(5122 /* ᐂ */))

@@ -31,9 +31,9 @@ public class G2ToMetadataMapper
 
     private final List<MetadataProcessingInfo> metadataProcessingInfos;
     private StringCharacterMapping iimStringCharacterMapping = null;
-    private String iimCharacterCharset = "iso8859-1";
+    private EncodingCharset iimCharacterCharset = EncodingCharset.ISO_8859_1;
     private StringCharacterMapping xmpStringCharacterMapping = null;
-    private String xmpCharacterCharset = "utf-8";
+    private EncodingCharset xmpCharacterCharset = EncodingCharset.UTF8;
 
     public G2ToMetadataMapper(final Mapping mapping)
     {
@@ -65,11 +65,12 @@ public class G2ToMetadataMapper
 
             xmpStringCharacterMapping = ConfigStringCharacterMappingBuilder.stringCharacterMappingBuilder()
                     .withMappingConfigurartion(mappingConfig)
-                    .withTargetCharsetAndFallbackReplacementChar(config.getXmp().getCharset(), config.getXmp().getDefaultReplaceChar())
+                    .withTargetCharsetAndFallbackReplacementChar(EncodingCharset.of(config.getXmp().getCharset()),
+                            config.getXmp().getDefaultReplaceChar())
                     .build();
             if (config.getXmp().getCharset() != null)
             {
-                xmpCharacterCharset = config.getXmp().getCharset();
+                xmpCharacterCharset = EncodingCharset.of(config.getXmp().getCharset());
             }
         }
     }
@@ -90,11 +91,12 @@ public class G2ToMetadataMapper
             }
             iimStringCharacterMapping = ConfigStringCharacterMappingBuilder.stringCharacterMappingBuilder()
                     .withMappingConfigurartion(mappingConfig)
-                    .withTargetCharsetAndFallbackReplacementChar(config.getIim().getCharset(), config.getIim().getDefaultReplaceChar())
+                    .withTargetCharsetAndFallbackReplacementChar(EncodingCharset.of(config.getIim().getCharset()),
+                            config.getIim().getDefaultReplaceChar())
                     .build();
             if (config.getIim().getCharset() != null)
             {
-                iimCharacterCharset = config.getIim().getCharset();
+                iimCharacterCharset = EncodingCharset.of(config.getIim().getCharset());
             }
         }
 

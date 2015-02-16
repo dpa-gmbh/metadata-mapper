@@ -1,5 +1,7 @@
 package de.dpa.oss.common;
 
+import de.dpa.oss.metadata.mapper.imaging.EncodingCharset;
+
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
@@ -13,7 +15,7 @@ import java.util.Map;
  * allowing up to 4-byte unicodes.</p>
  * <p/>
  * <p>The class supports the restriction of the mapping to a certain character set. If such a character set is specified
- * ({@link StringCharacterMappingTableBuilder#restrictToCharsetUsingDefaultChar(String, String)}) then the fallback replacement character
+ * ({@link StringCharacterMappingTableBuilder#restrictToCharsetUsingDefaultChar(EncodingCharset, String)}) then the fallback replacement character
  * hs to be specified too. This character is used in case an input character cannot be mapped or is malformed </p>
  *
  * @author oliver langer
@@ -242,20 +244,18 @@ public class StringCharacterMappingTable implements StringCharacterMapping
 
         /**
          * *
-         *
-         * @param charsetName                           name of the target charset
+         *  @param charsetName                           name of the target charset
          * @param targetCharsetMappingFallbackCharacter during mapping of a character this string will be used instead of
          *                                              the character in case it can not be encoded into the target charset encoding.
-         *                                              reasons may be: not part of the target charset or char is malformed
          */
-        public StringCharacterMappingTableBuilder restrictToCharsetUsingDefaultChar(final String charsetName,
+        public StringCharacterMappingTableBuilder restrictToCharsetUsingDefaultChar(final EncodingCharset charsetName,
                 String targetCharsetMappingFallbackCharacter)
         {
             if (targetCharsetMappingFallbackCharacter == null)
             {
                 throw new IllegalArgumentException("fallback mapping character must not be null");
             }
-            targetCharset = Charset.forName(charsetName);
+            targetCharset = Charset.forName(charsetName.charsetName());
             this.targetCharsetMappingFallbackCharacter = targetCharsetMappingFallbackCharacter;
 
             return this;

@@ -17,6 +17,7 @@ package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
 
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Sets;
+import de.dpa.oss.metadata.mapper.imaging.EncodingCharset;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroupBuilder;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import org.w3c.dom.Document;
@@ -920,7 +921,7 @@ public class ExifTool
         this((Feature[]) null);
     }
 
-    public ExifTool(Feature... features) throws UnsupportedFeatureException
+    private ExifTool(Feature... features) throws UnsupportedFeatureException
     {
         featureSet = new HashSet<ExifTool.Feature>();
 
@@ -1312,9 +1313,6 @@ public class ExifTool
 
                 log("\tStreaming arguments to ExifTool process...");
 
-                if (format == Format.NUMERIC)
-                    streams.writer.write("-n\n"); // numeric output
-
                 for (String cmdArg : cmdArgs)
                 {
                     streams.writer.write(cmdArg + "\n");
@@ -1346,10 +1344,9 @@ public class ExifTool
                 final List<String> args = new ArrayList<>();
                 args.add(EXIF_TOOL_PATH);
 
-                if (format == Format.NUMERIC)
-                    args.add("-n"); // numeric output
 
                 args.addAll(Arrays.asList(cmdArgs));
+
                 if( imageFile != null )
                 {
                     args.add(imageFile.getAbsolutePath());
@@ -1399,20 +1396,22 @@ public class ExifTool
         return sb.toString();
     }
 
-    public void setImageMeta(File image, ListMultimap<String, String> tags)
-            throws IllegalArgumentException, SecurityException, IOException, ExifToolIntegrationException
-    {
-        setImageMeta(image, Format.NUMERIC, tags);
-    }
-
-    public void setImageMeta(File image, Format format, ListMultimap<String, String> tags)
+    /**
+     *
+     * @param image image to modify
+     * @param tags Map<String, List<String>> which specifies single/multiple values for a given tag (key)
+     * @param options additional commandline parameters. See also {@link ExifToolOptionBuilder}. May be null
+     * @throws IllegalArgumentException
+     * @throws SecurityException
+     * @throws IOException
+     * @throws ExifToolIntegrationException
+     */
+    public void setImageMeta(File image, ListMultimap<String, String> tags, List<String> options )
             throws IllegalArgumentException, SecurityException, IOException, ExifToolIntegrationException
     {
         if (image == null)
             throw new IllegalArgumentException(
                     "image cannot be null and must be a valid stream of image data.");
-        if (format == null)
-            throw new IllegalArgumentException("format cannot be null");
         if (tags == null || tags.size() == 0)
             throw new IllegalArgumentException(
                     "tags cannot be null and must contain 1 or more Tag to query the image for.");
@@ -1426,11 +1425,21 @@ public class ExifTool
             log("Writing %d tags to image: %s", tags.size(),
                     image.getAbsolutePath());
 
-        List<String> cmdArgs = new ArrayList<>();
+        final List<String> cmdArgs;
+        if( options != null )
+        {
+            cmdArgs=new ArrayList<>(options);
+        }
+        else
+        {
+            cmdArgs = new ArrayList<>();
+        }
+
         for (Map.Entry<String, String> entry : tags.entries())
         {
             cmdArgs.add("-" + entry.getKey() + "=" + entry.getValue());
         }
+
 
         runExiftool(image,cmdArgs);
     }
@@ -1590,6 +1599,47 @@ public class ExifTool
         public Feature getFeature()
         {
             return feature;
+        }
+    }
+
+    public static ExifToolOptionBuilder exiftoolOptions() {
+        return new ExifToolOptionBuilder();
+    }
+
+    public enum CodedCharset {
+        /* ESC % G or UTF8*/
+        UTF8("UTF8"),
+        /* ESC . A */
+        LATIN1("\u001B.A");
+
+        byte[] elements;
+
+        CodedCharset(final String codepageId )
+        {
+            this.codepageId = codepageId;
+        }
+
+        private final String codepageId;
+
+        public String getCodepageId()
+        {
+            return codepageId;
+        }
+    };
+
+    public static class ExifToolOptionBuilder
+    {
+        List<String> options = new ArrayList<>();
+
+        public ExifToolOptionBuilder useEncodingCharsetForIPTC(final CodedCharset codedCharset)
+        {
+            options.add( "-IPTC:codedcharacterset=" + codedCharset.getCodepageId() );
+            return this;
+        }
+
+        public List<String> build()
+        {
+            return options;
         }
     }
 }

@@ -3,6 +3,7 @@ package de.dpa.oss.metadata.mapper.imaging;
 import de.dpa.oss.common.StringCharacterMappingTable;
 import de.dpa.oss.common.StringCharacterMapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CharacterMappingType;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMEncodingType;
 
 import java.nio.charset.Charset;
 
@@ -15,7 +16,7 @@ import java.nio.charset.Charset;
 public class ConfigStringCharacterMappingBuilder
 {
     private StringCharacterMappingTable.StringCharacterMappingTableBuilder characterMappingBuilder;
-    private String targetCharsetName = null;
+    private EncodingCharset targetCharsetName = null;
     private String fallbackReplacementChar = null;
     private boolean hasMappingTable = false;
 
@@ -28,7 +29,7 @@ public class ConfigStringCharacterMappingBuilder
         characterMappingBuilder = StringCharacterMappingTable.aCharacterMapping();
     }
 
-    public ConfigStringCharacterMappingBuilder withTargetCharsetAndFallbackReplacementChar( final String targetCharsetName,
+    public ConfigStringCharacterMappingBuilder withTargetCharsetAndFallbackReplacementChar( final EncodingCharset targetCharsetName,
             final String fallbackReplacementChar )
     {
         this.targetCharsetName = targetCharsetName;
@@ -60,8 +61,8 @@ public class ConfigStringCharacterMappingBuilder
          * if there is no mapping defined and if charset utf-8 is used then a simplified string character mapper 
          * is returned.
          */
-        if( !hasMappingTable && (targetCharsetName == null || Charset.forName("utf-8").aliases().contains(
-                targetCharsetName.toLowerCase())))
+        if( !hasMappingTable && (targetCharsetName == null || Charset.forName("utf8").aliases().contains(
+                targetCharsetName.charsetName())))
         {
             return new StringCharacterMapping()
             {
@@ -84,8 +85,8 @@ public class ConfigStringCharacterMappingBuilder
          * if there is no mapping defined and if charset utf-8 is used then a simplified string character mapper 
          * is returned.
          */
-        if( !hasMappingTable && (targetCharsetName == null || Charset.forName("utf-8").aliases().contains(
-                targetCharsetName.toLowerCase())))
+        if( !hasMappingTable && (targetCharsetName == null || Charset.forName("utf8").aliases().contains(
+                targetCharsetName.charsetName())))
         {
             return StringCharacterMappingTable.aCharacterMapping().build();
         }

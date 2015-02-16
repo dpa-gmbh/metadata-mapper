@@ -36,6 +36,17 @@ public class ExifToolBackend
         ListMultimap<String, String> tagToValues = ArrayListMultimap.create();
         EntryWriter entryWriter = new RootEntryWriter(tagToValues);
         xmpToTagValues(imageMetadata.getXmpMetadata(), entryWriter);
+
+        ExifTool.ExifToolOptionBuilder exifToolOptionBuilder = ExifTool.exiftoolOptions();
+        switch( imageMetadata.getIimCharset())
+        {
+            case ISO_8859_1:
+                exifToolOptionBuilder.useEncodingCharsetForIPTC(ExifTool.CodedCharset.LATIN1);
+                break;
+            default:
+                exifToolOptionBuilder.useEncodingCharsetForIPTC(ExifTool.CodedCharset.UTF8);
+        }
+
         iimToTagValues(imageMetadata.getIptcEntries(), entryWriter );
 
         ExifTool exifTool = new ExifTool();
@@ -48,7 +59,7 @@ public class ExifToolBackend
             ByteStreams.copy(inputStream, fileOutputStream);
             fileOutputStream.flush();
             fileOutputStream.close();
-            exifTool.setImageMeta(tempImageFile, tagToValues);
+            exifTool.setImageMeta(tempImageFile, tagToValues, exifToolOptionBuilder.build());
             ByteStreams.copy(new FileInputStream(tempImageFile), outputStream);
             tempImageFile.delete();
 
