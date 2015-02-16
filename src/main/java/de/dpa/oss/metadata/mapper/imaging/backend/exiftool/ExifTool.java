@@ -42,22 +42,6 @@ public class ExifTool
     private static Logger logger = LoggerFactory.getLogger(ExifTool.class);
 
     /**
-     * Flag used to indicate if debugging output has been enabled by setting the
-     * "<code>exiftool.debug</code>" system property to <code>true</code>. This
-     * value will be <code>false</code> if the " <code>exiftool.debug</code>"
-     * system property is undefined or set to <code>false</code>.
-     * <p/>
-     * This system property can be set on startup with:<br/>
-     * <code>
-     * -Dexiftool.debug=true
-     * </code> or by calling {@link System#setProperty(String, String)} before
-     * this class is loaded.
-     * <p/>
-     * Default value is <code>false</code>.
-     */
-    public static final Boolean DEBUG = Boolean.getBoolean("exiftool.debug");
-
-    /**
      * The absolute path to the ExifTool executable on the host system running
      * this class as defined by the "<code>exiftool.path</code>" system
      * property.
@@ -425,6 +409,64 @@ public class ExifTool
         return sb.toString();
     }
 
+
+
+    /**
+     * Helper method used to make canceling the current task and scheduling a
+     * new one easier.
+     * <p/>
+     * It is annoying that we cannot just reset the timer on the task, but that
+     * isn't the way the java.util.Timer class was designed unfortunately.
+     */
+    private void resetCleanupTask()
+    {
+        // no-op if the timer was never created.
+        if (cleanupTimer == null)
+            return;
+
+        logger.debug("\tResetting cleanup task...");
+
+        // Cancel the current cleanup task if necessary.
+        if (currentCleanupTask != null)
+            currentCleanupTask.cancel();
+
+        // Schedule a new cleanup task.
+        cleanupTimer.schedule(
+                (currentCleanupTask = new CleanupTimerTask(this)),
+                PROCESS_CLEANUP_DELAY, PROCESS_CLEANUP_DELAY);
+
+        logger.debug("\t\tSuccessful");
+    }
+
+    /**
+     * Class used to represent the {@link TimerTask} used by the internal auto
+     * cleanup {@link Timer} to call {@link ExifTool#close()} after a specified
+     * interval of inactivity.
+     *
+     * @author Riyad Kalla (software@thebuzzmedia.com)
+     * @since 1.1
+     */
+    private class CleanupTimerTask extends TimerTask
+    {
+        private ExifTool owner;
+
+        public CleanupTimerTask(ExifTool owner) throws IllegalArgumentException
+        {
+            if (owner == null)
+                throw new IllegalArgumentException(
+                        "owner cannot be null and must refer to the ExifTool instance creating this task.");
+
+            this.owner = owner;
+        }
+
+        @Override
+        public void run()
+        {
+            logger.debug("\tAuto cleanup task running...");
+            owner.close();
+        }
+    }
+
     /**
      * The core function used to set image metadata. It expects a multimap where each key points to a list of values.
      * The key has to be a fully qualified name consisting of group name and tag id. E.g.:
@@ -448,7 +490,7 @@ public class ExifTool
      *
      * @param image   image to modify
      * @param tags    Map<String, List<String>> which specifies single/multiple values for a given tag (key)
-     * @param options additional commandline parameters. See also {@link ExifToolOptionBuilder}. May be null
+     * @param options additional commandline parameters. See also {@link ExifTool.ExifToolOptionBuilder}. May be null
      * @throws IllegalArgumentException
      * @throws SecurityException
      * @throws IOException
@@ -469,9 +511,8 @@ public class ExifTool
                             + image.getAbsolutePath()
                             + "], ensure that the image exists at the given path and that the executing Java process has permissions to read it.");
 
-        if (DEBUG)
-            logger.debug("Writing %d tags to image: %s", tags.size(),
-                    image.getAbsolutePath());
+        logger.debug("Writing %d tags to image: %s", tags.size(),
+                image.getAbsolutePath());
 
         final List<String> cmdArgs;
         if (options != null)
@@ -487,7 +528,6 @@ public class ExifTool
         {
             cmdArgs.add("-" + entry.getKey() + "=" + entry.getValue());
         }
-
         runExiftool(image, cmdArgs);
     }
 
@@ -562,62 +602,6 @@ public class ExifTool
         }
 
         return tagInfo;
-    }
-
-    /**
-     * Helper method used to make canceling the current task and scheduling a
-     * new one easier.
-     * <p/>
-     * It is annoying that we cannot just reset the timer on the task, but that
-     * isn't the way the java.util.Timer class was designed unfortunately.
-     */
-    private void resetCleanupTask()
-    {
-        // no-op if the timer was never created.
-        if (cleanupTimer == null)
-            return;
-
-        logger.debug("\tResetting cleanup task...");
-
-        // Cancel the current cleanup task if necessary.
-        if (currentCleanupTask != null)
-            currentCleanupTask.cancel();
-
-        // Schedule a new cleanup task.
-        cleanupTimer.schedule(
-                (currentCleanupTask = new CleanupTimerTask(this)),
-                PROCESS_CLEANUP_DELAY, PROCESS_CLEANUP_DELAY);
-
-        logger.debug("\t\tSuccessful");
-    }
-
-    /**
-     * Class used to represent the {@link TimerTask} used by the internal auto
-     * cleanup {@link Timer} to call {@link ExifTool#close()} after a specified
-     * interval of inactivity.
-     *
-     * @author Riyad Kalla (software@thebuzzmedia.com)
-     * @since 1.1
-     */
-    private class CleanupTimerTask extends TimerTask
-    {
-        private ExifTool owner;
-
-        public CleanupTimerTask(ExifTool owner) throws IllegalArgumentException
-        {
-            if (owner == null)
-                throw new IllegalArgumentException(
-                        "owner cannot be null and must refer to the ExifTool instance creating this task.");
-
-            this.owner = owner;
-        }
-
-        @Override
-        public void run()
-        {
-            logger.debug("\tAuto cleanup task running...");
-            owner.close();
-        }
     }
 
     public static ExifToolOptionBuilder exiftoolOptions()

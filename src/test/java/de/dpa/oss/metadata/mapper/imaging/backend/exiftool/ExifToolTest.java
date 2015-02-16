@@ -2,14 +2,12 @@ package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
 
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroup;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
