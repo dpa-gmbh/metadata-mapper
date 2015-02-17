@@ -22,6 +22,16 @@ according to IPTC "Photo Metadata" standard revision 1.2, October 2014. The sour
 an API (ImageMetadataOperation) as well as a Tool supporting simple command-line based operations.
 
 
+# Prerequisites
+
+The metadata mapper uses the exiftool (http://www.sno.phy.queensu.ca/~phil/exiftool/) to modify the
+images accordingly. This tool has to be either in the execution path oder be referred by an environment
+variable named EXIFTOOL
+ <pre>
+ export EXIFTOOL=/myinstallhome/exiftool
+ </pre>
+
+
 # Building the Command Line Tool
 
 Run 
