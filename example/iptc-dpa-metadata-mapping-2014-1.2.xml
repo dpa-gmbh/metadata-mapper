@@ -16,7 +16,7 @@
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="City" targetType="Text"/>
 		</xmp>
 	</property-->
-    <metadata name="City (legacy)" cardinality="ONE">
+    <metadata name="City (legacy)">
         <xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/locality/name]]></xpath>
         <xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/locality/name]]></xpath>
         <xpath rank="3"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/locality/name]]></xpath>
@@ -29,7 +29,7 @@
             <mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="City" targetType="Text"/>
         </xmp>
     </metadata>
-	<metadata name="Country (legacy)" cardinality="ONE">
+	<metadata name="Country (legacy)">
 		<xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/country/name]]></xpath>
 		<xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/name]]></xpath>
 		<xpath rank="3"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/country/name]]></xpath>
@@ -42,7 +42,7 @@
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Country" targetType="Text"/>
 		</xmp>
 	</metadata>
-	<metadata name="Country Code (legacy)" cardinality="ONE">
+	<metadata name="Country Code (legacy)">
 		<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta/located/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
 		<xpath rank="2" returnType="STRING"><![CDATA[substring(//contentMeta/located/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a2:"]/@qcode,13)]]></xpath>
 		<xpath rank="3" returnType="STRING"><![CDATA[substring(//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
@@ -56,7 +56,7 @@
 			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="CountryCode" targetType="Text"/>
 		</xmp>
 	</metadata>
-	<metadata name="Headline" cardinality="ONE">
+	<metadata name="Headline">
 		<xpath><![CDATA[//contentMeta/headline[@rank='1' or not(@rank)]]]></xpath>
 		<iim>
 			<mapsTo dataset="105" field="Headline" targetType="STRING"/>
@@ -65,7 +65,7 @@
 			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Headline"/>
 		</xmp>
 	</metadata>
-	<metadata name="Description" cardinality="ONE">
+	<metadata name="Description">
 		<xpath rank="1"><![CDATA[//contentMeta/description[@role='drol:caption']]]></xpath>
 		<xpath rank="2"><![CDATA[//contentMeta/description[not(@role)]]></xpath>
 		<iim>
@@ -75,7 +75,7 @@
 			<mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="description"/>
 		</xmp>
 	</metadata>
-	<metadata name="Intellectual Genre" cardinality="ONE">
+	<metadata name="Intellectual Genre">
 		<xpath rank="1"><![CDATA[/newsItem/contentMeta/genre/name]]></xpath>
 		<xpath rank="2"><![CDATA[/newsItem/contentMeta/genre/@literal]]></xpath>
 		<iim>
@@ -85,7 +85,7 @@
 			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="IntellectualGenre"/>
 		</xmp>
 	</metadata>
-	<metadata name="Keywords" cardinality="MANY">
+	<metadata name="Keywords">
 		<xpath><![CDATA[//contentMeta/keyword | //contentMeta/subject[not(@type = 'dpatype:category')]/name]]></xpath>
 		<iim>
 			<mapsTo dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
@@ -96,7 +96,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Province or State (legacy)" cardinality="MANY">
+	<metadata name="Province or State (legacy)">
 		<xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/area/name]]></xpath>
 		<xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/area/name]]></xpath>
 		<xpath rank="3"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/area/name]]></xpath>
@@ -109,7 +109,7 @@
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="State" targetType="Text"/>
 		</xmp>
 	</metadata>
-	<metadata name="Scene Code" cardinality="MANY">
+	<metadata name="Scene Code">
 		<xpath rank="1"><![CDATA[//contentMeta/genre/@qcode]]></xpath>
 		<xmp>
 			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="Scene" targetType="Bag">
@@ -117,7 +117,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Subject Code" cardinality="MANY">
+	<metadata name="Subject Code">
 		<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta//subject[starts-with(@qcode, 'subj:')]/@qcode, 6)]]></xpath>
 		<iim>
 			<mapsTo field="Subject Reference" dataset="12" targetType="LIST_OF_STRING"/>
@@ -128,7 +128,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Subjectlocation (legacy)" cardinality="MANY">
+	<metadata name="Subjectlocation (legacy)">
 		<default/>
 		<iim>
 			<mapsTo field="Sublocation" dataset="92" targetType="STRING"/>
@@ -137,7 +137,7 @@
 			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="Location" targetType="Text"/>
 		</xmp>
 	</metadata>
-	<metadata name="Date Created" cardinality="ONE">
+	<metadata name="Date Created">
 		<xpath><![CDATA[//contentMeta/contentCreated]]></xpath>
 		<iim>
 			<mapsTo dataset="55" field="Date Created" targetType="STRING"/>
@@ -146,7 +146,7 @@
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Date" field="DateCreated"/>
 		</xmp>
 	</metadata>
-	<metadata name="Description Writer" cardinality="ONE">
+	<metadata name="Description Writer">
 		<xpath rank="1"><![CDATA[//contentMeta/contributor[@role="ctrol:descrWriter"]/name]]></xpath>
 		<xpath rank="2"><![CDATA[//contentMeta/contributor/name]]></xpath>
 		<iim>
@@ -156,7 +156,7 @@
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text" field="CaptionWriter"/>
 		</xmp>
 	</metadata>
-	<metadata name="Instructions" cardinality="ONE">
+	<metadata name="Instructions">
 		<xpath><![CDATA[//itemMeta/edNote]]></xpath>
 		<iim>
 			<mapsTo dataset="40" field="Special Instructions" targetType="STRING"/>
@@ -165,7 +165,7 @@
 			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Instructions"/>
 		</xmp>
 	</metadata>
-	<metadata name="Job Id" cardinality="ONE">
+	<metadata name="Job Id">
 		<xpath><![CDATA[//contentMeta/altId[@type='dpatype:orgTransRef']]]></xpath>
 		<iim>
 			<mapsTo dataset="103" field="Original Transmission, Reference" targetType="STRING"/>
@@ -174,14 +174,14 @@
 			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="TransmissionReference"/>
 		</xmp>
 	</metadata>
-	<metadata name="Title" cardinality="ONE">
+	<metadata name="Title">
 		<xpath rank="1"><![CDATA[//contentMeta/title]]></xpath>
 		<xpath rank="2"><![CDATA[//contentMeta/headline[not(@rank) or @rank='1']]]></xpath>
 		<xmp>
 			<mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="title"/>
 		</xmp>
 	</metadata>
-	<metadata name="Copyright Notice" cardinality="ONE">
+	<metadata name="Copyright Notice">
 		<xpath rank="1"><![CDATA[//rightsInfo/copyrightNotice]]></xpath>
 		<xpath rank="2" returnType="STRING"><![CDATA[concat('(c) ',//rightsInfo/copyrightHolder/name)]]></xpath>
 		<default>(c) dpa</default>
@@ -192,7 +192,7 @@
 			<mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="rights"/>
 		</xmp>
 	</metadata>
-	<metadata name="Creator" cardinality="MANY">
+	<metadata name="Creator">
 		<xpath><![CDATA[//contentMeta/creator/name]]></xpath>
 		<iim>
 			<mapsTo dataset="80" field="By-line" targetType="LIST_OF_STRING"/>
@@ -201,7 +201,7 @@
 			<mapsTo targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Sequence" field="creator"/>
 		</xmp>
 	</metadata>
-	<metadata name="Creator's Contact Info" cardinality="ONE">
+	<metadata name="Creator's Contact Info">
 		<xpath part="line"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/line]]></xpath>
 		<xpath part="city"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/locality/name]]></xpath>
 		<xpath part="country"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/country/name]]></xpath>
@@ -223,7 +223,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Creator's Jobtitle" cardinality="ONE">
+	<metadata name="Creator's Jobtitle">
 		<xpath rank="1"><![CDATA[//contentMeta/creator/facet]]></xpath>
 		<xpath rank="2" returnType="STRING"><![CDATA[substring(//contentMeta/creator/related[starts-with(@qcode, 'dpaaccno:')]/@qcode, 10)]]></xpath>
 		<iim>
@@ -233,7 +233,7 @@
 			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="AuthorsPosition"/>
 		</xmp>
 	</metadata>
-	<metadata name="Credit" cardinality="ONE">
+	<metadata name="Credit">
 		<xpath><![CDATA[//contentMeta/creditline]]></xpath>
 		<iim>
 			<mapsTo field="Credit" dataset="110" targetType="STRING"/>
@@ -242,13 +242,13 @@
 			<mapsTo field="Credit" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
 		</xmp>
 	</metadata>
-	<metadata name="Rights Usage Terms" cardinality="ONE">
+	<metadata name="Rights Usage Terms">
 		<xpath><![CDATA[//rightsInfo/usageTerms]]></xpath>
 		<xmp>
 			<mapsTo field="UsageTerms" targetNamespace="http://ns.adobe.com/xap/1.0/rights/" targetType="LangAlt"/>
 		</xmp>
 	</metadata>
-	<metadata name="Source" cardinality="ONE">
+	<metadata name="Source">
 		<xpath><![CDATA[//rightsInfo/copyrightHolder/name]]></xpath>
 		<iim>
 			<mapsTo field="Source" dataset="115" targetType="STRING"/>
@@ -257,7 +257,7 @@
 			<mapsTo field="Source" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
 		</xmp>
 	</metadata>
-	<metadata name="Language" cardinality="ONE">
+	<metadata name="Language">
 		<xpath rank="1"><![CDATA[//contentMeta/language/@tag]]></xpath>
 		<xpath rank="2"><![CDATA[//newsItem/@xml:lang]]></xpath>
 		<iim>
@@ -269,7 +269,7 @@
             </mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Location Created" cardinality="ONE">
+	<metadata name="Location Created">
         <xpath part="city" rank="1"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/locality/name]]></xpath>
 		<xpath part="city" rank="2"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/locality/name]]></xpath>
 		<xpath part="country" rank="1"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/name]]></xpath>
@@ -293,7 +293,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Urgency" cardinality="ONE">
+	<metadata name="Urgency">
 		<xpath><![CDATA[//contentMeta/urgency]]></xpath>
 		<iim>
 			<mapsTo dataset="10" field="Urgency" targetType="STRING"/>
@@ -302,7 +302,7 @@
 			<mapsTo targetType="Integer" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Urgency"/>
 		</xmp>
 	</metadata>
-	<metadata name="Category" cardinality="ONE">
+	<metadata name="Category">
 		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='dpatype:category']/name[@role='nrol:mnemonic']]]></xpath>
 		<xpath rank="2"><![CDATA[//contentMeta/subject[@type='dpatype:category']/name[1]]]></xpath>
 		<iim>
@@ -312,13 +312,13 @@
 			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Category"/>
 		</xmp>
 	</metadata>
-	<metadata name="Additional Model Information" cardinality="ONE">
+	<metadata name="Additional Model Information">
 		<xpath rank="1"><![CDATA[//contentMeta/description[@role='drol:modelInfo']]]></xpath>
 		<xmp>
 			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="AddlModelInfo"/>
 		</xmp>
 	</metadata>
-	<metadata name="Code of Organisation Featured in the Image" cardinality="MANY">
+	<metadata name="Code of Organisation Featured in the Image">
 		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='cpnat:organisation']/@qcode]]></xpath>
 		<xmp>
 			<mapsTo field="OrganisationInImageCode" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
@@ -327,7 +327,7 @@
 		</xmp>
 	</metadata>
     <!-- TODO review mapping. See bug #18 and notes below -->
-	<metadata name="CV-Term About Image" cardinality="MANY">
+	<metadata name="CV-Term About Image">
 
 		<!--compositeXpath>
                 <from><![CDATA[//contentMeta/subject]]></from>
@@ -347,7 +347,7 @@
 			</mapsTo-->
 		<!--/xmp-->
 	</metadata>
-	<metadata name="Location Shown" cardinality="ONE">
+	<metadata name="Location Shown">
 		<!--compositeXpath rank="1">
             <from><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address]]></from>
             <select>
@@ -387,7 +387,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Model Age" cardinality="MANY">
+	<metadata name="Model Age">
 		<xpath rank="1"><![CDATA[//contentMeta/description[@role='drol:modelAge']]]></xpath>
 		<xmp>
 			<mapsTo field="ModelAge" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
@@ -395,7 +395,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Name of Organisation Featured in the Image" cardinality="MANY">
+	<metadata name="Name of Organisation Featured in the Image">
 		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='cpnat:organisation']/name]]></xpath>
 		<xmp>
 			<mapsTo field="OrganisationInImageName" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
@@ -403,7 +403,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Person Shown in the Image" cardinality="MANY">
+	<metadata name="Person Shown in the Image">
 		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='cpnat:person']/name]]></xpath>
 		<xmp>
 			<mapsTo field="PersonInImage" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
@@ -411,7 +411,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="Digital Image GUID" cardinality="ONE">
+	<metadata name="Digital Image GUID">
 		<xpath rank="1"><![CDATA[//newsItem/@guid]]></xpath>
 		<xpath rank="2"><![CDATA[//contentMeta/altId[@type='altidtype:imageGUID']]]></xpath>
 		<iim>
@@ -421,7 +421,7 @@
 			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="DigImageGUID"/>
 		</xmp>
 	</metadata>
-	<metadata name="Event" cardinality="ONE">
+	<metadata name="Event">
 		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='cpnat:event']/name[1]]]></xpath>
 		<xpath rank="2"><![CDATA[//contentMeta/subject[@type='cpnat:event']/@qcode[1]]]></xpath>
 		<xpath rank="3"><![CDATA[//contentMeta/subject[@type='cpnat:event']/@literal[1]]]></xpath>
@@ -429,7 +429,7 @@
 			<mapsTo field="Event" targetType="LangAlt" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
 		</xmp>
 	</metadata>
-	<metadata name="Image Registry Entry" cardinality="MANY">
+	<metadata name="Image Registry Entry">
 		<!--compositeXpath>
             <from><![CDATA[//newsItem]]></from>
             <select>
@@ -452,13 +452,13 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<metadata name="IPTC Metadata Last Edited" cardinality="ONE">
+	<metadata name="IPTC Metadata Last Edited">
 		<xpath rank="1"><![CDATA[//contentMeta/contentModified]]></xpath>
 		<xmp>
 			<mapsTo field="IptcLastEdited" targetType="Date" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
 		</xmp>
 	</metadata>
-	<metadata name="Copyright Owner" cardinality="MANY">
+	<metadata name="Copyright Owner">
 		<xpath><![CDATA[//rightsInfo/CopyrightHolder/@qcode | //rightsInfo/CopyrightHolder/name]]></xpath>
 		<xmp>
 			<mapsTo field="CopyrightOwner" targetType="Sequence" targetNamespace="http://ns.useplus.org/ldf/xmp/1.0/">
@@ -466,7 +466,7 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-	<!-- open issue: unclear how to map/treat metadata name="Embedded Encoded Rights Expression" cardinality="MANY">
+	<!-- open issue: unclear how to map/treat metadata name="Embedded Encoded Rights Expression">
         <xmp>
             <mapsTo field="EmbdEncRightsExpr" targetType="Struct" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
                 <mapsTo field="EncRightsExpr" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
@@ -475,7 +475,7 @@
             </mapsTo>
         </xmp>
     </metadata -->
-	<metadata name="Image Creator" cardinality="MANY">
+	<metadata name="Image Creator">
 		<xpath><![CDATA[//contentMeta/creator/@qcode | //contentMeta/creator/name]]></xpath>
 		<xmp>
 			<mapsTo field="ImageCreator" targetType="Sequence" targetNamespace="http://ns.useplus.org/ldf/xmp/1.0/">

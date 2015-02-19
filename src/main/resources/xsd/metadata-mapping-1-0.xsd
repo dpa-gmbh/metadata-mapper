@@ -273,11 +273,6 @@
 								<xs:documentation>Name of the metadata according to the IPTC Photo Metadata Standard</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>
-						<xs:attribute name="cardinality" type="CardinalityType" use="required">
-							<xs:annotation>
-								<xs:documentation>Cardinality of the metadata. This attribute is only informal and has no functionality.</xs:documentation>
-							</xs:annotation>
-						</xs:attribute>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="characterMapping" type="CharacterMappingType" minOccurs="0" maxOccurs="1">
