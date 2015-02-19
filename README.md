@@ -24,7 +24,7 @@ an API (ImageMetadataOperation) as well as a Tool supporting simple command-line
 
 # Prerequisites
 
-The metadata mapper uses the exiftool (http://www.sno.phy.queensu.ca/~phil/exiftool/) to modify the
+The metadata mapper uses the exiftool (<http://www.sno.phy.queensu.ca/~phil/exiftool/>) to modify the
 images accordingly. This tool has to be either in the execution path oder be referred by an environment
 variable named EXIFTOOL
  <pre>

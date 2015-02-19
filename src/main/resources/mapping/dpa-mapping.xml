@@ -51,7 +51,8 @@
 	</metadata>
 
 	<metadata name="Headline" cardinality="ONE">
-		<xpath><![CDATA[//contentMeta/headline[@rank='1' or not(@rank)]]]></xpath>
+		<xpath rank="1"><![CDATA[//contentMeta/headline[@rank='1']]]></xpath>
+		<xpath rank="2"><![CDATA[//contentMeta/headline[not(@rank)]]]></xpath>
 		<iim>
 			<mapsTo dataset="105" field="Headline" targetType="STRING"/>
 		</iim>
