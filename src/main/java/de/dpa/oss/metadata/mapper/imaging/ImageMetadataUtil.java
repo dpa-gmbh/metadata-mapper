@@ -71,7 +71,7 @@ public class ImageMetadataUtil
     }
 
     public void mapToImage(final String pathToResultingImage)
-            throws IOException, XMPException, YAXPathExpressionException
+            throws IOException, XMPException, YAXPathExpressionException, ExifToolIntegrationException
     {
         try (FileOutputStream fileOutputStream = new FileOutputStream(pathToResultingImage))
         {
@@ -83,7 +83,7 @@ public class ImageMetadataUtil
      * Note: does not close the output stream
      */
     public void mapToImage(final OutputStream imageOutput)
-            throws YAXPathExpressionException, XMPException, IOException
+            throws YAXPathExpressionException, XMPException, IOException, ExifToolIntegrationException
     {
         if (imageOutput == null || xmlDocument == null || mapping == null)
         {

@@ -269,9 +269,10 @@ public class MetadataMapper
             System.err.println("* ERROR while accessing giving files");
             System.exit(1);
         }
-        catch (Exception e)
+        catch (Throwable t)
         {
-            System.err.println("* ERROR: Unclassified error during mappingCustomization:" + e);
+            System.err.println("* ERROR: Unclassified error during mappingCustomization:" + t);
+            System.exit(1);
         }
 
         System.exit(0);

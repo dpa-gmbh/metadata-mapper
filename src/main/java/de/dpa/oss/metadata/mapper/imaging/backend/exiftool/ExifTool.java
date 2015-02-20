@@ -109,7 +109,9 @@ public class ExifTool
         }
         catch (Throwable t)
         {
-            throw new ExifToolIntegrationException("Unable to start exiftool properly. Commandline args: " + args, t);
+            List<String> cmdArgs = new ArrayList<>(args);
+            cmdArgs.remove(0);
+            throw new ExifToolIntegrationException("Call of exiftool at \"" + args.get(0) + "\" failed. Commandline args: " + cmdArgs, t);
         }
 
         logger.debug("\tSetting up Read/Write streams to the external ExifTool process...");

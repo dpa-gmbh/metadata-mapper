@@ -6,6 +6,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.io.ByteStreams;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.XMPMetadata;
 
@@ -67,7 +68,6 @@ public class ChainedImageMetadataOperations
      * Then it removes of these groups from the file
      *
      * @param metadataMapping underlying metadata mapper
-     * @return
      */
     public ChainedImageMetadataOperations clearMetadataGroupsReferredByMapping(final ImageMetadata metadataMapping)
     {
@@ -94,7 +94,7 @@ public class ChainedImageMetadataOperations
         return this;
     }
 
-    public void execute(final ExifTool exifTool) throws XMPException
+    public void execute(final ExifTool exifTool) throws XMPException, ExifToolIntegrationException, IOException
     {
 
         File tempImageFile = null;
@@ -128,8 +128,9 @@ public class ChainedImageMetadataOperations
             FileInputStream modifiedTempStream = new FileInputStream(tempImageFile);
             ByteStreams.copy(modifiedTempStream, modifiedImage);
             tempImageFile.delete();
+            tempImageFile = null;
         }
-        catch (Throwable t)
+        finally
         {
             if (tempImageFile != null)
             {
