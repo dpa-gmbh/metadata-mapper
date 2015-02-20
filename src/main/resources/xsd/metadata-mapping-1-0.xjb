@@ -26,5 +26,4 @@
     <bindings schemaLocation="metadata-mapping-1-0.xsd" node="//xs:simpleType[@name = 'XPathReturnType']">
         <typesafeEnumClass name="XPathReturnType"/>
     </bindings>
-
 </bindings>

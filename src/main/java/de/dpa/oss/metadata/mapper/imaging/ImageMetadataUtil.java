@@ -10,7 +10,7 @@ import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationEx
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
-import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMappingTargetType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMapsTo;
 import org.slf4j.Logger;
@@ -19,7 +19,6 @@ import org.w3c.dom.Document;
 
 import javax.xml.bind.JAXBException;
 import java.io.*;
-import java.util.TimeZone;
 
 /**
  * @author oliver langer
@@ -28,12 +27,9 @@ public class ImageMetadataUtil
 {
     private static Logger logger = LoggerFactory.getLogger(ImageMetadataUtil.class);
     private static TagInfo tagInfo = null;
-    public static final String DPA_MAPPING_RESOURCE = "/mapping/dpa-mapping.xml";
-    private static Mapping dpaMapping = null;
-    private TimeZone timeZone = TimeZone.getDefault();
     private final FileInputStream imageInputStream;
     private Document xmlDocument = null;
-    private Mapping mapping = null;
+    private MappingType mapping = null;
     private boolean emptyTargetTagGroups = false;
 
     public static ImageMetadataUtil modifyImageAt(final String pathToSourceImage) throws FileNotFoundException
@@ -46,28 +42,25 @@ public class ImageMetadataUtil
         imageInputStream = new FileInputStream(pathToSourceImage);
     }
 
-    public ImageMetadataUtil withTimeZone(final TimeZone timeZone)
-    {
-        this.timeZone = timeZone;
-        return this;
-    }
-
     public ImageMetadataUtil withPathToXMLDocument(final String pathToXMLDocument) throws Exception
     {
+        logger.debug( "Reading XML document :" + pathToXMLDocument);
         String xmlSource = new String(ByteStreams.toByteArray(new FileInputStream(pathToXMLDocument)));
         xmlDocument = XmlUtils.toDocument(xmlSource);
         return this;
     }
 
-    public ImageMetadataUtil withIPTCDPAMapping() throws JAXBException
+    public ImageMetadataUtil withDefaultMapping() throws JAXBException
     {
-        this.mapping = getDPAMapping();
+        logger.debug( "Using DefaultMapping");
+        this.mapping = getDefaultMapping();
         return this;
     }
 
-    public ImageMetadataUtil withPathToMapping(final String pathToMapping) throws FileNotFoundException, JAXBException
+    public ImageMetadataUtil withDefaultMappingOverridenBy(final String pathToMapping) throws FileNotFoundException, JAXBException
     {
-        this.mapping = readMappingFile(pathToMapping);
+        logger.debug( "Overriding default mapping by mapping definitions defined in:" + pathToMapping);
+        this.mapping = getDefaultConfigOverridenBy(pathToMapping);
         return this;
     }
 
@@ -112,48 +105,27 @@ public class ImageMetadataUtil
 
     }
 
-    public static Mapping readMappingResource(final String resourcePath, Object caller) throws FileNotFoundException, JAXBException
+    public static MappingType getDefaultConfigOverridenBy(final String resourcePath, Object caller) throws FileNotFoundException, JAXBException
     {
-        return readMapping(ResourceUtil.resourceAsStream(resourcePath, caller.getClass()));
+        return getDefaultConfigOverridenBy(ResourceUtil.resourceAsStream(resourcePath, caller.getClass()));
     }
 
-    public static Mapping readMappingFile(final String path) throws FileNotFoundException, JAXBException
+    public static MappingType getDefaultConfigOverridenBy(final String path) throws FileNotFoundException, JAXBException
     {
-        return readMapping(new FileInputStream(path));
+        return getDefaultConfigOverridenBy(new FileInputStream(path));
     }
 
-    public static Mapping readMapping(final InputStream is) throws JAXBException
+    /**
+     * Reads the default configuration and overrides it with the specified one
+     */
+    public static MappingType getDefaultConfigOverridenBy(final InputStream is) throws JAXBException
     {
-        return new MetadataMappingConfigReader().readConfig(is);
+        return new MetadataMappingConfigReader().readCustomizedDefaultConfig(is);
     }
 
-    private static synchronized Mapping readDPAMapping()
+    public static MappingType getDefaultMapping() throws JAXBException
     {
-        if (dpaMapping == null)
-        {
-            InputStream mappingConfig = ResourceUtil.resourceAsStream(DPA_MAPPING_RESOURCE, ImageMetadataUtil.class);
-            try
-            {
-                dpaMapping = new MetadataMappingConfigReader().readConfig(mappingConfig);
-            }
-            catch (JAXBException e)
-            {
-                logger.error("Reading dpa mapping file failed: " + DPA_MAPPING_RESOURCE);
-                dpaMapping = new Mapping();
-            }
-        }
-
-        return dpaMapping;
-    }
-
-    public static Mapping getDPAMapping()
-    {
-        if (dpaMapping == null)
-        {
-            readDPAMapping();
-        }
-
-        return dpaMapping;
+        return new MetadataMappingConfigReader().getDefaultConfig();
     }
 
     protected static synchronized TagInfo getExifToolTagInfo() throws ExifToolIntegrationException
@@ -170,16 +142,15 @@ public class ImageMetadataUtil
     /**
      * Validates the given configuration. In case of an validation error an {@link ConfigValidationException} is thrown
      *
-     * @param mappingToValidate
      * @throws ExifToolIntegrationException
      * @throws ConfigValidationException
      */
-    public static void validate(final Mapping mappingToValidate)
+    public static void validate(final MappingType mappingToValidate)
             throws ExifToolIntegrationException, ConfigValidationException
     {
         TagInfo tagInfo = ImageMetadataUtil.getExifToolTagInfo();
 
-        for (Mapping.Metadata metadata : mappingToValidate.getMetadata())
+        for (MappingType.Metadata metadata : mappingToValidate.getMetadata())
         {
             if (metadata.getXmp() != null)
             {
@@ -206,7 +177,7 @@ public class ImageMetadataUtil
     /**
      * exiftool uses a compound name scheme: A member of a struct has its structure name as prefix.
      */
-    private static void validateXMPElements(final Mapping.Metadata metadata, final TagInfo tagInfo, final XMPMapsTo mappingItem,
+    private static void validateXMPElements(final MappingType.Metadata metadata, final TagInfo tagInfo, final XMPMapsTo mappingItem,
             final String strPrefix)
             throws ConfigValidationException
     {

@@ -23,20 +23,20 @@ public class MetadataProcessingInfo
 
     final Map<String, TreeMap<Integer, QualifiedXPath>> partNameToOrderedXPaths;
     final Map<String, String> partnameToDefaultValues;
-    final Mapping.Metadata metadataMapping;
+    final MappingType.Metadata metadataMapping;
 
-    public MetadataProcessingInfo(final Mapping.Metadata metadataMapping)
+    public MetadataProcessingInfo(final MappingType.Metadata metadataMapping)
     {
         this.metadataMapping = metadataMapping;
         partNameToOrderedXPaths = createMapOfXPathsOrderedByRank(metadataMapping);
         partnameToDefaultValues = createMapOfDefaultValues(metadataMapping);
     }
 
-    private Map<String, String> createMapOfDefaultValues(final Mapping.Metadata metadataMapping)
+    private Map<String, String> createMapOfDefaultValues(final MappingType.Metadata metadataMapping)
     {
         Map<String, String> toReturn = new HashMap<>();
 
-        for (Mapping.Metadata.Default aDefault : metadataMapping.getDefault())
+        for (MappingType.Metadata.Default aDefault : metadataMapping.getDefault())
         {
             if (Strings.isNullOrEmpty(aDefault.getPart()))
             {
@@ -117,7 +117,7 @@ public class MetadataProcessingInfo
     /**
      * Add xpaths element to a hash map. Order entries by rank
      */
-    private Map<String, TreeMap<Integer, QualifiedXPath>> createMapOfXPathsOrderedByRank(final Mapping.Metadata metadata)
+    private Map<String, TreeMap<Integer, QualifiedXPath>> createMapOfXPathsOrderedByRank(final MappingType.Metadata metadata)
     {
         Map<String, TreeMap<Integer, QualifiedXPath>> partnameToOrderedXPath = new HashMap<>();
         for (QualifiedXPath qualifiedXPath : metadata.getXpath())

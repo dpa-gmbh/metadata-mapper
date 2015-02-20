@@ -3,8 +3,8 @@ package de.dpa.oss.metadata.mapper.imaging;
 import com.google.common.base.Strings;
 import com.google.common.collect.ListMultimap;
 import de.dpa.oss.common.StringCharacterMapping;
-import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
 import de.dpa.oss.metadata.mapper.common.DateTimeUtils;
+import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.*;
 import de.dpa.oss.metadata.mapper.imaging.iptc.IptcFieldToType;
@@ -35,10 +35,10 @@ public class G2ToMetadataMapper
     private StringCharacterMapping xmpStringCharacterMapping = null;
     private EncodingCharset xmpCharacterCharset = EncodingCharset.UTF8;
 
-    public G2ToMetadataMapper(final Mapping mapping)
+    public G2ToMetadataMapper(final MappingType mapping)
     {
         metadataProcessingInfos = new ArrayList<>();
-        for (Mapping.Metadata metadataMapping : mapping.getMetadata())
+        for (MappingType.Metadata metadataMapping : mapping.getMetadata())
         {
             metadataProcessingInfos.add(new MetadataProcessingInfo(metadataMapping));
         }

@@ -8,7 +8,7 @@ import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
 import de.dpa.oss.metadata.mapper.imaging.ImageMetadataUtil;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CharacterMappingType;
-import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -67,12 +67,12 @@ public class MetadataMapper
         if (mapping == null)
         {
             System.out.println("Using default mapping.");
-            imageMetadataUtil.withIPTCDPAMapping();
+            imageMetadataUtil.withDefaultMapping();
         }
         else
         {
             System.out.println("Using mapping file \"" + mapping + "\".");
-            imageMetadataUtil.withPathToMapping(mapping);
+            imageMetadataUtil.withDefaultMappingOverridenBy(mapping);
         }
 
         if( emptyTagGroupBeforeMapping )
@@ -148,14 +148,14 @@ public class MetadataMapper
 
     private static void printCharacterMappingTable() throws FileNotFoundException, JAXBException
     {
-        final Mapping mappingTable;
+        final MappingType mappingTable;
         if (mapping == null)
         {
-            mappingTable = ImageMetadataUtil.getDPAMapping();
+            mappingTable = ImageMetadataUtil.getDefaultMapping();
         }
         else
         {
-            mappingTable = ImageMetadataUtil.readMappingFile(mapping);
+            mappingTable = ImageMetadataUtil.getDefaultConfigOverridenBy(mapping);
         }
 
         Map<Integer, String> codepointAlternativeCharacters = new HashMap<>();
@@ -203,7 +203,7 @@ public class MetadataMapper
             System.err.println("* ERROR: Unable to read mapping config: " + validateMapping);
         }
 
-        Mapping mappingToValidate = ImageMetadataUtil.readMappingFile(validateMapping);
+        final MappingType mappingToValidate = ImageMetadataUtil.getDefaultConfigOverridenBy(validateMapping);
         try
         {
             ImageMetadataUtil.validate(mappingToValidate);

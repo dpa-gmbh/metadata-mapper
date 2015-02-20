@@ -2,9 +2,9 @@ package de.dpa.oss.metadata.mapper.imaging;
 
 import de.dpa.oss.common.ResourceUtil;
 import de.dpa.oss.metadata.mapper.common.DateTimeUtils;
-import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
-import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
+import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.*;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -27,7 +27,7 @@ public class G2ToMetadataMapperTest
         String xmlDocument = ResourceUtil.resourceAsString("/content/imageMetadata/simple-test-inputfile.xml",this);
 
         Document document = XmlUtils.toDocument(xmlDocument);
-        Mapping mapping = new MetadataMappingConfigReader().readConfig(mappingConfig);
+        MappingType mapping = new MetadataMappingConfigReader().readConfig(mappingConfig);
 
         G2ToMetadataMapper g2ToMetadataMapper = new G2ToMetadataMapper(mapping);
 

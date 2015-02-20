@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customized-mapping name="customized" inherits="default-mapping" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/ file:///C:/dev/ws/service-dispatch/src/main/resources/mapping/xsd/metadata-mapping-1-0.xsd">
+    <config>
+        <timezone>Europe/London</timezone>
+        <iim charset="utf-8"/>
+        <xmp charset="utf-8"/>
+    </config>
+    <metadata name="Headline">
+        <xpath rank="1"><![CDATA[//contentMeta/headline[@rank='1']]]></xpath>
+        <iim>
+            <!-- just for testing purpose: -->
+            <mapsTo dataset="90" field="City" targetType="STRING"/>
+        </iim>
+        <xmp>
+            <mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/xap/1.0/rights/" field="UsageTerms"/>
+        </xmp>
+    </metadata>
+</customized-mapping>

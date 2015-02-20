@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mapping name="default" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/ file:///C:/dev/ws/service-dispatch/src/main/resources/mapping/xsd/metadata-mapping-1-0.xsd">
+<mapping name="defaultConfig" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/ file:///C:/dev/ws/service-dispatch/src/main/resources/mapping/xsd/metadata-mapping-1-0.xsd">
 	<config>
 		<timezone>Europe/Berlin</timezone>
 		<!--timezone tz="CET"/-->
@@ -63,7 +63,7 @@
 
 	<metadata name="Description">
 		<xpath rank="1"><![CDATA[//contentMeta/description[@role='drol:caption']]]></xpath>
-		<xpath rank="2"><![CDATA[//contentMeta/description[not(@role)]]></xpath>
+		<xpath rank="2"><![CDATA[//contentMeta/description[not(@role)]]]></xpath>
 		<iim>
 			<mapsTo dataset="120" field="Caption/Abstract" targetType="STRING"/>
 		</iim>
@@ -176,7 +176,7 @@
 
 	<metadata name="Job Id">
 		<xpath rank="1"><![CDATA[//contentMeta/altId[@type='dpatype:orgTransRef']]]></xpath>
-		<xpath rank="2"><![CDATA[///newsItem/itemMeta/memberOf/@literal]]></xpath>
+		<xpath rank="2"><![CDATA[//newsItem/itemMeta/memberOf/@literal]]></xpath>
 		<iim>
 			<mapsTo dataset="103" field="Original Transmission, Reference" targetType="STRING"/>
 		</iim>

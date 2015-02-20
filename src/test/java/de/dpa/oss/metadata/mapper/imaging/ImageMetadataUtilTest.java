@@ -2,11 +2,12 @@ package de.dpa.oss.metadata.mapper.imaging;
 
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
-import de.dpa.oss.metadata.mapper.imaging.configuration.generated.Mapping;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMapsTo;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBException;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -16,11 +17,11 @@ public class ImageMetadataUtilTest
     public void shouldValidateXMPEntry() throws ExifToolIntegrationException, ConfigValidationException
     {
         // given
-        Mapping mapping = new Mapping();
-        List<Mapping.Metadata> metadataList = mapping.getMetadata();
+        MappingType mapping = new MappingType();
+        List<MappingType.Metadata> metadataList = mapping.getMetadata();
         XMPMapping xmpMapping = new XMPMapping();
         List<XMPMapsTo> mapsToList = xmpMapping.getMapsTo();
-        Mapping.Metadata metadata = new Mapping.Metadata();
+        MappingType.Metadata metadata = new MappingType.Metadata();
         metadata.setXmp(xmpMapping);
         metadataList.add(metadata);
 
@@ -39,11 +40,11 @@ public class ImageMetadataUtilTest
     public void shouldValidateXMPAndIIMEntries() throws ExifToolIntegrationException, ConfigValidationException
     {
         // given
-        Mapping mapping = new Mapping();
-        List<Mapping.Metadata> metadataList = mapping.getMetadata();
+        MappingType mapping = new MappingType();
+        List<MappingType.Metadata> metadataList = mapping.getMetadata();
         XMPMapping xmpMapping = new XMPMapping();
         List<XMPMapsTo> mapsToList = xmpMapping.getMapsTo();
-        Mapping.Metadata metadata = new Mapping.Metadata();
+        MappingType.Metadata metadata = new MappingType.Metadata();
 
         metadata.setXmp(xmpMapping);
         metadataList.add(metadata);
@@ -73,11 +74,11 @@ public class ImageMetadataUtilTest
     public void shouldThrowValidateExceptionIfXMPTagIsUnknown() throws ExifToolIntegrationException, ConfigValidationException
     {
         // given
-        Mapping mapping = new Mapping();
-        List<Mapping.Metadata> metadataList = mapping.getMetadata();
+        MappingType mapping = new MappingType();
+        List<MappingType.Metadata> metadataList = mapping.getMetadata();
         XMPMapping xmpMapping = new XMPMapping();
         List<XMPMapsTo> mapsToList = xmpMapping.getMapsTo();
-        Mapping.Metadata metadata = new Mapping.Metadata();
+        MappingType.Metadata metadata = new MappingType.Metadata();
         metadata.setXmp(xmpMapping);
         metadataList.add(metadata);
 
@@ -94,11 +95,11 @@ public class ImageMetadataUtilTest
     public void shouldThrowExceptionIfGroupIsUnknown() throws ExifToolIntegrationException, ConfigValidationException
     {
         // given
-        Mapping mapping = new Mapping();
-        List<Mapping.Metadata> metadataList = mapping.getMetadata();
+        MappingType mapping = new MappingType();
+        List<MappingType.Metadata> metadataList = mapping.getMetadata();
         XMPMapping xmpMapping = new XMPMapping();
         List<XMPMapsTo> mapsToList = xmpMapping.getMapsTo();
-        Mapping.Metadata metadata = new Mapping.Metadata();
+        MappingType.Metadata metadata = new MappingType.Metadata();
         metadata.setXmp(xmpMapping);
         metadataList.add(metadata);
 
@@ -112,10 +113,10 @@ public class ImageMetadataUtilTest
     }
 
     @Test
-    public void shouldValidateDPAMapping() throws ExifToolIntegrationException, ConfigValidationException
+    public void shouldValidateDPAMapping() throws ExifToolIntegrationException, ConfigValidationException, JAXBException
     {
         // given
-        Mapping dpaMapping = ImageMetadataUtil.getDPAMapping();
+        MappingType dpaMapping = ImageMetadataUtil.getDefaultMapping();
 
         // when
         ImageMetadataUtil.validate(dpaMapping);

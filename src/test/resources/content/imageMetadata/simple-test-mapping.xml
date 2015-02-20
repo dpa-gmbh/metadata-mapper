@@ -2,32 +2,32 @@
 <mapping name="default" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/">
     <config>
         <timezone>Europe/Berlin</timezone>
-        <iim charset="iso8859-15" characterMappingRef="utf8-to-iso8859-15" defaultReplaceChar="·"/>
+        <iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-15" defaultReplaceChar="·"/>
         <xmp charset="utf-8" defaultReplaceChar="·"/>
     </config>
 
-    <metadata name="stringMapping" cardinality="ONE">
+    <metadata name="stringMapping">
         <xpath rank="1"><![CDATA[//stringMapping]]></xpath>
         <xmp>
             <mapsTo field="Credit" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
         </xmp>
     </metadata>
 
-    <metadata name="IntegerMapping" cardinality="ONE">
+    <metadata name="IntegerMapping">
         <xpath><![CDATA[//integerMapping]]></xpath>
         <xmp>
             <mapsTo targetType="Integer" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Urgency"/>
         </xmp>
     </metadata>
 
-    <metadata name="DateMapping" cardinality="ONE">
+    <metadata name="DateMapping">
         <xpath rank="1"><![CDATA[//dateMapping]]></xpath>
         <xmp>
             <mapsTo field="IptcLastEdited" targetType="Date" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
         </xmp>
     </metadata>
 
-    <metadata name="LangAltMapping" cardinality="ONE">
+    <metadata name="LangAltMapping">
         <xpath part="description"><![CDATA[//description]]></xpath>
 
         <xmp>
@@ -36,10 +36,10 @@
     </metadata>
 
 
-    <metadata name="StructMapping" cardinality="ONE">
+    <metadata name="StructMapping">
         <xpath part="city"><![CDATA[//structExample/address/city]]></xpath>
         <xpath part="lines"><![CDATA[//structExample/address/lines/line]]></xpath>
-        <xmp>                    ArtworkOrObject
+        <xmp>ArtworkOrObject
             <mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct" field="CreatorContactInfo">
                 <mapsTo part-ref="city" field="CiAdrCity" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
                 <mapsTo part-ref="lines" field="CiAdrExtadr" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"
@@ -51,7 +51,7 @@
         </xmp>
     </metadata>
 
-    <metadata name="SequenceMapping" cardinality="MANY">
+    <metadata name="SequenceMapping">
         <xpath><![CDATA[//sequenceMapping/item]]></xpath>
         <xmp>
             <mapsTo field="ImageCreator" targetType="Sequence" targetNamespace="http://ns.useplus.org/ldf/xmp/1.0/">
@@ -60,7 +60,7 @@
         </xmp>
     </metadata>
 
-    <metadata name="bagMapping" cardinality="MANY">
+    <metadata name="bagMapping">
         <xpath><![CDATA[//bagMapping/item]]></xpath>
         <xmp>
             <mapsTo field="OrganisationInImageName" targetType="Bag" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">
