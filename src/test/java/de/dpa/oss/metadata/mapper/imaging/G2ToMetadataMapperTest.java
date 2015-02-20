@@ -27,7 +27,7 @@ public class G2ToMetadataMapperTest
         String xmlDocument = ResourceUtil.resourceAsString("/content/imageMetadata/simple-test-inputfile.xml",this);
 
         Document document = XmlUtils.toDocument(xmlDocument);
-        MappingType mapping = new MetadataMappingConfigReader().readConfig(mappingConfig);
+        MappingType mapping = new MetadataMappingConfigReader().readCustomizedDefaultConfig(mappingConfig);
 
         G2ToMetadataMapper g2ToMetadataMapper = new G2ToMetadataMapper(mapping);
 
@@ -38,7 +38,7 @@ public class G2ToMetadataMapperTest
         assertThat( imageMetadata.getXmpMetadata(), is(notNullValue()));
         
         List<XMPMetadata> xmpMetadata = imageMetadata.getXmpMetadata();
-        assertThat(xmpMetadata, hasSize(7));
+        assertThat(xmpMetadata, hasSize(8));
         assertThat(xmpMetadata.get(0), instanceOf(XMPString.class));
         assertThat( ((XMPString) xmpMetadata.get(0)).getValue(), is("A sample string") );
         assertThat(xmpMetadata.get(1), instanceOf( XMPInteger.class));

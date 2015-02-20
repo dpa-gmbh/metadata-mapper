@@ -27,25 +27,6 @@ public class MetadataMappingConfigReader
     public static MappingType defaultConfig = null;
     public static final String DEFAULT_MAPPING = "/mapping/default-mapping.xml";
 
-
-    public MappingType readConfig(final InputStream is) throws JAXBException
-    {
-        final JAXBContext jaxbContext = JAXBContext
-                .newInstance(MappingType.class);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        JAXBElement<MappingType> root = unmarshaller.unmarshal( new StreamSource(is), MappingType.class);
-
-        if (root== null)
-        {
-            logger.info("No mapping configuration file found. Unable to map G2 document data to images");
-            return null;
-        }
-        else
-        {
-            return root.getValue();
-        }
-    }
-
     public CustomizedMappingType readCustomizedDefaultConfig(final InputStream customizationsIS) throws JAXBException
     {
         final CustomizedMappingType customizations = readConfig(customizationsIS, CustomizedMappingType.class);
@@ -93,7 +74,6 @@ public class MetadataMappingConfigReader
         return readConfig( this.getClass().getResourceAsStream( DEFAULT_MAPPING),
                 MappingType.class);
     }
-
 
     private <T> T readConfig( final InputStream is, Class<T> clazz ) throws JAXBException
     {
