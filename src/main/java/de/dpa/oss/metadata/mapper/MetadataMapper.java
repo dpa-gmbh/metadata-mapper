@@ -42,7 +42,8 @@ public class MetadataMapper
 
     private static Boolean emptyTagGroupBeforeMapping = false;
 
-    @Argument(alias = "m", required = false, description = "filename of mapping file. By default it uses dpa mapping")
+    @Argument(alias = "m", required = false, description = "filename of mapping file which is used to *override* and/or enhance the default "
+            +"mapping. By default it uses dpa mapping")
     private static String mapping = null;
 
     @Argument(alias = "c", required = false, description = "Outputs configured character mapping table. Does not perform any mapping. "

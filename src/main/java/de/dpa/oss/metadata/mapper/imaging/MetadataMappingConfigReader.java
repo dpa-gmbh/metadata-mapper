@@ -71,6 +71,10 @@ public class MetadataMappingConfigReader
         customizations.getMetadata().clear();
         customizations.getMetadata().addAll( mergedMappings );
 
+        if( customizations.getConfig() == null )
+        {
+            customizations.setConfig(defaultMapping.getConfig());
+        }
         return customizations;
     }
 
