@@ -31,24 +31,23 @@ public class MetadataMapper
     @Argument(alias = "d", required = false, description = "filename of input G2 document")
     private static String g2doc = null;
 
-    @Argument(alias = "v", required = false, description = "Validate given mapping file")
+    @Argument(alias = "v", required = false, description = "Validate given mappingCustomization file")
     private static String validateMapping = null;
 
-    //@Argument(alias = "k", required = false, description = "keep existing metadata. By default existing metadata will be removed")
-    //private static Boolean keepExistingMetadata = false;
-
-    @Argument(alias = "e", required = false, description = "Removes all tags from those tag groups which are used by the mapping. "
+    @Argument(alias = "e", required = false, description = "Removes all tags from those tag groups which are used by the mappingCustomization. "
         + "By default mapped tag values will be merged with existing tags")
-
     private static Boolean emptyTagGroupBeforeMapping = false;
 
-    @Argument(alias = "m", required = false, description = "filename of mapping file which is used to *override* and/or enhance the default "
-            +"mapping. By default it uses dpa mapping")
-    private static String mapping = null;
+    @Argument(alias = "m", required = false, description = "mappingCustomization file which is used to override and/or enhance the default "
+            +"mappingCustomization. By default it uses dpa mappingCustomization")
+    private static String mappingCustomization = null;
 
-    @Argument(alias = "c", required = false, description = "Outputs configured character mapping table. Does not perform any mapping. "
-            + "Uses default mapping file if argument -m is omitted")
+    @Argument(alias = "c", required = false, description = "Outputs configured character mappingCustomization table. Does not perform any mappingCustomization. "
+            + "Uses default mappingCustomization file if argument -m is omitted")
     private static boolean printCharacterMappingTable = false;
+
+    @Argument(alias = "h", required = false)
+    private static boolean help = false;
 
     private static void performMapping() throws Exception
     {
@@ -63,15 +62,15 @@ public class MetadataMapper
 
         ImageMetadataUtil imageMetadataUtil = ImageMetadataUtil.modifyImageAt(inputImage);
 
-        if (mapping == null)
+        if (mappingCustomization == null)
         {
-            System.out.println("Using default mapping.");
+            System.out.println("Using default mappingCustomization.");
             imageMetadataUtil.withDefaultMapping();
         }
         else
         {
-            System.out.println("Using mapping file \"" + mapping + "\".");
-            imageMetadataUtil.withDefaultMappingOverridenBy(mapping);
+            System.out.println("Using mappingCustomization file \"" + mappingCustomization + "\".");
+            imageMetadataUtil.withDefaultMappingOverridenBy(mappingCustomization);
         }
 
         if( emptyTagGroupBeforeMapping )
@@ -148,13 +147,13 @@ public class MetadataMapper
     private static void printCharacterMappingTable() throws FileNotFoundException, JAXBException
     {
         final MappingType mappingTable;
-        if (mapping == null)
+        if (mappingCustomization == null)
         {
             mappingTable = ImageMetadataUtil.getDefaultMapping();
         }
         else
         {
-            mappingTable = ImageMetadataUtil.getDefaultConfigOverridenBy(mapping);
+            mappingTable = ImageMetadataUtil.getDefaultConfigOverridenBy(mappingCustomization);
         }
 
         Map<Integer, String> codepointAlternativeCharacters = new HashMap<>();
@@ -191,7 +190,7 @@ public class MetadataMapper
     {
         if (validateMapping == null)
         {
-            System.err.println("* ERROR: No mapping file to validate");
+            System.err.println("* ERROR: No mappingCustomization file to validate");
             Args.usage(MetadataMapper.class);
             System.exit(1);
         }
@@ -199,7 +198,7 @@ public class MetadataMapper
         File file = new File(validateMapping);
         if (!(file.exists() && file.isFile()))
         {
-            System.err.println("* ERROR: Unable to read mapping config: " + validateMapping);
+            System.err.println("* ERROR: Unable to read mappingCustomization config: " + validateMapping);
         }
 
         final MappingType mappingToValidate = ImageMetadataUtil.getDefaultConfigOverridenBy(validateMapping);
@@ -212,7 +211,7 @@ public class MetadataMapper
         }
         catch (ConfigValidationException ex)
         {
-            System.err.println("* ERROR: Validation failed for metadata mapping named \"" + ex.getMetadataMappingName()
+            System.err.println("* ERROR: Validation failed for metadata mappingCustomization named \"" + ex.getMetadataMappingName()
                     + "\" using group reference \"" + ex.getConfiguredNamespace() + "\", field \"" + ex.getConfiguredFieldname() + "\"");
             System.exit(1);
         }
@@ -221,6 +220,7 @@ public class MetadataMapper
     public static void main(String argv[])
     {
         System.out.println("** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH");
+
         try
         {
             Args.parse(MetadataMapper.class, argv);
@@ -229,6 +229,12 @@ public class MetadataMapper
         {
             Args.usage(MetadataMapper.class);
             System.exit(1);
+        }
+
+        if( help )
+        {
+            Args.usage( MetadataMapper.class);
+            System.exit(0);
         }
 
         try
@@ -256,7 +262,7 @@ public class MetadataMapper
         }
         catch (Exception e)
         {
-            System.err.println("* ERROR: Unclassified error during mapping:" + e);
+            System.err.println("* ERROR: Unclassified error during mappingCustomization:" + e);
         }
 
         System.exit(0);
