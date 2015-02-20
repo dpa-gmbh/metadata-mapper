@@ -52,8 +52,9 @@ Usage: de.dpa.oss.metadata.mapper.MetadataMapper
   -outputImage (-o) [String] filename of resulting image
   -g2doc (-d) [String] filename of input G2 document
   -validateMapping (-v) [String] Validate given mapping file
+  -emptyTagGroupBeforeMapping (-e) [flag] Removes all tags from those tag groups which are used by the mapping. By default mapped tag values will be merged with existing tags
   -mapping (-m) [String] filename of mapping file. By default it uses dpa mapping
-  -printCharacterMappingTable (-c) [flag] Outputs configured character mapping table. Does not perform any mapping. Uses default mapping file if argument -m is omittet
+  -printCharacterMappingTable (-c) [flag] Outputs configured character mapping table. Does not perform any mapping. Uses default mapping file if argument -m is omitted
 ```
 
 The distribution contains samples in *./example*. Call the tool using these samples as
