@@ -30,7 +30,14 @@ variable named EXIFTOOL
  <pre>
  export EXIFTOOL=/myinstallhome/exiftool
  </pre>
-
+Alternatively you may setup the java system property
+ <pre>
+ -Dexiftool.path=/myinstallhome/exiftool
+ </pre>
+or directly call the wrapper in order to specify the path:
+ <pre>
+ de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool.setPathToExifTool("/myinstallhome/exiftool")
+ </pre>
 
 # Building the Command Line Tool
 

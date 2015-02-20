@@ -43,64 +43,38 @@ public class ExifTool
     private static Logger logger = LoggerFactory.getLogger(ExifTool.class);
 
     /**
-     * The absolute path to the ExifTool executable on the host system running
-     * this class as defined by the "<code>exiftool.path</code>" system
-     * property.
-     * <p/>
-     * If ExifTool is on your system path and running the command "exiftool"
-     * successfully executes it, leaving this value unchanged will work fine on
-     * any platform. If the ExifTool executable is named something else or not
-     * in the system path, then this property will need to be set to point at it
-     * before using this class.
-     * <p/>
-     * This system property can be set on startup with:<br/>
-     * <code>
-     * -Dexiftool.path=/path/to/exiftool
-     * </code> or by calling {@link System#setProperty(String, String)} before
-     * this class is loaded.
-     * <p/>
-     * On Windows be sure to double-escape the path to the tool, for example:
-     * <code>
-     * -Dexiftool.path=C:\\Tools\\exiftool.exe
-     * </code>
-     * <p/>
-     * Default value is "<code>exiftool</code>".
-     * <h3>Relative Paths</h3>
-     * Relative path values (e.g. "bin/tools/exiftool") are executed with
-     * relation to the base directory the VM process was started in. Essentially
-     * the directory that <code>new File(".").getAbsolutePath()</code> points at
-     * during runtime.
+     * Environment variable referring to exiftool call
      */
-    public static final String EXIF_TOOL_PATH = System.getProperty(
-            "exiftool.path", "exiftool");
+    public static final String ENVIRONMENT_VAR_EXIFTOOL_PATH = "EXIFTOOL";
 
     /**
-     * Interval (in milliseconds) of inactivity before the cleanup thread wakes
-     * up and cleans up the daemon ExifTool process and the read/write streams
-     * used to communicate with it when the {@link #stayOpen} feature is
-     * used.
-     * <p/>
-     * Ever time a call to <code>getImageMeta</code> is processed, the timer
-     * keeping track of cleanup is reset; more specifically, this class has to
-     * experience no activity for this duration of time before the cleanup
-     * process is fired up and cleans up the host OS process and the stream
-     * resources.
-     * <p/>
-     * Any subsequent calls to <code>getImageMeta</code> after a cleanup simply
-     * re-initializes the resources.
-     * <p/>
-     * This system property can be set on startup with:<br/>
-     * <code>
-     * -Dexiftool.processCleanupDelay=600000
-     * </code> or by calling {@link System#setProperty(String, String)} before
-     * this class is loaded.
-     * <p/>
-     * Setting this value to 0 disables the automatic cleanup thread completely
-     * and the caller will need to manually cleanup the external ExifTool
-     * process and read/write streams by calling {@link #close()}.
-     * <p/>
-     * Default value is <code>600,000</code> (10 minutes).
+     * java system property used to lookup for the exiftool program
      */
+    public static final String JAVA_SYSTEM_PROPERTY = "exiftool.path";
+
+    private static String pathToExifTool;
+
+    static
+    {
+        if (System.getenv().containsKey(ENVIRONMENT_VAR_EXIFTOOL_PATH))
+        {
+            pathToExifTool = System.getenv().get(ENVIRONMENT_VAR_EXIFTOOL_PATH);
+        }
+        else
+        {
+          pathToExifTool = System.getProperty(JAVA_SYSTEM_PROPERTY,"exiftool");
+        }
+    }
+
+    public static String getPathToExifTool() {
+        return pathToExifTool;
+    }
+
+    public static void setPathToExifTool( final String pathToExifTool )
+    {
+        ExifTool.pathToExifTool = pathToExifTool;
+    }
+
     public static final long PROCESS_CLEANUP_DELAY = Long.getLong(
             "exiftool.processCleanupDelay", 600000);
 
@@ -115,8 +89,11 @@ public class ExifTool
      */
     protected static final String CLEANUP_THREAD_NAME = "ExifTool Cleanup Thread";
 
+    /**
+     * @param args Should only contain commandline parameters which have to be passed to the tool
+     */
     protected static IOStream startExifToolProcess(List<String> args)
-            throws RuntimeException
+            throws RuntimeException, ExifToolIntegrationException
     {
         Process proc;
         IOStream streams;
@@ -124,21 +101,15 @@ public class ExifTool
         logger.debug("\tAttempting to start external ExifTool process using args: %s",
                 args);
 
+        args.add(0, getPathToExifTool());
         try
         {
             proc = new ProcessBuilder(args).start();
             logger.debug("\t\tSuccessful");
         }
-        catch (Exception e)
+        catch (Throwable t)
         {
-            String message = "Unable to start external ExifTool process using the execution arguments: "
-                    + args
-                    + ". Ensure ExifTool is installed correctly and runs using the command path '"
-                    + EXIF_TOOL_PATH
-                    + "' as specified by the 'exiftool.path' system property.";
-
-            logger.debug(message);
-            throw new RuntimeException(message, e);
+            throw new ExifToolIntegrationException("Unable to start exiftool properly. Commandline args: " + args, t);
         }
 
         logger.debug("\tSetting up Read/Write streams to the external ExifTool process...");
@@ -302,7 +273,7 @@ public class ExifTool
                 resetCleanupTask();
 
 			/*
-			 * If this is our first time calling getImageMeta with a stayOpen
+             * If this is our first time calling getImageMeta with a stayOpen
 			 * connection, set up the persistent process and run it so it is
 			 * ready to receive commands from us.
 			 */
@@ -311,7 +282,6 @@ public class ExifTool
                     final List<String> args = new ArrayList<>();
                     logger.debug("\tStarting daemon ExifTool process and creating read/write streams (this only happens once)...");
 
-                    args.add(EXIF_TOOL_PATH);
                     args.add("-stay_open");
                     args.add("True");
                     args.add("-@");
@@ -334,7 +304,7 @@ public class ExifTool
                     streams.writer.write('\n');
                 }
                 logger.debug("\tExecuting ExifTool...");
-                logger.debug( "Using arguments: " + cmdArgs);
+                logger.debug("Using arguments: " + cmdArgs);
                 // Begin tracking the duration ExifTool takes to respond.
                 exifToolCallElapsedTime = System.currentTimeMillis();
 
@@ -352,8 +322,6 @@ public class ExifTool
 			 * execution arguments completely each time.
 			 */
                 final List<String> args = new ArrayList<>();
-                args.add(EXIF_TOOL_PATH);
-
                 args.addAll(Arrays.asList(cmdArgs));
 
                 if (imageFile != null)
@@ -364,7 +332,7 @@ public class ExifTool
                 logger.debug("\tExecuting ExifTool...");
                 exifToolCallElapsedTime = System.currentTimeMillis();
                 // Run the ExifTool with our args.
-                logger.debug( "Using arguments: " + args );
+                logger.debug("Using arguments: " + args);
                 streams = startExifToolProcess(args);
 
             }
@@ -410,8 +378,6 @@ public class ExifTool
         }
         return sb.toString();
     }
-
-
 
     /**
      * Helper method used to make canceling the current task and scheduling a
@@ -530,7 +496,7 @@ public class ExifTool
         runExiftool(image, cmdArgs);
     }
 
-    private void addArgsToSetImageMetadata( final List<String> args, final ListMultimap<String, String> tags)
+    private void addArgsToSetImageMetadata(final List<String> args, final ListMultimap<String, String> tags)
     {
         for (Map.Entry<String, String> entry : tags.entries())
         {
@@ -652,7 +618,8 @@ public class ExifTool
         }
     }
 
-    public static ExifToolBuilder anExifTool() {
+    public static ExifToolBuilder anExifTool()
+    {
         return new ExifToolBuilder();
     }
 
@@ -676,7 +643,7 @@ public class ExifTool
         }
     }
 
-    public static ExifToolOperationChainBuilder modifyImage( final File image )
+    public static ExifToolOperationChainBuilder modifyImage(final File image)
 
     {
         if (image == null)
@@ -688,7 +655,7 @@ public class ExifTool
                             + image.getAbsolutePath()
                             + "], ensure that the image exists at the given path and that the executing Java process has permissions to read it.");
 
-        return new ExifToolOperationChainBuilder( image );
+        return new ExifToolOperationChainBuilder(image);
     }
 
     /**
@@ -733,19 +700,19 @@ public class ExifTool
          * or {@link #getSupportedTagsOfGroups()} to get the list of TagGroups which contains the group name
          * (g0 / {@link TagGroup#getName()}) and the specific location ( g1 / {@link TagGroup#getSpecificLocation()})
          */
-        public ExifToolOperationChainBuilder clearTagGroup( final String groupName, final String specificLocation )
+        public ExifToolOperationChainBuilder clearTagGroup(final String groupName, final String specificLocation)
         {
-            tagGroupsToClear.add( "-" + groupName + ":" + specificLocation + "=");
+            tagGroupsToClear.add("-" + groupName + ":" + specificLocation + "=");
             return this;
         }
 
-        public void execute( final ExifTool exifTool ) throws ExifToolIntegrationException
+        public void execute(final ExifTool exifTool) throws ExifToolIntegrationException
         {
             final List<String> cmdArgs = new ArrayList<>();
-            cmdArgs.addAll( this.codedCharsetOptions);
+            cmdArgs.addAll(this.codedCharsetOptions);
             cmdArgs.addAll(tagGroupsToClear);
             cmdArgs.addAll(tagModifications);
-            exifTool.runExiftool( inputSource,cmdArgs);
+            exifTool.runExiftool(inputSource, cmdArgs);
         }
     }
 }

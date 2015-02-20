@@ -13,6 +13,7 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.fail;
 
 public class ExifToolTest
 {
@@ -33,4 +34,29 @@ public class ExifToolTest
         assertThat(xmpDC.getTagInfoById("title").getType(), is("lang-alt"));
     }
 
+    @Test
+    public void shouldReportErrorIfExiftoolNotFound()
+    {
+        // given
+        final String currentSetting = ExifTool.getPathToExifTool();
+
+        ExifTool.setPathToExifTool( "notfound");
+        boolean rightExceptionThrown = false;
+        // when
+        try
+        {
+            ExifTool.anExifTool().build().getSupportedTagsOfGroups();
+        }
+        catch (ExifToolIntegrationException e)
+        {
+            rightExceptionThrown = true;
+        }
+        finally
+        {
+            ExifTool.setPathToExifTool(currentSetting);
+        }
+
+        // then
+        assertThat(rightExceptionThrown, is(true));
+    }
 }
