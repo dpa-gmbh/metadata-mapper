@@ -6,6 +6,7 @@ import de.dpa.oss.common.StringCharacterMappingTable;
 import de.dpa.oss.metadata.mapper.imaging.ConfigStringCharacterMappingBuilder;
 import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
 import de.dpa.oss.metadata.mapper.imaging.ImageMetadataUtil;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CharacterMappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
@@ -45,6 +46,9 @@ public class MetadataMapper
     @Argument(alias = "c", required = false, description = "Outputs configured character mappingCustomization table. Does not perform any mappingCustomization. "
             + "Uses default mappingCustomization file if argument -m is omitted")
     private static boolean printCharacterMappingTable = false;
+
+    @Argument(alias = "t", required = false, description = "Path to exiftool. Alternatively you may set environment variable EXIFTOOL")
+    private static String exiftoolPath = null;
 
     @Argument(alias = "h", required = false)
     private static boolean help = false;
@@ -235,6 +239,11 @@ public class MetadataMapper
         {
             Args.usage( MetadataMapper.class);
             System.exit(0);
+        }
+
+        if( exiftoolPath != null )
+        {
+            ExifTool.setPathToExifTool( exiftoolPath );
         }
 
         try
