@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mapping name="default" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/">
+<customized-mapping name="default" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/">
     <config>
         <timezone>Europe/Berlin</timezone>
-        <iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-15" defaultReplaceChar="·"/>
+        <iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
         <xmp charset="utf-8" defaultReplaceChar="·"/>
     </config>
 
@@ -39,7 +39,7 @@
     <metadata name="StructMapping">
         <xpath part="city"><![CDATA[//structExample/address/city]]></xpath>
         <xpath part="lines"><![CDATA[//structExample/address/lines/line]]></xpath>
-        <xmp>ArtworkOrObject
+        <xmp>
             <mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Struct" field="CreatorContactInfo">
                 <mapsTo part-ref="city" field="CiAdrCity" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" targetType="Text"/>
                 <mapsTo part-ref="lines" field="CiAdrExtadr" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"
@@ -106,11 +106,11 @@
         </xmp>
     </metadata-->
 
-    <characterMapping id="utf8-to-iso8859-15">
+    <characterMapping id="utf8-to-iso8859-1">
         <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
         <character from="0xa8" to="0x22" comment="from ¨; to=&quot;"/>
         <character from="0xb4" to="0x27" comment="from ´; to='"/>
         <character from="0x201d" to="0x22" comment="from ”; to=&quot;"/>
         <character from="0x201e" to="0x22" comment="from „; to=&quot;"/>
     </characterMapping>
-</mapping>
+</customized-mapping>

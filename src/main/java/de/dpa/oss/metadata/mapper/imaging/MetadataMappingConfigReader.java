@@ -25,7 +25,7 @@ public class MetadataMappingConfigReader
     private static Logger logger = LoggerFactory.getLogger(MetadataMappingConfigReader.class);
 
     public static MappingType defaultConfig = null;
-    public static final String DEFAULT_MAPPING = "/mapping/dpa-mapping.xml";
+    public static final String DEFAULT_MAPPING = "/mapping/default-mapping.xml";
 
 
     public MappingType readConfig(final InputStream is) throws JAXBException

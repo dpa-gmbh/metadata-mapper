@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<customized-mapping name="customized" inherits="default-mapping" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/ file:///C:/dev/ws/service-dispatch/src/main/resources/mapping/xsd/metadata-mapping-1-0.xsd">
+<customized-mapping name="customized" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/ file:///C:/dev/ws/service-dispatch/src/main/resources/mapping/xsd/metadata-mapping-1-0.xsd">
     <config>
         <timezone>Europe/London</timezone>
         <iim charset="utf-8"/>

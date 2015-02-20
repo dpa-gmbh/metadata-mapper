@@ -42,8 +42,6 @@ public class MetadataMapper
 
     private static Boolean emptyTagGroupBeforeMapping = false;
 
-    public static final String DEFAULT_MAPPING = "mapping/dpa-mapping.xml";
-
     @Argument(alias = "m", required = false, description = "filename of mapping file. By default it uses dpa mapping")
     private static String mapping = null;
 

@@ -26,13 +26,6 @@
     <xs:complexType name="CustomizedMappingType">
         <xs:complexContent>
             <xs:extension base="MappingType">
-                <xs:attribute name="inherits" use="required">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:enumeration value="default-mapping"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
