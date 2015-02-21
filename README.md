@@ -58,10 +58,12 @@ Usage: de.dpa.oss.metadata.mapper.MetadataMapper
   -inputImage (-i) [String] filename of input image
   -outputImage (-o) [String] filename of resulting image
   -g2doc (-d) [String] filename of input G2 document
-  -validateMapping (-v) [String] Validate given mapping file
-  -emptyTagGroupBeforeMapping (-e) [flag] Removes all tags from those tag groups which are used by the mapping. By default mapped tag values will be merged with existing tags
-  -mapping (-m) [String] filename of mapping file. By default it uses dpa mapping
-  -printCharacterMappingTable (-c) [flag] Outputs configured character mapping table. Does not perform any mapping. Uses default mapping file if argument -m is omitted
+  -validateMapping (-v) [String] Validate given mappingCustomization file
+  -emptyTagGroupBeforeMapping (-e) [flag] Removes all tags from those tag groups which are used by the mappingCustomization. By default mapped tag values will be merged with existing tags
+  -mappingCustomization (-m) [String] mappingCustomization file which is used to override and/or enhance the default mappingCustomization. By default it uses dpa mappingCustomization
+  -printCharacterMappingTable (-c) [flag] Outputs configured character mappingCustomization table. Does not perform any mappingCustomization. Uses default mappingCustomization file if argument -m is omitted
+  -exiftoolPath (-t) [String] Path to exiftool. Alternatively you may set environment variable EXIFTOOL
+  -help (-h) [flag]
 ```
 
 The distribution contains samples in *./example*. Call the tool using these samples as
@@ -81,9 +83,11 @@ tools simultaneously to evaluate the result.
 You may provide customizations or enhancements of the default mappings. In this case specify the mapping file using
 the option "-m". It loads the customizations and adds all those default mappings which are not overriden by the
 customization. See e. g.
+
  ```
  example/dpa-mapping.xml
  ```
+
  Use the parameter "-m" to specify the path to your own mapping configuration.
   
 # License
