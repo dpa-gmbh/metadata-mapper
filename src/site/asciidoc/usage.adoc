@@ -1,0 +1,56 @@
+== Usage ==
+
+=== Basic Arguments ===
+To map the content of a G2 document _mydoc_ related to a given image _myimage_ the command line tool
+can be called as follows:
+
+....
+java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -i myimage -d mydoc -o result.jpeg
+....
+
+This maps the content of _mydoc_ using the default mapping rules into the image _myimage_ and stores the
+resulting image as _result.jpeg_.
+
+
+=== Custom Mappings ===
+
+If you want to override certain rules of the default mapping you have to provide a custom mapping _myrules_.
+This mapping can be specified via switch _-m_:
+
+....
+java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -m myroles -i myimage -d mydoc -o result.jpeg
+....
+
+
+=== Empty Containers in Advance ===
+
+To empty all target container before the mapping you may use the switch _-e_:
+
+....
+java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -e -m myroles -i myimage -d mydoc -o result.jpeg
+....
+
+
+=== List of Options ===
+
+Simply call ``java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -h```:
+
+....
+** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
+
+Usage: de.dpa.oss.metadata.mapper.MetadataMapper
+  -inputImage (-i) [String] filename of input image
+  -outputImage (-o) [String] filename of resulting image
+  -g2doc (-d) [String] filename of input G2 document
+  -validateMapping (-v) [String] Validate given mappingCustomization file
+  -emptyTagGroupBeforeMapping (-e) [flag] Removes all tags from those tag groups which are used by the
+      mappingCustomization. By default mapped tag values will be merged with existing tags
+  -mappingCustomization (-m) [String] mappingCustomization file which is used to override and/or
+      enhance the default mappingCustomization. By default it uses dpa mappingCustomization
+  -printCharacterMappingTable (-c) [flag] Outputs configured character mappingCustomization
+      table. Does not perform any mappingCustomization. Uses default mappingCustomization file
+      if argument -m is omitted
+  -exiftoolPath (-t) [String] Path to exiftool. Alternatively you may set environment variable EXIFTOOL
+  -help (-h) [flag]
+....
+

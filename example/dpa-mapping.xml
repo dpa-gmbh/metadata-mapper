@@ -2,7 +2,6 @@
 <customized-mapping name="dpa" xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/ file:///C:/dev/ws/service-dispatch/src/main/resources/mapping/xsd/metadata-mapping-1-0.xsd">
 	<config>
 		<timezone>Europe/Berlin</timezone>
-		<!--timezone tz="CET"/-->
 		<iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
 		<xmp charset="utf-8" defaultReplaceChar="·"/>
 	</config>

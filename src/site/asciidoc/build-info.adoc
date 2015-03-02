@@ -1,0 +1,35 @@
+== Build Info ==
+
+=== Prerequisites ===
+The metadata mapper uses the exiftool (<http://www.sno.phy.queensu.ca/~phil/exiftool/>) to modify the
+images accordingly. This tool needs to be installed and has to be referred either in the execution path
+or by an environment variable named EXIFTOOL.
+
+For example:
+
+....
+export EXIFTOOL=/myinstallhome/exiftool
+....
+
+Alternatively you may setup a java system property:
+
+....
+-Dexiftool.path=/myinstallhome/exiftool
+....
+
+
+Via code you may directly call the wrapper in order to specify the path:
+
+....
+de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool.setPathToExifTool("/myinstallhome/exiftool")
+....
+
+=== Building the Command Line Tool ===
+
+Run
+
+....
+mvn package
+....
+
+creates a jar containg all dependencies

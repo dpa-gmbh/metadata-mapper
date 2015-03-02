@@ -28,8 +28,9 @@
     </custom>
     <body>
         <menu name="Overview">
-            <item name="Introduction" href="./index.html"/>
-            <item name="License" href="./license.html"/>
+            <item name="Introduction" href="./introduction.html"/>
+            <item name="Build Info" href="./build-info.html"/>
+            <item name="Usage" href="./usage.html"/>
             <!--item name="Goals" href="./goals.html"/>
             <item name="Getting started" href="./gettings-started.html"/>
             <item name="Files" href="./files.html"/-->
