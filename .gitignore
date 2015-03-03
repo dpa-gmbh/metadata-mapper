@@ -3,3 +3,4 @@ dpa-metadata-mapper.iml
 .idea
 metadata-mapper.iml
 .DS_Store
+*.log
