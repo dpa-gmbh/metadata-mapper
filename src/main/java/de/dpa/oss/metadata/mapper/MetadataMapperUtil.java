@@ -56,11 +56,17 @@ public class MetadataMapperUtil
         this.imageInputStream = imageInputStream;
     }
 
-    public MetadataMapperUtil withPathToXMLDocument(final String pathToXMLDocument) throws Exception
+    public MetadataMapperUtil withXMLDocument(final String pathToXMLDocument) throws Exception
     {
         logger.debug( "Reading XML document :" + pathToXMLDocument);
         String xmlSource = new String(ByteStreams.toByteArray(new FileInputStream(pathToXMLDocument)));
         xmlDocument = XmlUtils.toDocument(xmlSource);
+        return this;
+    }
+
+    public MetadataMapperUtil withXMLDocument( final Document xmlDocument )
+    {
+        this.xmlDocument = xmlDocument;
         return this;
     }
 

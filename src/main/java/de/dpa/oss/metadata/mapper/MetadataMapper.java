@@ -81,7 +81,7 @@ public class MetadataMapper
             metadataMapperUtil.emptyTargetTagGroups();
         }
 
-        metadataMapperUtil.withPathToXMLDocument(g2doc)
+        metadataMapperUtil.withXMLDocument(g2doc)
                 .mapToImage(outputImage);
 
         System.out.println( "Mappingperformed successfully");
