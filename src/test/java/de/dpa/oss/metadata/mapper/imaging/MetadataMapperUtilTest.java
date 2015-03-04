@@ -1,5 +1,6 @@
 package de.dpa.oss.metadata.mapper.imaging;
 
+import de.dpa.oss.metadata.mapper.MetadataMapperUtil;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
@@ -11,7 +12,7 @@ import javax.xml.bind.JAXBException;
 import java.math.BigInteger;
 import java.util.List;
 
-public class ImageMetadataUtilTest
+public class MetadataMapperUtilTest
 {
     @Test
     public void shouldValidateXMPEntry() throws ExifToolIntegrationException, ConfigValidationException
@@ -31,7 +32,7 @@ public class ImageMetadataUtilTest
         xmpMapsTo.setField("contributor");
 
         // when
-        ImageMetadataUtil.validate(mapping);
+        MetadataMapperUtil.validate(mapping);
 
         // then no exception should be thrown
     }
@@ -64,7 +65,7 @@ public class ImageMetadataUtilTest
         iimMapsToList.add(iimMapsTo);
 
         // when
-        ImageMetadataUtil.validate(mapping);
+        MetadataMapperUtil.validate(mapping);
 
         // then no exception should be thrown
     }
@@ -88,7 +89,7 @@ public class ImageMetadataUtilTest
 
         // when
         xmpMapsTo.setField("UnknownTagName");
-        ImageMetadataUtil.validate(mapping);
+        MetadataMapperUtil.validate(mapping);
     }
 
     @Test(expected = ConfigValidationException.class)
@@ -109,17 +110,17 @@ public class ImageMetadataUtilTest
         xmpMapsTo.setField("contributor");
 
         // when
-        ImageMetadataUtil.validate(mapping);
+        MetadataMapperUtil.validate(mapping);
     }
 
     @Test
     public void shouldValidateDPAMapping() throws ExifToolIntegrationException, ConfigValidationException, JAXBException
     {
         // given
-        MappingType dpaMapping = ImageMetadataUtil.getDefaultMapping();
+        MappingType dpaMapping = MetadataMapperUtil.getDefaultMapping();
 
         // when
-        ImageMetadataUtil.validate(dpaMapping);
+        MetadataMapperUtil.validate(dpaMapping);
 
         // then it should not throw any exception
     }

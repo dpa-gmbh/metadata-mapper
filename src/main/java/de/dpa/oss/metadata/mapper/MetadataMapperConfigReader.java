@@ -1,4 +1,4 @@
-package de.dpa.oss.metadata.mapper.imaging;
+package de.dpa.oss.metadata.mapper;
 
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CustomizedMappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
@@ -20,12 +20,12 @@ import java.util.Set;
 /**
  * @author oliver langer
  */
-public class MetadataMappingConfigReader
+public class MetadataMapperConfigReader
 {
-    private static Logger logger = LoggerFactory.getLogger(MetadataMappingConfigReader.class);
+    private static Logger logger = LoggerFactory.getLogger(MetadataMapperConfigReader.class);
 
     public static MappingType defaultConfig = null;
-    public static final String DEFAULT_MAPPING = "/mapping/default-mapping.xml";
+    public static final String DEFAULT_MAPPING = "/image-metadata-mapping/default-mapping.xml";
 
     public CustomizedMappingType readCustomizedDefaultConfig(final InputStream customizationsIS) throws JAXBException
     {

@@ -1,5 +1,6 @@
-package de.dpa.oss.metadata.mapper.imaging;
+package de.dpa.oss.metadata.mapper;
 
+import de.dpa.oss.metadata.mapper.imaging.MetadataMapperConfigReader;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CustomizedMappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMEncodingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
@@ -18,14 +19,14 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-public class MetadataMappingConfigReaderTest
+public class MetadataMapperConfigReaderTest
 {
     @Test
     public void shouldReadDefaultCOnfig() throws JAXBException
     {
         // given
         // when
-        MappingType mappingType = new MetadataMappingConfigReader().getDefaultConfig();
+        MappingType mappingType = new MetadataMapperConfigReader().getDefaultConfig();
 
         // then
         assertThat(mappingType, is(notNullValue()));
@@ -38,10 +39,10 @@ public class MetadataMappingConfigReaderTest
         // given
 
         // when
-        CustomizedMappingType customizedDefaultConfig = new MetadataMappingConfigReader().readCustomizedDefaultConfig(this.getClass()
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
                 .getResourceAsStream("/content/overriding-mapping.xml"));
 
-        MappingType defaultConfig = new MetadataMappingConfigReader().getDefaultConfig();
+        MappingType defaultConfig = new MetadataMapperConfigReader().getDefaultConfig();
 
         // then
         assertThat(customizedDefaultConfig, is(Matchers.notNullValue()));
@@ -78,10 +79,10 @@ public class MetadataMappingConfigReaderTest
         // given
 
         // when
-        CustomizedMappingType customizedDefaultConfig = new MetadataMappingConfigReader().readCustomizedDefaultConfig(this.getClass()
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
                 .getResourceAsStream("/content/overriding-mapping.xml"));
 
-        MappingType defaultConfig = new MetadataMappingConfigReader().getDefaultConfig();
+        MappingType defaultConfig = new MetadataMapperConfigReader().getDefaultConfig();
 
         // then
         assertThat(customizedDefaultConfig, is(Matchers.notNullValue()));
@@ -106,7 +107,7 @@ public class MetadataMappingConfigReaderTest
     public void shouldOverrideConfig() throws JAXBException
     {
         // given
-        CustomizedMappingType customizedDefaultConfig = new MetadataMappingConfigReader().readCustomizedDefaultConfig(this.getClass()
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
                 .getResourceAsStream("/content/overriding-mapping.xml"));
 
         // then

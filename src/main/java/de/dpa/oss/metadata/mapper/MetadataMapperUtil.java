@@ -1,10 +1,11 @@
-package de.dpa.oss.metadata.mapper.imaging;
+package de.dpa.oss.metadata.mapper;
 
 import com.adobe.xmp.XMPException;
 import com.google.common.io.ByteStreams;
 import de.dpa.oss.common.ResourceUtil;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
+import de.dpa.oss.metadata.mapper.imaging.*;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
@@ -23,26 +24,26 @@ import java.io.*;
 /**
  * @author oliver langer
  */
-public class ImageMetadataUtil
+public class MetadataMapperUtil
 {
-    private static Logger logger = LoggerFactory.getLogger(ImageMetadataUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(MetadataMapperUtil.class);
     private static TagInfo tagInfo = null;
     private final FileInputStream imageInputStream;
     private Document xmlDocument = null;
     private MappingType mapping = null;
     private boolean emptyTargetTagGroups = false;
 
-    public static ImageMetadataUtil modifyImageAt(final String pathToSourceImage) throws FileNotFoundException
+    public static MetadataMapperUtil modifyImageAt(final String pathToSourceImage) throws FileNotFoundException
     {
-        return new ImageMetadataUtil(pathToSourceImage);
+        return new MetadataMapperUtil(pathToSourceImage);
     }
 
-    public ImageMetadataUtil(final String pathToSourceImage) throws FileNotFoundException
+    public MetadataMapperUtil(final String pathToSourceImage) throws FileNotFoundException
     {
         imageInputStream = new FileInputStream(pathToSourceImage);
     }
 
-    public ImageMetadataUtil withPathToXMLDocument(final String pathToXMLDocument) throws Exception
+    public MetadataMapperUtil withPathToXMLDocument(final String pathToXMLDocument) throws Exception
     {
         logger.debug( "Reading XML document :" + pathToXMLDocument);
         String xmlSource = new String(ByteStreams.toByteArray(new FileInputStream(pathToXMLDocument)));
@@ -50,21 +51,21 @@ public class ImageMetadataUtil
         return this;
     }
 
-    public ImageMetadataUtil withDefaultMapping() throws JAXBException
+    public MetadataMapperUtil withDefaultMapping() throws JAXBException
     {
         logger.debug( "Using DefaultMapping");
         this.mapping = getDefaultMapping();
         return this;
     }
 
-    public ImageMetadataUtil withDefaultMappingOverridenBy(final String pathToMapping) throws FileNotFoundException, JAXBException
+    public MetadataMapperUtil withDefaultMappingOverridenBy(final String pathToMapping) throws FileNotFoundException, JAXBException
     {
         logger.debug( "Overriding default mapping by mapping definitions defined in:" + pathToMapping);
         this.mapping = getDefaultConfigOverridenBy(pathToMapping);
         return this;
     }
 
-    public ImageMetadataUtil emptyTargetTagGroups()
+    public MetadataMapperUtil emptyTargetTagGroups()
     {
         this.emptyTargetTagGroups = true;
         return this;
@@ -148,7 +149,7 @@ public class ImageMetadataUtil
     public static void validate(final MappingType mappingToValidate)
             throws ExifToolIntegrationException, ConfigValidationException
     {
-        TagInfo tagInfo = ImageMetadataUtil.getExifToolTagInfo();
+        TagInfo tagInfo = MetadataMapperUtil.getExifToolTagInfo();
 
         for (MappingType.Metadata metadata : mappingToValidate.getMetadata())
         {
