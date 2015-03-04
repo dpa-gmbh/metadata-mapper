@@ -5,7 +5,10 @@ import com.google.common.io.ByteStreams;
 import de.dpa.oss.common.ResourceUtil;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
-import de.dpa.oss.metadata.mapper.imaging.*;
+import de.dpa.oss.metadata.mapper.imaging.ChainedImageMetadataOperations;
+import de.dpa.oss.metadata.mapper.imaging.ConfigToExifToolTagNames;
+import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
+import de.dpa.oss.metadata.mapper.imaging.G2ToMetadataMapper;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
@@ -28,7 +31,7 @@ public class MetadataMapperUtil
 {
     private static Logger logger = LoggerFactory.getLogger(MetadataMapperUtil.class);
     private static TagInfo tagInfo = null;
-    private final FileInputStream imageInputStream;
+    private final InputStream imageInputStream;
     private Document xmlDocument = null;
     private MappingType mapping = null;
     private boolean emptyTargetTagGroups = false;
@@ -38,9 +41,19 @@ public class MetadataMapperUtil
         return new MetadataMapperUtil(pathToSourceImage);
     }
 
+    public static MetadataMapperUtil modifyImageAt(final InputStream sourceImage) throws FileNotFoundException
+    {
+        return new MetadataMapperUtil(sourceImage);
+    }
+
     public MetadataMapperUtil(final String pathToSourceImage) throws FileNotFoundException
     {
-        imageInputStream = new FileInputStream(pathToSourceImage);
+        this( new FileInputStream( pathToSourceImage));
+    }
+
+    public MetadataMapperUtil( final InputStream imageInputStream )
+    {
+        this.imageInputStream = imageInputStream;
     }
 
     public MetadataMapperUtil withPathToXMLDocument(final String pathToXMLDocument) throws Exception
