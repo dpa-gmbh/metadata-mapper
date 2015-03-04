@@ -65,6 +65,13 @@ public class MetadataMapperUtil
         return this;
     }
 
+    public MetadataMapperUtil withDefaultMappingOverridenBy( final MappingType customMapping )
+    {
+        logger.debug( "Overriding default mapping by mapping:" + customMapping.getName());
+        this.mapping = customMapping;
+        return this;
+    }
+
     public MetadataMapperUtil emptyTargetTagGroups()
     {
         this.emptyTargetTagGroups = true;
@@ -121,12 +128,12 @@ public class MetadataMapperUtil
      */
     public static MappingType getDefaultConfigOverridenBy(final InputStream is) throws JAXBException
     {
-        return new MetadataMappingConfigReader().readCustomizedDefaultConfig(is);
+        return new MetadataMapperConfigReader().readCustomizedDefaultConfig(is);
     }
 
     public static MappingType getDefaultMapping() throws JAXBException
     {
-        return new MetadataMappingConfigReader().getDefaultConfig();
+        return new MetadataMapperConfigReader().getDefaultConfig();
     }
 
     protected static synchronized TagInfo getExifToolTagInfo() throws ExifToolIntegrationException

@@ -5,7 +5,6 @@ import com.sampullara.cli.Argument;
 import de.dpa.oss.common.StringCharacterMappingTable;
 import de.dpa.oss.metadata.mapper.imaging.ConfigStringCharacterMappingBuilder;
 import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
-import de.dpa.oss.metadata.mapper.imaging.ImageMetadataUtil;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CharacterMappingType;
@@ -64,25 +63,25 @@ public class MetadataMapper
         System.out.println("Mapping metadata taken from \"" + g2doc + "\" into image given by input file \"" + inputImage
                 + "\", writing result to output file \"" + outputImage + "\". ");
 
-        ImageMetadataUtil imageMetadataUtil = ImageMetadataUtil.modifyImageAt(inputImage);
+        MetadataMapperUtil metadataMapperUtil = MetadataMapperUtil.modifyImageAt(inputImage);
 
         if (mappingCustomization == null)
         {
             System.out.println("Using default mappingCustomization.");
-            imageMetadataUtil.withDefaultMapping();
+            metadataMapperUtil.withDefaultMapping();
         }
         else
         {
             System.out.println("Using mappingCustomization file \"" + mappingCustomization + "\".");
-            imageMetadataUtil.withDefaultMappingOverridenBy(mappingCustomization);
+            metadataMapperUtil.withDefaultMappingOverridenBy(mappingCustomization);
         }
 
         if( emptyTagGroupBeforeMapping )
         {
-            imageMetadataUtil.emptyTargetTagGroups();
+            metadataMapperUtil.emptyTargetTagGroups();
         }
 
-        imageMetadataUtil.withPathToXMLDocument(g2doc)
+        metadataMapperUtil.withPathToXMLDocument(g2doc)
                 .mapToImage(outputImage);
 
         System.out.println( "Mappingperformed successfully");
@@ -153,11 +152,11 @@ public class MetadataMapper
         final MappingType mappingTable;
         if (mappingCustomization == null)
         {
-            mappingTable = ImageMetadataUtil.getDefaultMapping();
+            mappingTable = MetadataMapperUtil.getDefaultMapping();
         }
         else
         {
-            mappingTable = ImageMetadataUtil.getDefaultConfigOverridenBy(mappingCustomization);
+            mappingTable = MetadataMapperUtil.getDefaultConfigOverridenBy(mappingCustomization);
         }
 
         Map<Integer, String> codepointAlternativeCharacters = new HashMap<>();
@@ -205,10 +204,10 @@ public class MetadataMapper
             System.err.println("* ERROR: Unable to read mappingCustomization config: " + validateMapping);
         }
 
-        final MappingType mappingToValidate = ImageMetadataUtil.getDefaultConfigOverridenBy(validateMapping);
+        final MappingType mappingToValidate = MetadataMapperUtil.getDefaultConfigOverridenBy(validateMapping);
         try
         {
-            ImageMetadataUtil.validate(mappingToValidate);
+            MetadataMapperUtil.validate(mappingToValidate);
 
             System.out.println("Mapping file \"" + validateMapping + "\" validated successfully.");
             System.exit(0);

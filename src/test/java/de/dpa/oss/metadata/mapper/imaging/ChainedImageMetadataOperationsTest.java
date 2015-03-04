@@ -1,6 +1,8 @@
 package de.dpa.oss.metadata.mapper.imaging;
 
 import de.dpa.oss.common.ResourceUtil;
+import de.dpa.oss.metadata.mapper.MetadataMapperConfigReader;
+import de.dpa.oss.metadata.mapper.MetadataMapperUtil;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
@@ -24,7 +26,7 @@ public class ChainedImageMetadataOperationsTest
         Document document = XmlUtils.toDocument(xmlDocument);
         
         ImageMetadata imageMetadata = new ImageMetadata();
-        new G2ToMetadataMapper( ImageMetadataUtil.getDefaultMapping()).mapToImageMetadata(document, imageMetadata);
+        new G2ToMetadataMapper( MetadataMapperUtil.getDefaultMapping()).mapToImageMetadata(document, imageMetadata);
 
         // when
         ChainedImageMetadataOperations.modifyImage(imageInputStream,fileOutputStream)
@@ -44,7 +46,7 @@ public class ChainedImageMetadataOperationsTest
         InputStream mappingConfig = ResourceUtil.resourceAsStream("/content/imageMetadata/simple-test-mapping.xml", this.getClass());
         String xmlDocument = ResourceUtil.resourceAsString("/content/imageMetadata/simple-test-inputfile.xml", this.getClass());
         Document document = XmlUtils.toDocument(xmlDocument);
-        MappingType mapping = new MetadataMappingConfigReader().readCustomizedDefaultConfig(mappingConfig);
+        MappingType mapping = new MetadataMapperConfigReader().readCustomizedDefaultConfig(mappingConfig);
 
         ImageMetadata imageMetadata = new ImageMetadata();
         new G2ToMetadataMapper( mapping ).mapToImageMetadata(document, imageMetadata);

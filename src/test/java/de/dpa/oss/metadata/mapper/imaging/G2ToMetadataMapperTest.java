@@ -1,6 +1,7 @@
 package de.dpa.oss.metadata.mapper.imaging;
 
 import de.dpa.oss.common.ResourceUtil;
+import de.dpa.oss.metadata.mapper.MetadataMapperConfigReader;
 import de.dpa.oss.metadata.mapper.common.DateTimeUtils;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
@@ -27,7 +28,7 @@ public class G2ToMetadataMapperTest
         String xmlDocument = ResourceUtil.resourceAsString("/content/imageMetadata/simple-test-inputfile.xml",this);
 
         Document document = XmlUtils.toDocument(xmlDocument);
-        MappingType mapping = new MetadataMappingConfigReader().readCustomizedDefaultConfig(mappingConfig);
+        MappingType mapping = new MetadataMapperConfigReader().readCustomizedDefaultConfig(mappingConfig);
 
         G2ToMetadataMapper g2ToMetadataMapper = new G2ToMetadataMapper(mapping);
 

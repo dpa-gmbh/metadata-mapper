@@ -1,6 +1,5 @@
 package de.dpa.oss.metadata.mapper;
 
-import de.dpa.oss.metadata.mapper.imaging.MetadataMapperConfigReader;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CustomizedMappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMEncodingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
