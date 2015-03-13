@@ -1,10 +1,11 @@
 package de.dpa.oss.metadata.mapper.common;
 
 import com.google.common.base.Strings;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class DateTimeUtils
 {
-    private static Logger logger = Logger.getLogger(DateTimeUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(DateTimeUtils.class);
 
     private static Set<String> SUPPORTED_TZ = new TreeSet<String>();
     public final static String FORMAT_EXIF = "yyyy:MM:dd HH:mm:ss";

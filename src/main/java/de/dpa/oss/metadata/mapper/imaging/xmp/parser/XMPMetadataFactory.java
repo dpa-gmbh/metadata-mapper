@@ -5,7 +5,8 @@ import com.adobe.xmp.options.PropertyOptions;
 import com.adobe.xmp.properties.XMPPropertyInfo;
 import com.google.common.base.Strings;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.*;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -16,7 +17,8 @@ import java.util.regex.Pattern;
  */
 public class XMPMetadataFactory
 {
-    public static Logger logger = Logger.getLogger(XMPMetadataFactory.class);
+    private static Logger logger = LoggerFactory.getLogger(XMPMetadataFactory.class);
+
     /**
      * Allow strings as follows "ns:name[arrayIndex]"
      * where "[arrayIndex]" is optional
