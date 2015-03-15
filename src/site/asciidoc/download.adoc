@@ -2,3 +2,14 @@
 
 Download version 1.0.1-SNAPSHOT as link:metadata-mapper-1.0.1-SNAPSHOT.jar[jar file]
 
+=== What's New in this Version ===
+
+* Initial version
+* Reading metadata from XML documents based on XPath expressions
+* Definition of metadata sinks for IIM and XMP
+* Contains a default mapping based on "IPTC Photo Metadata" standard
+* Support of custom mapping definitions
+* Character mapping/replacement allows to replacements single characters of the
+  input document by given alternatives
+
+
