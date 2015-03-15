@@ -1,7 +1,7 @@
 = Introduction =
-The metadata mapper writes image metadata by extracting content elements from an XML
-document and mapping these elements to corresponding fields of the Information Interchange
-Model (IIM) records and Extensible Metadata Platform (XMP) of an JPEG image.
+
+The metadata mapper writes image metadata by extracting content elements from an XML document and mapping these elements to corresponding
+fields of the Information Interchange Model (IIM) records and Extensible Metadata Platform (XMP) of an JPEG image.
 
 A metadata mapping is based on three files: an input XML, a JPEG file and a mapping
 configuration file. The configuration contains XPath expressions and relates them to

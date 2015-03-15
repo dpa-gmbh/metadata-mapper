@@ -1,0 +1,4 @@
+== Download ==
+
+Download version 1.0.1-SNAPSHOT as link:metadata-mapper-1.0.1-SNAPSHOT.jar[jar file]
+
