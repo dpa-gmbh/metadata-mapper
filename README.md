@@ -41,11 +41,19 @@ or directly call the wrapper in order to specify the path:
 
 # Building the Command Line Tool
 
+Run
+```
+mvn package -P build_executable
+```
+creates a jar containg all dependencies needed by the commandline tool
+
+
 Run 
 ```
 mvn package
 ```
-creates a jar containg all dependencies.
+creates a the jar for embedding the mapper into own projects
+
 
 # Using the Command Line Tool
 
