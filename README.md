@@ -43,7 +43,7 @@ or directly call the wrapper in order to specify the path:
 
 Run
 ```
-mvn package -P build_executable
+mvn package -P executable
 ```
 creates a jar containg all dependencies needed by the commandline tool
 
