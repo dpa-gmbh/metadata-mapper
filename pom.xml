@@ -71,6 +71,9 @@
                         <artifactId>maven-jar-plugin</artifactId>
                         <version>2.4</version>
                         <configuration>
+                            <includes>
+                                <include>**/log4j.properties</include>
+                            </includes>
                             <archive>
                                 <manifest>
                                     <addClasspath>true</addClasspath>
@@ -93,7 +96,6 @@
                                 </manifest>
                             </archive>
                             <appendAssemblyId>false</appendAssemblyId>
-
                         </configuration>
                         <executions>
                             <execution>
@@ -214,6 +216,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/log4j.properties</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
