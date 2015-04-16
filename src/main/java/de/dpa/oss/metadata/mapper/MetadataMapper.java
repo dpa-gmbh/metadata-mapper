@@ -11,6 +11,7 @@ import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
 import de.dpa.oss.metadata.mapper.imaging.G2ToMetadataMapper;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroupItem;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
@@ -219,6 +220,16 @@ public class MetadataMapper
                     {
                         throw new ConfigValidationException(metadata.getName(), ConfigToExifToolTagNames.IPTC_APPLICATION_TAGGROUP_NAME,
                                 iimMapsTo.getField());
+                    }
+                    else
+                    {
+                        TagGroupItem tagInfoById = tagInfo.getGroupByName(ConfigToExifToolTagNames.IPTC_APPLICATION_TAGGROUP_NAME)
+                                .getTagInfoById(iimMapsTo.getDataset().toString());
+                        if( !tagInfoById.getName().equals( iimMapsTo.getField()))
+                        {
+                            throw new ConfigValidationException(metadata.getName(), ConfigToExifToolTagNames.IPTC_APPLICATION_TAGGROUP_NAME,
+                                    iimMapsTo.getField());
+                        }
                     }
                 }
             }
