@@ -9,6 +9,7 @@ import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMapsTo;
 import org.junit.Test;
 
 import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -114,13 +115,26 @@ public class MetadataMapperTest
     }
 
     @Test
-    public void shouldValidateDPAMapping() throws ExifToolIntegrationException, ConfigValidationException, JAXBException
+    public void shouldValidateDefaultMapping() throws ExifToolIntegrationException, ConfigValidationException, JAXBException
     {
         // given
-        MappingType dpaMapping = MetadataMapper.getDefaultMapping();
+        MappingType defaultMapping = MetadataMapper.getDefaultMapping();
 
         // when
-        MetadataMapper.validate(dpaMapping);
+        MetadataMapper.validate(defaultMapping);
+
+        // then it should not throw any exception
+    }
+
+    @Test
+    public void shouldValidateDPAMapping()
+            throws ExifToolIntegrationException, ConfigValidationException, JAXBException, FileNotFoundException
+    {
+        // given
+        MappingType defaultMapping = MetadataMapper.getDefaultConfigOverridenBy("example/dpa-mapping.xml");
+
+        // when
+        MetadataMapper.validate(defaultMapping);
 
         // then it should not throw any exception
     }

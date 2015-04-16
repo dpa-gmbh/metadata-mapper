@@ -28,7 +28,7 @@
 		<xpath rank="4"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/country/name]]></xpath>
 		<xpath rank="5"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/country/name]]></xpath>
 		<iim>
-			<mapsTo dataset="101" field="Country/Primary Location Name" targetType="STRING"/>
+			<mapsTo dataset="101" field="Country-PrimaryLocationName" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Country" targetType="Text"/>
@@ -50,7 +50,7 @@
         <xpath rank="12" returnType="STRING"><![CDATA[substring(//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a2:"]/@qcode,13)]]></xpath>
 
 		<iim>
-			<mapsTo dataset="100" field="Country/Primary Location Code" targetType="STRING"/>
+			<mapsTo dataset="100" field="Country-PrimaryLocationCode" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="CountryCode" targetType="Text"/>
@@ -72,7 +72,7 @@
 		<xpath rank="1"><![CDATA[//contentMeta/description[@role='drol:caption']]]></xpath>
 		<xpath rank="2"><![CDATA[//contentMeta/description[not(@role)]]]></xpath>
 		<iim>
-			<mapsTo dataset="120" field="Caption/Abstract" targetType="STRING"/>
+			<mapsTo dataset="120" field="Caption-Abstract" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="description"/>
@@ -83,7 +83,7 @@
 		<xpath rank="1"><![CDATA[/newsItem/contentMeta/genre/name]]></xpath>
 		<xpath rank="2"><![CDATA[/newsItem/contentMeta/genre/@literal]]></xpath>
 		<iim>
-			<mapsTo dataset="4" field="Object Attribute Reference" targetType="STRING"/>
+			<mapsTo dataset="4" field="ObjectAttributeReference" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="IntellectualGenre"/>
@@ -109,7 +109,7 @@
 		<xpath rank="4"><![CDATA[//assert[@literal=//contentMeta/subject/@literal]/POIDetails/address/area/name]]></xpath>
 		<xpath rank="5"><![CDATA[//assert[@qcode=//contentMeta/subject/@qcode]/POIDetails/address/area/name]]></xpath>
 		<iim>
-			<mapsTo dataset="95" field="Province/State" targetType="STRING"/>
+			<mapsTo dataset="95" field="Province-State" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="State" targetType="Text"/>
@@ -130,7 +130,7 @@
 	<metadata name="Subject Code">
 		<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta//subject[starts-with(@qcode, 'subj:')]/@qcode, 6)]]></xpath>
 		<iim>
-			<mapsTo field="Subject Reference" dataset="12" targetType="LIST_OF_STRING"/>
+			<mapsTo field="SubjectReference" dataset="12" targetType="LIST_OF_STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="SubjectCode" targetType="Bag">
@@ -142,7 +142,7 @@
 	<metadata name="Sublocation (legacy)">
 		<default/>
 		<iim>
-			<mapsTo field="Sublocation" dataset="92" targetType="STRING"/>
+			<mapsTo field="Sub-location" dataset="92" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="Location" targetType="Text"/>
@@ -152,7 +152,7 @@
 	<metadata name="Date Created">
 		<xpath><![CDATA[//contentMeta/contentCreated]]></xpath>
 		<iim>
-			<mapsTo dataset="55" field="Date Created" targetType="STRING"/>
+			<mapsTo dataset="55" field="DateCreated" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Date" field="DateCreated"/>
@@ -163,7 +163,7 @@
 		<xpath rank="1"><![CDATA[//contentMeta/contributor[@role="ctrol:descrWriter"]/name]]></xpath>
 		<xpath rank="2"><![CDATA[//contentMeta/contributor/name]]></xpath>
 		<iim>
-			<mapsTo dataset="122" field="Writer/Editor" targetType="STRING"/>
+			<mapsTo dataset="122" field="Writer-Editor" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text" field="CaptionWriter"/>
@@ -174,7 +174,7 @@
 		<!--xpath><![CDATA[string-join(//itemMeta/edNote, ', ')]]></xpath-->
 		<xpath><![CDATA[//itemMeta/edNote[1]]]></xpath>
 		<iim>
-			<mapsTo dataset="40" field="Special Instructions" targetType="STRING"/>
+			<mapsTo dataset="40" field="SpecialInstructions" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Instructions"/>
@@ -184,7 +184,7 @@
 	<metadata name="Job Id">
 		<xpath><![CDATA[//newsItem/itemMeta/memberOf/@literal]]></xpath>
 		<iim>
-			<mapsTo dataset="103" field="Original Transmission, Reference" targetType="STRING"/>
+			<mapsTo dataset="103" field="OriginalTransmissionReference" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="TransmissionReference"/>
@@ -204,7 +204,7 @@
 		<xpath rank="2" returnType="STRING"><![CDATA[concat('(c) ',//rightsInfo/copyrightHolder/name)]]></xpath>
 		<default>(c) dpa</default>
 		<iim>
-			<mapsTo dataset="116" field="Copyright Notice" targetType="STRING"/>
+			<mapsTo dataset="116" field="CopyrightNotice" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="rights"/>
@@ -247,7 +247,7 @@
 	<metadata name="Creator's Jobtitle">
 		<xpath><![CDATA[//contentMeta/creator/facet]]></xpath>
 		<iim>
-			<mapsTo dataset="85" field="By-line Title" targetType="STRING"/>
+			<mapsTo dataset="85" field="By-lineTitle" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="AuthorsPosition"/>
@@ -257,7 +257,7 @@
 	<metadata name="Credit Line">
 		<xpath><![CDATA[//contentMeta/creditline]]></xpath>
 		<iim>
-			<mapsTo field="Credit" dataset="110" targetType="STRING"/>
+			<mapsTo dataset="110" field="Credit" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo field="Credit" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
@@ -286,7 +286,7 @@
 		<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta/language/@tag,1,2)]]></xpath>
 		<xpath rank="2" returnType="STRING"><![CDATA[substring(//newsItem/@xml:lang,1,2)]]></xpath>
 		<iim>
-			<mapsTo dataset="135" field="Language Identifier" targetType="STRING"/>
+			<mapsTo dataset="135" field="LanguageIdentifier" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/" field="language">
