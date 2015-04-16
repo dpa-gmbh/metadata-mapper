@@ -94,6 +94,16 @@ public class ChainedImageMetadataOperations
         return this;
     }
 
+    public ChainedImageMetadataOperations clearMetadataGroups(final Map<String, String> tagGroupsToClear)
+    {
+        for (String group : tagGroupsToClear.keySet())
+        {
+            groupToSpecificLocationToRemove.put( group, tagGroupsToClear.get(group));
+        }
+
+        return this;
+    }
+
     public void execute(final ExifTool exifTool) throws XMPException, ExifToolIntegrationException, IOException
     {
 

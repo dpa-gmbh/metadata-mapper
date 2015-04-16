@@ -46,8 +46,8 @@
 	</metadata>
 
     <metadata name="Sublocation (legacy)">
-        <xpath rank="1"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/locality[@role='dpalocalityrole:sublocality]/name']]></xpath>
-        <xpath rank="2"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/locality[@role='dpalocalityrole:sublocality]/name']]></xpath>
+        <xpath rank="1"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/locality[@role='dpalocalityrole:sublocality']/name]]></xpath>
+        <xpath rank="2"><![CDATA[//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/locality[@role='dpalocalityrole:sublocality']/name]]></xpath>
 
         <iim>
             <mapsTo field="Sublocation" dataset="92" targetType="STRING"/>

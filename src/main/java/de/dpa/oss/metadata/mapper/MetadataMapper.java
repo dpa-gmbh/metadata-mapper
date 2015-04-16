@@ -1,279 +1,263 @@
 package de.dpa.oss.metadata.mapper;
 
-import com.sampullara.cli.Args;
-import com.sampullara.cli.Argument;
-import de.dpa.oss.common.StringCharacterMappingTable;
-import de.dpa.oss.metadata.mapper.imaging.ConfigStringCharacterMappingBuilder;
+import com.adobe.xmp.XMPException;
+import com.google.common.io.ByteStreams;
+import de.dpa.oss.common.ResourceUtil;
+import de.dpa.oss.metadata.mapper.common.XmlUtils;
+import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
+import de.dpa.oss.metadata.mapper.imaging.ChainedImageMetadataOperations;
+import de.dpa.oss.metadata.mapper.imaging.ConfigToExifToolTagNames;
 import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
+import de.dpa.oss.metadata.mapper.imaging.G2ToMetadataMapper;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
-import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CharacterMappingType;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
+import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMappingTargetType;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.XMPMapsTo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
+import java.io.*;
 import java.util.Map;
 
 /**
+ * This class offers the metadata mapper functionality. It purpose is to construct the desired functionality and to
+ * call it. Typical use:
+ * <pre>
+ *   MetadataMapper.modifyImageAt( "image.jpg").withXMLDocument(xmldoc).withDefaultMapping().mapToImage(resultImage)
+ * </pre>
+ *
  * @author oliver langer
  */
 public class MetadataMapper
 {
-    @Argument(alias = "i", required = false, description = "filename of input image")
-    private static String inputImage = null;
+    private static Logger logger = LoggerFactory.getLogger(MetadataMapper.class);
+    private static TagInfo tagInfo = null;
+    private final InputStream imageInputStream;
+    private Document xmlDocument = null;
+    private MappingType mapping = null;
+    private boolean emptyTargetTagGroups = false;
+    private Map<String,String> tagGroupsToClear = null;
 
-    @Argument(alias = "o", required = false, description = "filename of resulting image")
-    private static String outputImage = null;
-
-    @Argument(alias = "d", required = false, description = "filename of input G2 document")
-    private static String g2doc = null;
-
-    @Argument(alias = "v", required = false, description = "Validate given mappingCustomization file")
-    private static String validateMapping = null;
-
-    @Argument(alias = "e", required = false, description = "Removes all tags from those tag groups which are used by the mappingCustomization. "
-        + "By default mapped tag values will be merged with existing tags")
-    private static Boolean emptyTagGroupBeforeMapping = false;
-
-    @Argument(alias = "m", required = false, description = "mappingCustomization file which is used to override and/or enhance the default "
-            +"mappingCustomization. By default it uses dpa mappingCustomization")
-    private static String mappingCustomization = null;
-
-    @Argument(alias = "c", required = false, description = "Outputs configured character mappingCustomization table. Does not perform any mappingCustomization. "
-            + "Uses default mappingCustomization file if argument -m is omitted")
-    private static boolean printCharacterMappingTable = false;
-
-    @Argument(alias = "t", required = false, description = "Path to exiftool. Alternatively you may set environment variable EXIFTOOL")
-    private static String exiftoolPath = null;
-
-    @Argument(alias = "h", required = false)
-    private static boolean help = false;
-
-    private static void performMapping() throws Exception
+    public static MetadataMapper modifyImageAt(final String pathToSourceImage) throws FileNotFoundException
     {
-        if (!validateArgsForMapping())
-        {
-            Args.usage(MetadataMapper.class);
-            System.exit(1);
-        }
-
-        System.out.println("Mapping metadata taken from \"" + g2doc + "\" into image given by input file \"" + inputImage
-                + "\", writing result to output file \"" + outputImage + "\". ");
-
-        MetadataMapperUtil metadataMapperUtil = MetadataMapperUtil.modifyImageAt(inputImage);
-
-        if (mappingCustomization == null)
-        {
-            System.out.println("Using default mappingCustomization.");
-            metadataMapperUtil.withDefaultMapping();
-        }
-        else
-        {
-            System.out.println("Using mappingCustomization file \"" + mappingCustomization + "\".");
-            metadataMapperUtil.withDefaultMappingOverridenBy(mappingCustomization);
-        }
-
-        if( emptyTagGroupBeforeMapping )
-        {
-            metadataMapperUtil.emptyTargetTagGroups();
-        }
-
-        metadataMapperUtil.withXMLDocument(g2doc)
-                .mapToImage(outputImage);
-
-        System.out.println( "Mappingperformed successfully");
+        return new MetadataMapper(pathToSourceImage);
     }
 
-    private static boolean validateArgsForMapping() throws IOException
+    public static MetadataMapper modifyImageAt(final InputStream sourceImage) throws FileNotFoundException
     {
-        boolean checkSuccessful = true;
-
-        if (inputImage == null)
-        {
-            System.err.println("* ERROR: input image file not given");
-            checkSuccessful = false;
-        }
-        else
-        {
-            File fileToCheck = new File(inputImage);
-            if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
-            {
-                System.err.println("* ERROR: input image file \"" + inputImage + "\" must exists and must be readable");
-                checkSuccessful = false;
-            }
-        }
-
-        if( outputImage == null )
-        {
-            System.err.println( "* ERROR: output image (-o) not given");
-            checkSuccessful = false;
-        }
-
-        if (g2doc == null)
-        {
-            System.err.println("* ERROR: g2doc file not given");
-            checkSuccessful = false;
-        }
-        else
-        {
-            File fileToCheck = new File(g2doc);
-            if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
-            {
-                System.err.println("* ERROR: g2 document file\"" + g2doc + "\" must exists and must be readable");
-                checkSuccessful = false;
-            }
-        }
-
-        return checkSuccessful;
+        return new MetadataMapper(sourceImage);
     }
 
-    public static final String FORMATTED_OUTPUT_PREFIX = "<html lang=\"en\" class=\"\"><table class=\"mappingTable\">\n"
-            + "<tbody><tr>\n"
-            + "  <th>Source Unicode<br>Codepoint (HEX)</th>\n"
-            + "  <th>Source Character</th>\n"
-            + "  <th>Mapped Unicode<br>Codepoint (HEX)</th>\n"
-            + "  <th>Mapped Character</th>\n"
-            + "  </tr>\n";
-
-    public static final String FORMATTED_OUTPUT_ENTRY = "  <tr class=\"mappingEntry\">\n"
-            + "    <td class=\"srcCP\">0x%1$s</td>\n"
-            + "    <td class=\"srcChar\">&#x%1$s;</td>\n"
-            + "    <td class=\"mappedCP\">0x%3$s</td>\n"
-            + "    <td class=\"mappedChar\">&#x%3$s;</td>\n"
-            + "  </tr>\n";
-
-    public static final String FORMATTED_OUTPUT_SUFFIX = "</tbody></table></html>";
-
-    private static void printCharacterMappingTable() throws FileNotFoundException, JAXBException
+    private MetadataMapper(final String pathToSourceImage) throws FileNotFoundException
     {
-        final MappingType mappingTable;
-        if (mappingCustomization == null)
+        this( new FileInputStream( pathToSourceImage));
+    }
+
+    private MetadataMapper(final InputStream imageInputStream)
+    {
+        this.imageInputStream = imageInputStream;
+    }
+
+    public MetadataMapper withXMLDocument(final String pathToXMLDocument) throws Exception
+    {
+        logger.debug( "Reading XML document :" + pathToXMLDocument);
+        String xmlSource = new String(ByteStreams.toByteArray(new FileInputStream(pathToXMLDocument)));
+        xmlDocument = XmlUtils.toDocument(xmlSource);
+        return this;
+    }
+
+    public MetadataMapper withXMLDocument( final Document xmlDocument )
+    {
+        this.xmlDocument = xmlDocument;
+        return this;
+    }
+
+    public MetadataMapper withDefaultMapping() throws JAXBException
+    {
+        logger.debug( "Using DefaultMapping");
+        this.mapping = getDefaultMapping();
+        return this;
+    }
+
+    public MetadataMapper withDefaultMappingOverridenBy(final String pathToMapping) throws FileNotFoundException, JAXBException
+    {
+        logger.debug( "Overriding default mapping by mapping definitions defined in:" + pathToMapping);
+        this.mapping = getDefaultConfigOverridenBy(pathToMapping);
+        return this;
+    }
+
+    public MetadataMapper withDefaultMappingOverridenBy( final MappingType customMapping )
+    {
+        logger.debug( "Overriding default mapping by mapping:" + customMapping.getName());
+        this.mapping = customMapping;
+        return this;
+    }
+
+    /**
+     * Expects a list of metadata mapper to remove before mapping is being performed
+     * @param tagGroupsToClear list of tagGroupsToClear to erase. exiftool format is expected. that is: GROUP:TAG
+     *                   E.g. IPTC:ALL, XMP:XMP-dc
+     */
+    public MetadataMapper withTagGroupsToRemoveBeforeMapping(final Map<String, String> tagGroupsToClear)
+    {
+        this.tagGroupsToClear = tagGroupsToClear;
+        return this;
+    }
+
+    public MetadataMapper emptyTargetTagGroups()
+    {
+        this.emptyTargetTagGroups = true;
+        return this;
+    }
+
+    public void mapToImage(final String pathToResultingImage)
+            throws IOException, XMPException, YAXPathExpressionException, ExifToolIntegrationException
+    {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(pathToResultingImage))
         {
-            mappingTable = MetadataMapperUtil.getDefaultMapping();
-        }
-        else
-        {
-            mappingTable = MetadataMapperUtil.getDefaultConfigOverridenBy(mappingCustomization);
-        }
-
-        Map<Integer, String> codepointAlternativeCharacters = new HashMap<>();
-
-        if (mappingTable.getConfig() != null)
-        {
-            if (mappingTable.getConfig().getIim().getCharacterMappingRef() != null)
-            {
-                System.out.println("IIM Character Mapping Table\n");
-                StringCharacterMappingTable stringCharacterMapping = ConfigStringCharacterMappingBuilder.stringCharacterMappingBuilder()
-                        .withMappingConfigurartion((CharacterMappingType) mappingTable.getConfig().getIim().getCharacterMappingRef())
-                        .buildTable();
-                System.out.print(FORMATTED_OUTPUT_PREFIX);
-                System.out.print(stringCharacterMapping.toString(FORMATTED_OUTPUT_ENTRY, codepointAlternativeCharacters));
-                System.out.println(FORMATTED_OUTPUT_SUFFIX);
-            }
-
-            if (mappingTable.getConfig().getXmp().getCharacterMappingRef() != null)
-            {
-                System.out.println("XMP Character Mapping Table\n");
-                StringCharacterMappingTable stringCharacterMapping = ConfigStringCharacterMappingBuilder.stringCharacterMappingBuilder()
-                        .withMappingConfigurartion((CharacterMappingType) mappingTable.getConfig().getXmp().getCharacterMappingRef())
-                        .buildTable();
-                System.out.print(FORMATTED_OUTPUT_PREFIX);
-                System.out.println(stringCharacterMapping.toString(FORMATTED_OUTPUT_ENTRY, codepointAlternativeCharacters));
-                System.out.println(FORMATTED_OUTPUT_SUFFIX);
-            }
-
+            mapToImage(fileOutputStream);
         }
     }
 
-    private static void validateConfig()
-            throws FileNotFoundException, JAXBException, ExifToolIntegrationException, ConfigValidationException
+    /**
+     * Note: does not close the output stream
+     */
+    public void mapToImage(final OutputStream imageOutput)
+            throws YAXPathExpressionException, XMPException, IOException, ExifToolIntegrationException
     {
-        if (validateMapping == null)
+        if (imageOutput == null || xmlDocument == null || mapping == null)
         {
-            System.err.println("* ERROR: No mappingCustomization file to validate");
-            Args.usage(MetadataMapper.class);
-            System.exit(1);
+            throw new IllegalArgumentException("At least one parameter (image input, image output, source xml, mapping) is missing");
         }
 
-        File file = new File(validateMapping);
-        if (!(file.exists() && file.isFile()))
+        ImageMetadata imageMetadata = new ImageMetadata();
+        new G2ToMetadataMapper(mapping).mapToImageMetadata(xmlDocument, imageMetadata);
+        ChainedImageMetadataOperations chainedImageMetadataOperations = ChainedImageMetadataOperations
+                .modifyImage(imageInputStream, imageOutput);
+
+        if(emptyTargetTagGroups)
         {
-            System.err.println("* ERROR: Unable to read mappingCustomization config: " + validateMapping);
+            chainedImageMetadataOperations.clearMetadataGroupsReferredByMapping( imageMetadata );
         }
 
-        final MappingType mappingToValidate = MetadataMapperUtil.getDefaultConfigOverridenBy(validateMapping);
-        try
+        if( tagGroupsToClear != null && tagGroupsToClear.size() > 0 )
         {
-            MetadataMapperUtil.validate(mappingToValidate);
-
-            System.out.println("Mapping file \"" + validateMapping + "\" validated successfully.");
-            System.exit(0);
+            chainedImageMetadataOperations.clearMetadataGroups( tagGroupsToClear );
         }
-        catch (ConfigValidationException ex)
+
+        chainedImageMetadataOperations.setMetadata(imageMetadata);
+        chainedImageMetadataOperations.execute(ExifTool.anExifTool().build());
+
+    }
+
+    public static MappingType getDefaultConfigOverridenBy(final String resourcePath, Object caller) throws FileNotFoundException, JAXBException
+    {
+        return getDefaultConfigOverridenBy(ResourceUtil.resourceAsStream(resourcePath, caller.getClass()));
+    }
+
+    public static MappingType getDefaultConfigOverridenBy(final String path) throws FileNotFoundException, JAXBException
+    {
+        return getDefaultConfigOverridenBy(new FileInputStream(path));
+    }
+
+    /**
+     * Reads the default configuration and overrides it with the specified one
+     */
+    public static MappingType getDefaultConfigOverridenBy(final InputStream is) throws JAXBException
+    {
+        return new MetadataMapperConfigReader().readCustomizedDefaultConfig(is);
+    }
+
+    public static MappingType getDefaultMapping() throws JAXBException
+    {
+        return new MetadataMapperConfigReader().getDefaultConfig();
+    }
+
+    protected static synchronized TagInfo getExifToolTagInfo() throws ExifToolIntegrationException
+    {
+        if (tagInfo == null)
         {
-            System.err.println("* ERROR: Validation failed for metadata mappingCustomization named \"" + ex.getMetadataMappingName()
-                    + "\" using group reference \"" + ex.getConfiguredNamespace() + "\", field \"" + ex.getConfiguredFieldname() + "\"");
-            System.exit(1);
+            // todo cache somehow
+            tagInfo = ExifTool.anExifTool().build().getSupportedTagsOfGroups();
+        }
+
+        return tagInfo;
+    }
+
+    /**
+     * Validates the given configuration. In case of an validation error an {@link ConfigValidationException} is thrown
+     *
+     * @throws ExifToolIntegrationException
+     * @throws ConfigValidationException
+     */
+    public static void validate(final MappingType mappingToValidate)
+            throws ExifToolIntegrationException, ConfigValidationException
+    {
+        TagInfo tagInfo = MetadataMapper.getExifToolTagInfo();
+
+        for (MappingType.Metadata metadata : mappingToValidate.getMetadata())
+        {
+            if (metadata.getXmp() != null)
+            {
+                for (XMPMapsTo xmpMapsTo : metadata.getXmp().getMapsTo())
+                {
+                    validateXMPElements(metadata, tagInfo, xmpMapsTo, "");
+                }
+            }
+            if (metadata.getIim() != null)
+            {
+                for (IIMMapping.MapsTo iimMapsTo : metadata.getIim().getMapsTo())
+                {
+                    if (!tagInfo.hasGroupContainingTagWithId(ConfigToExifToolTagNames.IPTC_APPLICATION_TAGGROUP_NAME,
+                            iimMapsTo.getDataset().toString()))
+                    {
+                        throw new ConfigValidationException(metadata.getName(), ConfigToExifToolTagNames.IPTC_APPLICATION_TAGGROUP_NAME,
+                                iimMapsTo.getField());
+                    }
+                }
+            }
         }
     }
 
-    public static void main(String argv[])
+    /**
+     * exiftool uses a compound name scheme: A member of a struct has its structure name as prefix.
+     */
+    private static void validateXMPElements(final MappingType.Metadata metadata, final TagInfo tagInfo, final XMPMapsTo mappingItem,
+            final String strPrefix)
+            throws ConfigValidationException
     {
-        System.out.println("** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH");
+        String targetNamespace = mappingItem.getTargetNamespace();
+        String tagGroupname = ConfigToExifToolTagNames.getTagGroupnameByConfigNamespace(targetNamespace);
 
-        try
+        if (!tagInfo.hasGroupContainingTagWithId(tagGroupname, strPrefix + mappingItem.getField()))
         {
-            Args.parse(MetadataMapper.class, argv);
-        }
-        catch (IllegalArgumentException ex)
-        {
-            Args.usage(MetadataMapper.class);
-            System.exit(1);
+            throw new ConfigValidationException(metadata.getName(), mappingItem.getTargetNamespace(), strPrefix+mappingItem.getField() );
         }
 
-        if( help )
+        if( mappingItem.getTargetType() == XMPMappingTargetType.STRUCT || mappingItem.getTargetType() == XMPMappingTargetType.SEQUENCE
+                || mappingItem.getTargetType() == XMPMappingTargetType.BAG )
         {
-            Args.usage( MetadataMapper.class);
-            System.exit(0);
-        }
-
-        if( exiftoolPath != null )
-        {
-            ExifTool.setPathToExifTool( exiftoolPath );
-        }
-
-        try
-        {
-            if (printCharacterMappingTable)
+            final String prefix;
+            if( mappingItem.getTargetType() == XMPMappingTargetType.STRUCT )
             {
-                printCharacterMappingTable();
+                prefix = strPrefix + mappingItem.getField();
             }
             else
             {
-                if( validateMapping != null )
-                {
-                    validateConfig();
-                }
-                else
-                {
-                    performMapping();
-                }
+                prefix = strPrefix;
+            }
+
+            for (XMPMapsTo child : mappingItem.getMapsTo())
+            {
+                validateXMPElements(metadata, tagInfo, child, prefix);
             }
         }
-        catch (IOException e)
-        {
-            System.err.println("* ERROR while accessing giving files");
-            System.exit(1);
-        }
-        catch (Throwable t)
-        {
-            System.err.println("* ERROR: Unclassified error during mappingCustomization:" + t);
-            System.exit(1);
-        }
-
-        System.exit(0);
     }
 }
+
