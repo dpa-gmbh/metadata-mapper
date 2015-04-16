@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/" xmlns:dpa="http://www.dpa.com/iptc/nar/2008-12-01/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<itemSet>
+		<newsItem conformance="power" guid="urn:newsml:dpa.com:20090101:150105-99-07656" standard="NewsML-G2" standardversion="2.18" version="2" xml:lang="en">
+		</newsItem>
+	</itemSet>
+</newsMessage>
