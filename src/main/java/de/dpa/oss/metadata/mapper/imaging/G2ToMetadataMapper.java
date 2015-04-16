@@ -7,9 +7,6 @@ import de.dpa.oss.metadata.mapper.common.DateTimeUtils;
 import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.*;
-import de.dpa.oss.metadata.mapper.imaging.iptc.IptcFieldToType;
-import de.dpa.oss.metadata.mapper.imaging.iptc.IptcType;
-import de.dpa.oss.metadata.mapper.imaging.iptc.IptcTypes;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -301,23 +298,16 @@ public class G2ToMetadataMapper
             return;
         }
 
-        IptcType iptcType = IptcFieldToType.asIptcType(mappingInfo.getField());
-        if (iptcType == null)
-        {
-            logger.debug("Mapping unknown IPTCType=\"" + mappingInfo.getField() + "\", DS=" + mappingInfo.getDataset());
-            iptcType = IptcTypes.getUnknown(mappingInfo.getDataset().intValue());
-        }
-
         if (mappingInfo.getTargetType() == IIMMappingTargetType.LIST_OF_STRING)
         {
             for (String value : valueList)
             {
-                imageMetadata.addIPTCEntry(iptcType.getName(), iimStringCharacterMapping.map(value));
+                imageMetadata.addIPTCEntry(mappingInfo.getField(), iimStringCharacterMapping.map(value));
             }
         }
         else
         {
-            imageMetadata.addIPTCEntry(iptcType.getName(), iimStringCharacterMapping.map(valueList.get(0)));
+            imageMetadata.addIPTCEntry(mappingInfo.getField(), iimStringCharacterMapping.map(valueList.get(0)));
         }
     }
 }

@@ -92,7 +92,7 @@
 	<metadata name="Digital Image GUID">
 		<xpath><![CDATA[//newsItem/@guid]]></xpath>
 		<iim>
-			<mapsTo dataset="5" field="Object Name" targetType="STRING"/>
+			<mapsTo dataset="5" field="ObjectName" targetType="STRING"/>
 		</iim>
 		<xmp>
 			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="DigImageGUID"/>

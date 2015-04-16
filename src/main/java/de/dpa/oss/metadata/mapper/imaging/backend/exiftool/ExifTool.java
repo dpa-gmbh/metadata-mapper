@@ -20,7 +20,9 @@ package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
  * limitations under the License.
  */
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ListMultimap;
+import com.google.gson.Gson;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroup;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroupBuilder;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
@@ -535,6 +537,34 @@ public class ExifTool
             throw new ExifToolIntegrationException(e);
         }
         return toReturn;
+    }
+
+    /**
+     * @param nameOfTagGroups the list of tag groups to inspect. An entry may contain the specific location too. It has to be
+     *                        separated by a colon. Example entries: "IPTC", "XMP:XMP-dc"
+     * @return map containing tags as keys and tag values
+     */
+    public List readTagGroup( File image, final String ... nameOfTagGroups ) throws ExifToolIntegrationException
+    {
+        final List tagToValue;
+
+        List<String> args = new ArrayList<>();
+        args.add("-j");
+        for (String nameOfTagGroup : nameOfTagGroups)
+        {
+            args.add( "-" + nameOfTagGroup);
+        }
+
+        String result = runExiftool(image, args);
+        if(!Strings.isNullOrEmpty(result))
+        {
+            tagToValue = new Gson().fromJson( result, ArrayList.class);
+        }
+        else
+        {
+            tagToValue = new ArrayList<>();
+        }
+        return tagToValue;
     }
 
     private TagInfo parseTagInfoFromXMLInput(final String xmlInput) throws ParserConfigurationException, SAXException, IOException
