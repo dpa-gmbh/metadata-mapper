@@ -43,7 +43,8 @@ public class MetadataMapper
     private Document xmlDocument = null;
     private MappingType mapping = null;
     private boolean emptyTargetTagGroups = false;
-    private Map<String,String> tagGroupsToClear = null;
+    private Map<String, String> tagGroupsToClear = null;
+    private boolean removeAllTagGroups = false;
 
     public static MetadataMapper modifyImageAt(final String pathToSourceImage) throws FileNotFoundException
     {
@@ -57,7 +58,7 @@ public class MetadataMapper
 
     private MetadataMapper(final String pathToSourceImage) throws FileNotFoundException
     {
-        this( new FileInputStream( pathToSourceImage));
+        this(new FileInputStream(pathToSourceImage));
     }
 
     private MetadataMapper(final InputStream imageInputStream)
@@ -65,49 +66,56 @@ public class MetadataMapper
         this.imageInputStream = imageInputStream;
     }
 
-    public MetadataMapper withXMLDocument(final String pathToXMLDocument) throws Exception
+    public MetadataMapper xmlDocument(final String pathToXMLDocument) throws Exception
     {
-        logger.debug( "Reading XML document :" + pathToXMLDocument);
+        logger.debug("Reading XML document :" + pathToXMLDocument);
         String xmlSource = new String(ByteStreams.toByteArray(new FileInputStream(pathToXMLDocument)));
         xmlDocument = XmlUtils.toDocument(xmlSource);
         return this;
     }
 
-    public MetadataMapper withXMLDocument( final Document xmlDocument )
+    public MetadataMapper xmlDocument(final Document xmlDocument)
     {
         this.xmlDocument = xmlDocument;
         return this;
     }
 
-    public MetadataMapper withDefaultMapping() throws JAXBException
+    public MetadataMapper useDefaultMapping() throws JAXBException
     {
-        logger.debug( "Using DefaultMapping");
+        logger.debug("Using DefaultMapping");
         this.mapping = getDefaultMapping();
         return this;
     }
 
-    public MetadataMapper withDefaultMappingOverridenBy(final String pathToMapping) throws FileNotFoundException, JAXBException
+    public MetadataMapper useDefaultMappingOverridenBy(final String pathToMapping) throws FileNotFoundException, JAXBException
     {
-        logger.debug( "Overriding default mapping by mapping definitions defined in:" + pathToMapping);
+        logger.debug("Overriding default mapping by mapping definitions defined in:" + pathToMapping);
         this.mapping = getDefaultConfigOverridenBy(pathToMapping);
         return this;
     }
 
-    public MetadataMapper withDefaultMappingOverridenBy( final MappingType customMapping )
+    public MetadataMapper useDefaultMappingOverridenBy(final MappingType customMapping)
     {
-        logger.debug( "Overriding default mapping by mapping:" + customMapping.getName());
+        logger.debug("Overriding default mapping by mapping:" + customMapping.getName());
         this.mapping = customMapping;
         return this;
     }
 
     /**
      * Expects a list of metadata mapper to remove before mapping is being performed
+     *
      * @param tagGroupsToClear list of tagGroupsToClear to erase. exiftool format is expected. that is: GROUP:TAG
-     *                   E.g. IPTC:ALL, XMP:XMP-dc
+     *                         E.g. IPTC:ALL, XMP:XMP-dc
      */
-    public MetadataMapper withTagGroupsToRemoveBeforeMapping(final Map<String, String> tagGroupsToClear)
+    public MetadataMapper tagGroupsToRemoveBeforeMapping(final Map<String, String> tagGroupsToClear)
     {
         this.tagGroupsToClear = tagGroupsToClear;
+        return this;
+    }
+
+    public MetadataMapper removeAllTagGroups()
+    {
+        this.removeAllTagGroups = true;
         return this;
     }
 
@@ -117,19 +125,19 @@ public class MetadataMapper
         return this;
     }
 
-    public void mapToImage(final String pathToResultingImage)
+    public void executeMapping(final String pathToResultingImage)
             throws IOException, XMPException, YAXPathExpressionException, ExifToolIntegrationException
     {
         try (FileOutputStream fileOutputStream = new FileOutputStream(pathToResultingImage))
         {
-            mapToImage(fileOutputStream);
+            executeMapping(fileOutputStream);
         }
     }
 
     /**
      * Note: does not close the output stream
      */
-    public void mapToImage(final OutputStream imageOutput)
+    public void executeMapping(final OutputStream imageOutput)
             throws YAXPathExpressionException, XMPException, IOException, ExifToolIntegrationException
     {
         if (imageOutput == null || xmlDocument == null || mapping == null)
@@ -142,14 +150,18 @@ public class MetadataMapper
         ChainedImageMetadataOperations chainedImageMetadataOperations = ChainedImageMetadataOperations
                 .modifyImage(imageInputStream, imageOutput);
 
-        if(emptyTargetTagGroups)
+        if (emptyTargetTagGroups)
         {
-            chainedImageMetadataOperations.clearMetadataGroupsReferredByMapping( imageMetadata );
+            chainedImageMetadataOperations.clearMetadataGroupsReferredByMapping(imageMetadata);
         }
 
-        if( tagGroupsToClear != null && tagGroupsToClear.size() > 0 )
+        if (removeAllTagGroups)
         {
-            chainedImageMetadataOperations.clearMetadataGroups( tagGroupsToClear );
+            chainedImageMetadataOperations.clearAllMetadataGroups();
+        }
+        else if (tagGroupsToClear != null && tagGroupsToClear.size() > 0)
+        {
+            chainedImageMetadataOperations.clearMetadataGroups(tagGroupsToClear);
         }
 
         chainedImageMetadataOperations.setMetadata(imageMetadata);
@@ -157,7 +169,8 @@ public class MetadataMapper
 
     }
 
-    public static MappingType getDefaultConfigOverridenBy(final String resourcePath, Object caller) throws FileNotFoundException, JAXBException
+    public static MappingType getDefaultConfigOverridenBy(final String resourcePath, Object caller)
+            throws FileNotFoundException, JAXBException
     {
         return getDefaultConfigOverridenBy(ResourceUtil.resourceAsStream(resourcePath, caller.getClass()));
     }
@@ -225,7 +238,7 @@ public class MetadataMapper
                     {
                         TagGroupItem tagInfoById = tagInfo.getGroupByName(ConfigToExifToolTagNames.IPTC_APPLICATION_TAGGROUP_NAME)
                                 .getTagInfoById(iimMapsTo.getDataset().toString());
-                        if( !tagInfoById.getName().equals( iimMapsTo.getField()))
+                        if (!tagInfoById.getName().equals(iimMapsTo.getField()))
                         {
                             throw new ConfigValidationException(metadata.getName(), ConfigToExifToolTagNames.IPTC_APPLICATION_TAGGROUP_NAME,
                                     iimMapsTo.getField());
@@ -248,14 +261,14 @@ public class MetadataMapper
 
         if (!tagInfo.hasGroupContainingTagWithId(tagGroupname, strPrefix + mappingItem.getField()))
         {
-            throw new ConfigValidationException(metadata.getName(), mappingItem.getTargetNamespace(), strPrefix+mappingItem.getField() );
+            throw new ConfigValidationException(metadata.getName(), mappingItem.getTargetNamespace(), strPrefix + mappingItem.getField());
         }
 
-        if( mappingItem.getTargetType() == XMPMappingTargetType.STRUCT || mappingItem.getTargetType() == XMPMappingTargetType.SEQUENCE
-                || mappingItem.getTargetType() == XMPMappingTargetType.BAG )
+        if (mappingItem.getTargetType() == XMPMappingTargetType.STRUCT || mappingItem.getTargetType() == XMPMappingTargetType.SEQUENCE
+                || mappingItem.getTargetType() == XMPMappingTargetType.BAG)
         {
             final String prefix;
-            if( mappingItem.getTargetType() == XMPMappingTargetType.STRUCT )
+            if (mappingItem.getTargetType() == XMPMappingTargetType.STRUCT)
             {
                 prefix = strPrefix + mappingItem.getField();
             }

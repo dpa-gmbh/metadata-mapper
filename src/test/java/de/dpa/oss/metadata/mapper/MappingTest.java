@@ -29,9 +29,9 @@ public class MappingTest
 
         // when
         MetadataMapper.modifyImageAt(imageInputStream)
-                .withDefaultMappingOverridenBy( "example/dpa-mapping.xml")
-                .withXMLDocument(document)
-                .mapToImage("target/" + this.getClass().getSimpleName()
+                .useDefaultMappingOverridenBy("example/dpa-mapping.xml")
+                .xmlDocument(document)
+                .executeMapping("target/" + this.getClass().getSimpleName()
                         + "-shouldApplyCustomizedMapping.jpg");
 
         // then

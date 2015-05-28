@@ -90,6 +90,15 @@ public class ExifTool
         return this;
     }
 
+    /**
+     * Removes all tag groups within the given media.
+     */
+    public ExifTool clearAllTagGroups()
+    {
+        tagGroupsToClear.add("-all=");
+        return this;
+    }
+
     public void execute(final ExifToolWrapper exifTool) throws ExifToolIntegrationException
     {
         final List<String> cmdArgs = new ArrayList<>();

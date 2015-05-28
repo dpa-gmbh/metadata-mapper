@@ -25,7 +25,7 @@ public class ChainedImageMetadataOperations
     private ExifTool.CodedCharset iptcCodedCharset = null;
     private TimeZone timeZone = TimeZone.getDefault();
     private final ListMultimap<String, String> groupToSpecificLocationToRemove = ArrayListMultimap.create();
-
+    private boolean clearAllMetadataGroups = false;
 
     public static ChainedImageMetadataOperations modifyImage(final InputStream inputImage, final OutputStream modifiedImage)
     {
@@ -95,11 +95,17 @@ public class ChainedImageMetadataOperations
         return this;
     }
 
+    public ChainedImageMetadataOperations clearAllMetadataGroups()
+    {
+        this.clearAllMetadataGroups = true;
+        return this;
+    }
+
     public ChainedImageMetadataOperations clearMetadataGroups(final Map<String, String> tagGroupsToClear)
     {
         for (String group : tagGroupsToClear.keySet())
         {
-            groupToSpecificLocationToRemove.put( group, tagGroupsToClear.get(group));
+            groupToSpecificLocationToRemove.put(group, tagGroupsToClear.get(group));
         }
 
         return this;
@@ -127,9 +133,13 @@ public class ChainedImageMetadataOperations
                 exifToolOperationChainBuilder.useEncodingCharsetForIPTC(iptcCodedCharset);
             }
 
-            if (groupToSpecificLocationToRemove.size() > 0)
+            if (clearAllMetadataGroups)
             {
-                for (Map.Entry<String,String> groupAndSpecificLocation : groupToSpecificLocationToRemove.entries())
+                exifToolOperationChainBuilder.clearAllTagGroups();
+            }
+            else if (groupToSpecificLocationToRemove.size() > 0)
+            {
+                for (Map.Entry<String, String> groupAndSpecificLocation : groupToSpecificLocationToRemove.entries())
                 {
                     exifToolOperationChainBuilder.clearTagGroup(groupAndSpecificLocation.getKey(), groupAndSpecificLocation.getValue());
                 }

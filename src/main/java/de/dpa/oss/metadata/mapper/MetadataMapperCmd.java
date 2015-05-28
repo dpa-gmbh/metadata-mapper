@@ -35,25 +35,30 @@ public class MetadataMapperCmd
     @Argument(alias = "v", required = false, description = "Validate given mappingCustomization file")
     protected static String validateMapping = null;
 
-    @Argument(alias = "e", required = false, description = "Removes all tags from those tag groups which are used by the mappingCustomization. "
-        + "By default mapped tag values will be merged with existing tags")
-    protected static Boolean emptyTagGroupBeforeMapping = false;
-
     @Argument(alias = "m", required = false, description = "mappingCustomization file which is used to override and/or enhance the default "
-            +"mappingCustomization. By default it uses dpa mappingCustomization")
+            + "mappingCustomization. By default it uses dpa mappingCustomization")
     protected static String mappingCustomization = null;
 
-    @Argument(alias = "c", required = false, description = "Outputs configured character mappingCustomization table. Does not perform any mappingCustomization. "
-            + "Uses default mappingCustomization file if argument -m is omitted")
+    @Argument(alias = "c", required = false, description =
+            "Outputs configured character mappingCustomization table. Does not perform any mappingCustomization. "
+                    + "Uses default mappingCustomization file if argument -m is omitted")
     protected static boolean printCharacterMappingTable = false;
 
     @Argument(alias = "t", required = false, description = "Path to exiftool. Alternatively you may set environment variable EXIFTOOL")
     protected static String exiftoolPath = null;
 
+    @Argument(alias = "e", required = false, description =
+            "Removes all tags from those tag groups which are used by the mappingCustomization. "
+                    + "By default mapped tag values will be merged with existing tags")
+    protected static Boolean emptyTagGroupBeforeMapping = false;
+
     @Argument(alias = "r", required = false, description = "comma-separated list of metadata tag groups to clear before mapping. "
             + "The syntax needs to match the exiftool syntax to specify containers: TAG_GROUP:TAG. For a list of available "
             + "containers see exiftool. Example: -r IPTC:ALL,XMP:XMP-dc")
     protected static String removeTagGroups;
+
+    @Argument(alias = "R", required = false, description = "Removes all metadata from given file before processing")
+    protected static Boolean removeAllTagGroups = false;
 
     @Argument(alias = "h", required = false)
     protected static boolean help = false;
@@ -74,43 +79,48 @@ public class MetadataMapperCmd
         if (mappingCustomization == null)
         {
             System.out.println("Using default mappingCustomization.");
-            metadataMapper.withDefaultMapping();
+            metadataMapper.useDefaultMapping();
         }
         else
         {
             System.out.println("Using mappingCustomization file \"" + mappingCustomization + "\".");
-            metadataMapper.withDefaultMappingOverridenBy(mappingCustomization);
+            metadataMapper.useDefaultMappingOverridenBy(mappingCustomization);
         }
 
-        if( emptyTagGroupBeforeMapping )
+        if (emptyTagGroupBeforeMapping)
         {
             metadataMapper.emptyTargetTagGroups();
         }
 
-        if(!Strings.isNullOrEmpty(removeTagGroups ))
+        if (removeAllTagGroups)
+        {
+            System.out.println( "Removing ALL metadata properties before processing");
+            metadataMapper.removeAllTagGroups();
+        }
+        else if (!Strings.isNullOrEmpty(removeTagGroups))
         {
             String[] tagGroups = removeTagGroups.split(",");
-            Map<String,String> tagGroupsToRemove = new HashMap<>();
+            Map<String, String> tagGroupsToRemove = new HashMap<>();
             for (String tagGroup : tagGroups)
             {
                 String[] tagGroupWithTag = tagGroup.split(":");
-                if( tagGroupWithTag.length != 2 )
+                if (tagGroupWithTag.length != 2)
                 {
-                    System.out.println( "** Illegal format for tag group to remove: " + tagGroup
-                      + ". Required format looks like IPTC:ALL. Ignoring this entry.");
+                    System.out.println("** Illegal format for tag group to remove: " + tagGroup
+                            + ". Required format looks like IPTC:ALL. Ignoring this entry.");
                 }
                 else
                 {
-                    tagGroupsToRemove.put( tagGroupWithTag[0], tagGroupWithTag[1]);
+                    tagGroupsToRemove.put(tagGroupWithTag[0], tagGroupWithTag[1]);
                 }
             }
-            metadataMapper.withTagGroupsToRemoveBeforeMapping(tagGroupsToRemove);
+            metadataMapper.tagGroupsToRemoveBeforeMapping(tagGroupsToRemove);
         }
 
-        metadataMapper.withXMLDocument(g2doc)
-                .mapToImage(outputImage);
+        metadataMapper.xmlDocument(g2doc)
+                .executeMapping(outputImage);
 
-        System.out.println( "Mappingperformed successfully");
+        System.out.println("Mappingperformed successfully");
     }
 
     private static boolean validateArgsForMapping() throws IOException
@@ -132,9 +142,9 @@ public class MetadataMapperCmd
             }
         }
 
-        if( outputImage == null )
+        if (outputImage == null)
         {
-            System.err.println( "* ERROR: output image (-o) not given");
+            System.err.println("* ERROR: output image (-o) not given");
             checkSuccessful = false;
         }
 
@@ -260,13 +270,13 @@ public class MetadataMapperCmd
             System.exit(1);
         }
 
-        if( help )
+        if (help)
         {
-            Args.usage( MetadataMapperCmd.class);
+            Args.usage(MetadataMapperCmd.class);
             System.exit(0);
         }
 
-        if( exiftoolPath != null )
+        if (exiftoolPath != null)
         {
             ExifToolWrapper.setPathToExifTool(exiftoolPath);
         }
@@ -279,7 +289,7 @@ public class MetadataMapperCmd
             }
             else
             {
-                if( validateMapping != null )
+                if (validateMapping != null)
                 {
                     validateConfig();
                 }
