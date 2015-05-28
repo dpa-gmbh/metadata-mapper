@@ -15,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.fail;
 
-public class ExifToolTest
+public class ExifToolWrapperTest
 {
     @Test
     public void shouldReturnListOfGroups()
@@ -23,7 +23,7 @@ public class ExifToolTest
     {
         // given
         // when
-        TagInfo supportedTagsOfGroups = ExifTool.anExifTool().build().getSupportedTagsOfGroups();
+        TagInfo supportedTagsOfGroups = ExifToolWrapper.anExifTool().build().getSupportedTagsOfGroups();
         // then
         assertThat( supportedTagsOfGroups, is(notNullValue()));
         assertThat(supportedTagsOfGroups.getGroupByName("XMP::dc"), is(notNullValue()));
@@ -38,14 +38,14 @@ public class ExifToolTest
     public void shouldReportErrorIfExiftoolNotFound()
     {
         // given
-        final String currentSetting = ExifTool.getPathToExifTool();
+        final String currentSetting = ExifToolWrapper.getPathToExifTool();
 
-        ExifTool.setPathToExifTool( "notfound");
+        ExifToolWrapper.setPathToExifTool("notfound");
         boolean rightExceptionThrown = false;
         // when
         try
         {
-            ExifTool.anExifTool().build().getSupportedTagsOfGroups();
+            ExifToolWrapper.anExifTool().build().getSupportedTagsOfGroups();
         }
         catch (ExifToolIntegrationException e)
         {
@@ -53,7 +53,7 @@ public class ExifToolTest
         }
         finally
         {
-            ExifTool.setPathToExifTool(currentSetting);
+            ExifToolWrapper.setPathToExifTool(currentSetting);
         }
 
         // then
