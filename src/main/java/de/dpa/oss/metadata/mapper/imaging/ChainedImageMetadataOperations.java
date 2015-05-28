@@ -5,8 +5,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.io.ByteStreams;
-import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.XMPMetadata;
 
@@ -104,7 +105,7 @@ public class ChainedImageMetadataOperations
         return this;
     }
 
-    public void execute(final ExifTool exifTool) throws XMPException, ExifToolIntegrationException, IOException
+    public void execute(final ExifToolWrapper exifTool) throws XMPException, ExifToolIntegrationException, IOException
     {
 
         File tempImageFile = null;
@@ -115,7 +116,7 @@ public class ChainedImageMetadataOperations
             ByteStreams.copy(inputImage, fis);
             fis.close();
 
-            ExifTool.ExifToolOperationChainBuilder exifToolOperationChainBuilder = ExifTool.modifyImage(tempImageFile);
+            ExifTool exifToolOperationChainBuilder = ExifTool.modifyImage(tempImageFile);
 
             if (tagsToSet != null)
             {

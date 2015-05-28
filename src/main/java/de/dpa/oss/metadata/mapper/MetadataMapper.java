@@ -9,7 +9,7 @@ import de.dpa.oss.metadata.mapper.imaging.ChainedImageMetadataOperations;
 import de.dpa.oss.metadata.mapper.imaging.ConfigToExifToolTagNames;
 import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
 import de.dpa.oss.metadata.mapper.imaging.G2ToMetadataMapper;
-import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroupItem;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
@@ -153,7 +153,7 @@ public class MetadataMapper
         }
 
         chainedImageMetadataOperations.setMetadata(imageMetadata);
-        chainedImageMetadataOperations.execute(ExifTool.anExifTool().build());
+        chainedImageMetadataOperations.execute(ExifToolWrapper.anExifTool().build());
 
     }
 
@@ -185,7 +185,7 @@ public class MetadataMapper
         if (tagInfo == null)
         {
             // todo cache somehow
-            tagInfo = ExifTool.anExifTool().build().getSupportedTagsOfGroups();
+            tagInfo = ExifToolWrapper.anExifTool().build().getSupportedTagsOfGroups();
         }
 
         return tagInfo;

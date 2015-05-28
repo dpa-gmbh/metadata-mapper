@@ -6,7 +6,7 @@ import com.sampullara.cli.Argument;
 import de.dpa.oss.common.StringCharacterMappingTable;
 import de.dpa.oss.metadata.mapper.imaging.ConfigStringCharacterMappingBuilder;
 import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
-import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CharacterMappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
@@ -268,7 +268,7 @@ public class MetadataMapperCmd
 
         if( exiftoolPath != null )
         {
-            ExifTool.setPathToExifTool( exiftoolPath );
+            ExifToolWrapper.setPathToExifTool(exiftoolPath);
         }
 
         try

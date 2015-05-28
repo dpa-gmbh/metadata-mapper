@@ -4,7 +4,7 @@ import de.dpa.oss.common.ResourceUtil;
 import de.dpa.oss.metadata.mapper.MetadataMapperConfigReader;
 import de.dpa.oss.metadata.mapper.MetadataMapper;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
-import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class ChainedImageMetadataOperationsTest
         // when
         ChainedImageMetadataOperations.modifyImage(imageInputStream,fileOutputStream)
                 .setMetadata( imageMetadata)
-                .execute(ExifTool.anExifTool().build());
+                .execute(ExifToolWrapper.anExifTool().build());
         fileOutputStream.flush();
         fileOutputStream.close();
     }
@@ -54,7 +54,7 @@ public class ChainedImageMetadataOperationsTest
         // when
         ChainedImageMetadataOperations.modifyImage(imageInputStream,fileOutputStream)
                 .setMetadata(imageMetadata)
-                .execute(ExifTool.anExifTool().build());
+                .execute(ExifToolWrapper.anExifTool().build());
         fileOutputStream.flush();
         fileOutputStream.close();
 

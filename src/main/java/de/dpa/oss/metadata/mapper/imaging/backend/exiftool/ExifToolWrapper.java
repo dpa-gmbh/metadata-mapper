@@ -614,13 +614,13 @@ public class ExifToolWrapper
     }
 
     /**
-     * @deprecated Use {@link ExifToolOperationChainBuilder}
+     * @deprecated Use {@link ExifTool}
      */
     public static class ExifToolOptionBuilder
     {
         List<String> options = new ArrayList<>();
 
-        public ExifToolOptionBuilder useEncodingCharsetForIPTC(final ExifToolOperationChainBuilder.CodedCharset codedCharset)
+        public ExifToolOptionBuilder useEncodingCharsetForIPTC(final ExifTool.CodedCharset codedCharset)
         {
             options.add("-IPTC:codedcharacterset=" + codedCharset.getCodepageId());
             return this;
