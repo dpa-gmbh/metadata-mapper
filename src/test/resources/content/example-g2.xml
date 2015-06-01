@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/" xmlns:dpa="http://www.dpa.com/iptc/nar/2008-12-01/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<header>
+		<sent>2015-06-01T15:47:41+02:00</sent>
+		<catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_19.xml"/>
+		<catalogRef href="http://g2.dpa.com/catalog/catalog001.xml"/>
+		<priority>5</priority>
+		<origin>ines</origin>
+		<destination qcode="dpasrv:barch">report</destination>
+		<destination qcode="dpasrv:bbasis">Basis</destination>
+		<destination qcode="dpadest:pool">pool</destination>
+	</header>
+	<itemSet>
+		<newsItem conformance="power" guid="urn:newsml:dpa.com:20090101:150601-890-013445" standard="NewsML-G2" standardversion="2.18" version="2" xml:lang="de">
+			<catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_19.xml"/>
+			<catalogRef href="http://g2.dpa.com/catalog/catalog001.xml"/>
+			<rightsInfo>
+				<copyrightHolder>
+					<name>dpa-Zentralbild</name>
+				</copyrightHolder>
+				<rightsInfoExtProperty custom="true" rel="dparel:hasMinimumFee" value="false" valuedatatype="xs:boolean"/>
+			</rightsInfo>
+			<itemMeta>
+				<itemClass qcode="ninat:picture">
+					<name xml:lang="en">Picture Item(s)</name>
+				</itemClass>
+				<provider>
+					<name>dpa-Zentralbild</name>
+					<related custom="true" rel="dparel:logo" value="dpa" valuedatatype="xs:string"/>
+				</provider>
+				<versionCreated>2015-06-01T15:47:41+02:00</versionCreated>
+				<pubStatus qcode="stat:usable">
+					<name xml:lang="en">Usable</name>
+				</pubStatus>
+				<generator versioninfo="1.0.0">mule-module-pa</generator>
+				<profile versioninfo="2.0.0">dpa-G2</profile>
+				<service qcode="dpasrv:barch">
+					<name role="nrol:mnemonic">report</name>
+				</service>
+				<service qcode="dpasrv:bbasis">
+					<name role="nrol:mnemonic">bbasis</name>
+				</service>
+			</itemMeta>
+			<contentMeta>
+				<urgency>5</urgency>
+				<contentCreated>2015-06-01</contentCreated>
+				<located literal="poiID" type="cpnat:poi">
+					<name>Gaza</name>
+				</located>
+				<creator>
+					<name>Mr X</name>
+					<related qcode="dpaaccno:ZZZZZ">
+						<name role="nrol:full">Mr X</name>
+					</related>
+				</creator>
+				<contributor>
+					<name>jbu</name>
+				</contributor>
+				<altId type="dpatype:orgTransRef">jbu052</altId>
+				<language tag="de"/>
+				<genre qcode="dpascn:24">
+					<name xml:lang="de">Aufführung</name>
+				</genre>
+				<subject qcode="dpasubject:114">
+					<name xml:lang="de">Konflikte</name>
+					<sameAs qcode="medtop:16000000">
+						<name xml:lang="de">Krise, Krieg, Konflikte</name>
+					</sameAs>
+				</subject>
+				<subject qcode="dpacat:pl" type="dpatype:category">
+					<name role="nrol:mnemonic" xml:lang="de">pl</name>
+					<sameAs qcode="dparessort:pl">
+						<name xml:lang="de">Politik</name>
+						<name role="nrol:mnemonic" xml:lang="de">pl</name>
+					</sameAs>
+				</subject>
+				<keyword rank="1">Nahost</keyword>
+				<keyword rank="2">Außenministerium</keyword>
+				<keyword rank="3">Kriegsfolgen</keyword>
+				<keyword rank="4">Zerstörung</keyword>
+				<keyword rank="5">Hamas</keyword>
+				<subject type="cpnat:person">
+					<name>Max Mütze</name>
+				</subject>
+				<subject literal="poiID" type="cpnat:poi"/>
+				<headline>Situation im Gazastreifen</headline>
+				<creditline>dpa</creditline>
+				<description role="drol:caption">Ein Werbebanner für den militärischen Kampf der Palästinenser hängt am 01.06.2015 über einer Straße in Gaza-Stadt (Palästinensische Gebiete). Fast ein Jahr nach dem jüngsten Krieg mit mehr als 2.200 Toten leidet die Bevölkerung des dicht besiedelten Palästinensergebiets immer noch schwer unter den Folgen. Foto: Jens Büttner/dpa</description>
+			</contentMeta>
+			<assert literal="poiID">
+				<POIDetails>
+					<address>
+						<locality role="dpalocalityrole:locality">
+							<name>Gaza-Stadt</name>
+						</locality>
+						<area role="dpaarearole:area">
+							<name>Palästinensische Gebiete</name>
+						</area>
+						<country qcode="dpacountry:67" type="dpatype:country">
+							<name role="nrol:display" xml:lang="de">Israel</name>
+							<sameAs qcode="iso3166-1a3:ISR">
+								<name role="nrol:mnemonic">ISR</name>
+							</sameAs>
+							<sameAs qcode="dpageosbj:68">
+								<name>Israel</name>
+							</sameAs>
+							<sameAs qcode="iso3166-1a2:IL">
+								<name role="nrol:mnemonic">IL</name>
+							</sameAs>
+						</country>
+					</address>
+				</POIDetails>
+			</assert>
+			<contentSet>
+				<remoteContent contenttype="image/jpeg" dpa:imageformat="Landscape" href="150601-890-013445.jpeg"/>
+			</contentSet>
+		</newsItem>
+	</itemSet>
+</newsMessage>
