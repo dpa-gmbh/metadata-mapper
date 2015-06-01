@@ -31,18 +31,6 @@
 		</xmp>
 	</metadata>
 
-    <!-- TODO review: Scene Code-->
-    <metadata name="Scene Code">
-        <xpath rank="1"><![CDATA[//contentMeta/genre[starts-with(@qcode, 'dpascn:')]/@qcode]]></xpath>
-        <xpath rank="2"><![CDATA[//genre/sameAs[starts-with(@qcode, 'dpascn:')]/@qcode]]></xpath>
-        <xpath rank="3"><![CDATA[//genre/broader[starts-with(@qcode, 'dpascn:')]/@qcode]]></xpath>
-        <xmp>
-            <mapsTo targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" field="Scene" targetType="Bag">
-                <mapsTo field="Scene" targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" targetType="Text"/>
-            </mapsTo>
-        </xmp>
-    </metadata>
-
 	<metadata name="Subject Code">
 		<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta//subject/sameAs[starts-with(@qcode, 'subj:')]/@qcode, 6)]]></xpath>
         <xpath rank="2" returnType="STRING"><![CDATA[substring(//contentMeta//subject[starts-with(@qcode, 'subj:')]/@qcode, 6)]]></xpath>
