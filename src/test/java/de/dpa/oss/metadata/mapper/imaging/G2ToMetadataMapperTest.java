@@ -82,7 +82,7 @@ public class G2ToMetadataMapperTest
     {
         // given
         InputStream mappingConfig = ResourceUtil.resourceAsStream("/image-metadata-mapping/default-mapping.xml", this);
-        String xmlDocument = ResourceUtil.resourceAsString("/content/bild-senden-national-out_40458479_150529-96-00696_2.xml",this);
+        String xmlDocument = ResourceUtil.resourceAsString("/content/example-g2.xml",this);
 
         Document document = XmlUtils.toDocument(xmlDocument);
         MappingType mapping = new MetadataMapperConfigReader().readCustomizedDefaultConfig(mappingConfig);

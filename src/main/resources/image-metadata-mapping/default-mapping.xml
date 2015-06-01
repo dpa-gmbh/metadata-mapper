@@ -82,8 +82,8 @@
 	</metadata>
 
 	<metadata name="Intellectual Genre">
-		<xpath rank="1"><![CDATA[/newsItem/contentMeta/genre/name]]></xpath>
-		<xpath rank="2"><![CDATA[/newsItem/contentMeta/genre/@literal]]></xpath>
+		<xpath rank="1"><![CDATA[//newsItem/contentMeta/genre/name]]></xpath>
+		<xpath rank="2"><![CDATA[//newsItem/contentMeta/genre/@literal]]></xpath>
 		<iim>
 			<mapsTo dataset="4" field="ObjectAttributeReference" targetType="STRING"/>
 		</iim>
