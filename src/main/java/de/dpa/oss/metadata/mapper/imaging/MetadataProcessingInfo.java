@@ -21,6 +21,9 @@ public class MetadataProcessingInfo
 
     public static final String DEFAULT_PARTNAME = "@__default";
 
+    /**
+     * each part may have multiple xpath expressions assigned to it. These expressions are orderd by a rank
+     */
     final Map<String, TreeMap<Integer, QualifiedXPath>> partNameToOrderedXPaths;
     final Map<String, String> partnameToDefaultValues;
     final MappingType.Metadata metadataMapping;
@@ -73,6 +76,23 @@ public class MetadataProcessingInfo
         }
 
         return partnameToValue;
+    }
+
+    public Iterator<String> getPartNames()
+    {
+        return partNameToOrderedXPaths.keySet().iterator();
+    }
+
+    /**
+     * @return list of xpaths belonging to the given partname. The xpaths are given in the order defined by the rank
+     */
+    public Iterator<QualifiedXPath> getXPathsForPartName( final String partname )
+    {
+        if( !partNameToOrderedXPaths.containsKey(partname))
+        {
+            throw new IllegalArgumentException("Unable to find part with name: " + partname);
+        }
+        return partNameToOrderedXPaths.get(partname).values().iterator();
     }
 
     private List<String> selectFirstMatchingXPathValues(final Document document,

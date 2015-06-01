@@ -1,6 +1,7 @@
 package de.dpa.oss.metadata.mapper.imaging;
 
 import de.dpa.oss.metadata.mapper.MetadataMapper;
+import de.dpa.oss.metadata.mapper.MetadataMapperConfigReader;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
@@ -118,7 +119,7 @@ public class MetadataMapperTest
     public void shouldValidateDefaultMapping() throws ExifToolIntegrationException, ConfigValidationException, JAXBException
     {
         // given
-        MappingType defaultMapping = MetadataMapper.getDefaultMapping();
+        MappingType defaultMapping = MetadataMapperConfigReader.getDefaultMapping();
 
         // when
         MetadataMapper.validate(defaultMapping);
@@ -131,7 +132,7 @@ public class MetadataMapperTest
             throws ExifToolIntegrationException, ConfigValidationException, JAXBException, FileNotFoundException
     {
         // given
-        MappingType defaultMapping = MetadataMapper.getDefaultConfigOverridenBy("example/dpa-mapping.xml");
+        MappingType defaultMapping = MetadataMapperConfigReader.getDefaultConfigOverridenBy("example/dpa-mapping.xml");
 
         // when
         MetadataMapper.validate(defaultMapping);

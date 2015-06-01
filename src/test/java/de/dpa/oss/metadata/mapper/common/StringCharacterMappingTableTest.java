@@ -2,6 +2,7 @@ package de.dpa.oss.metadata.mapper.common;
 
 import de.dpa.oss.common.StringCharacterMappingTable;
 import de.dpa.oss.metadata.mapper.imaging.EncodingCharset;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -197,5 +198,19 @@ public class StringCharacterMappingTableTest
                 + "<tr><td>62</td><td>b</td><td>42</td><td>B</td></tr>\n"
                 + "<tr><td>63</td><td>c</td><td>43</td><td>C</td></tr>\n"
                 + "<tr><td>64</td><td>d</td><td>44</td><td>D</td></tr>\n"));
+    }
+
+    @Test
+    public void shouldMapToOriginWithoutAnyGivenMapping()
+    {
+        // given
+        StringCharacterMappingTable mapping = StringCharacterMappingTable.aCharacterMapping().build();
+
+        // when
+        String result = mapping.map("inputString");
+
+        // then
+        assertThat(result,is(CoreMatchers.notNullValue()));
+        assertThat(result,is("inputString"));
     }
 }

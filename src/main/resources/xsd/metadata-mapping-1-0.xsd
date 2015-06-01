@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 sp2 (x64) (http://www.altova.com) by Matthias Gebert (dpa Deutsche Presse-Agentur GmbH) -->
-<xs:schema 
-        xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
         xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"
         xmlns:jaxb="http://java.sun.com/xml/ns/jaxb/2.1"
         targetNamespace="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"
-        elementFormDefault="qualified" 
-        attributeFormDefault="unqualified" 
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
         version="1.0">
 
     <xs:element name="mapping" type="MappingType">
@@ -38,7 +38,8 @@
             </xs:element>
             <xs:element name="metadata" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
-                    <xs:documentation>The mapping of a specific metadata according to the IPTC Photo Metadata specification</xs:documentation>
+                    <xs:documentation>The mapping of a specific metadata according to the IPTC Photo Metadata specification
+                    </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
@@ -87,39 +88,43 @@
         </xs:attribute>
     </xs:complexType>
 
-	<xs:complexType name="ConfigType">
-		<xs:sequence>
-			<xs:element name="timezone" type="xs:string">
-				<xs:annotation>
-					<xs:documentation>Timezone to be used to convert date/time values into string representation</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="iim">
-				<xs:annotation>
-					<xs:documentation>IIM (record 2) specific configuration</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:attribute name="charset" type="IIMEncodingType" use="required"/>
-					<xs:attribute name="characterMappingRef" type="xs:IDREF" use="optional">
-						<xs:annotation>
-							<xs:documentation>Reference onto a character mapping table to replace e.g. diacritc characters to the target namespace (see characterMapping type)</xs:documentation>
-                                <xs:appinfo>
-                                    <jaxb:property>
-                                        <jaxb:baseType name="CharacterMappingType"/>
-                                    </jaxb:property>
-                                </xs:appinfo>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="defaultReplaceChar" type="xs:string" use="optional">
-						<xs:annotation>
-							<xs:documentation>Default character to use, if a character from the source is not supported within the taget namespace</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="xmp">
-				<xs:complexType>
-					<xs:attribute name="charset" use="required">
+    <xs:complexType name="ConfigType">
+        <xs:sequence>
+            <xs:element name="timezone" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Timezone to be used to convert date/time values into string representation</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="iim">
+                <xs:annotation>
+                    <xs:documentation>IIM (record 2) specific configuration</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:attribute name="charset" type="IIMEncodingType" use="required"/>
+                    <xs:attribute name="characterMappingRef" type="xs:IDREF" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Reference onto a character mapping table to replace e.g. diacritc characters to the target
+                                namespace (see characterMapping type)
+                            </xs:documentation>
+                            <xs:appinfo>
+                                <jaxb:property>
+                                    <jaxb:baseType name="CharacterMappingType"/>
+                                </jaxb:property>
+                            </xs:appinfo>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="defaultReplaceChar" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Default character to use, if a character from the source is not supported within the taget
+                                namespace
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="xmp">
+                <xs:complexType>
+                    <xs:attribute name="charset" use="required">
                         <xs:simpleType>
                             <xs:restriction base="xs:string">
                                 <xs:annotation>
@@ -127,23 +132,43 @@
                                 </xs:annotation>
                                 <xs:enumeration value="utf-8"/>
                             </xs:restriction>
-                            
+
                         </xs:simpleType>
-					</xs:attribute>
-					<xs:attribute name="characterMappingRef" type="xs:IDREF" use="optional">
-						<xs:annotation>
-							<xs:documentation>Reference onto a character mapping table to replace e.g. diacritc characters to the target namespace (see characterMapping type)</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="defaultReplaceChar" type="xs:string" use="optional">
-						<xs:annotation>
-							<xs:documentation>Default character to use, if a character from the source is not supported within the taget namespace</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+                    </xs:attribute>
+                    <xs:attribute name="characterMappingRef" type="xs:IDREF" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Reference onto a character mapping table to replace e.g. diacritc characters to the target
+                                namespace (see characterMapping type)
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="defaultReplaceChar" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Default character to use, if a character from the source is not supported within the taget
+                                namespace
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dateParser" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>A Date Parser is used to parse the date format given in a G2 document. It is referred by mapsTo
+                        directive in order to read the input as date and to store it accordingly
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:attribute name="id" type="xs:ID"/>
+                    <xs:attribute name="inputDateFormat" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>For valid date format strings refer to http://docs.oracle.com/javase/7/docs/api/
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
     <xs:simpleType name="IIMEncodingType">
         <xs:restriction base="xs:string">
             <xs:annotation>
@@ -155,182 +180,203 @@
     </xs:simpleType>
 
     <xs:simpleType name="CardinalityType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="ONE"/>
-			<xs:enumeration value="MANY"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="XPathReturnType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="STRING"/>
-			<xs:enumeration value="NODE"/>
-			<xs:enumeration value="NODELIST"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:complexType name="QualifiedXPath">
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute name="part" type="xs:string" use="optional">
-					<xs:annotation>
-						<xs:documentation>Reference of the part of a structure.</xs:documentation>
-					</xs:annotation>
-				</xs:attribute>
-				<xs:attribute name="rank" type="xs:integer" use="optional">
-					<xs:annotation>
-						<xs:documentation>In case of alternative xpath expression to evaluate the metadata, the rank is used to define the order of processing</xs:documentation>
-					</xs:annotation>
-				</xs:attribute>
-				<xs:attribute name="returnType" type="XPathReturnType" use="optional" default="NODE">
-					<xs:annotation>
-						<xs:documentation>Expected return type of the xpath expression </xs:documentation>
-					</xs:annotation>
-				</xs:attribute>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-	<xs:complexType name="BaseMetadataType">
-		<xs:sequence>
-			<xs:element name="processor" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>Processor to provide the source data </xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:attribute name="class" type="xs:string" use="required">
-						<xs:annotation>
-							<xs:documentation>Java class implementing the Processor interface </xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="BaseMapsTo" abstract="true">
-		<xs:attribute name="field" type="xs:string" use="required">
-			<xs:annotation>
-				<xs:documentation>NName of the data set according to the IIM specification</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="part-ref" type="xs:string">
-			<xs:annotation>
-				<xs:documentation>Reference to a part of a structure </xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:simpleType name="XMPMappingTargetType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Text"/>
-			<xs:enumeration value="Integer"/>
-			<xs:enumeration value="Date"/>
-			<xs:enumeration value="LangAlt"/>
-			<xs:enumeration value="Struct"/>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ONE"/>
+            <xs:enumeration value="MANY"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="XPathReturnType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="STRING"/>
+            <xs:enumeration value="NODE"/>
+            <xs:enumeration value="NODELIST"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="QualifiedXPath">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="part" type="xs:string" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Reference of the part of a structure.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="rank" type="xs:integer" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>In case of alternative xpath expression to evaluate the metadata, the rank is used to define the
+                            order of processing
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="returnType" type="XPathReturnType" use="optional" default="NODE">
+                    <xs:annotation>
+                        <xs:documentation>Expected return type of the xpath expression</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="BaseMetadataType">
+        <xs:sequence>
+            <xs:element name="processor" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Processor to provide the source data</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:attribute name="class" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>Java class implementing the Processor interface</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BaseMapsTo" abstract="true">
+        <xs:attribute name="field" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>NName of the data set according to the IIM specification</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="part-ref" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>Reference to a part of a structure</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:simpleType name="XMPMappingTargetType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Text"/>
+            <xs:enumeration value="Integer"/>
+            <xs:enumeration value="Date"/>
+            <xs:enumeration value="LangAlt"/>
+            <xs:enumeration value="Struct"/>
             <xs:enumeration value="Sequence"/>
             <xs:enumeration value="Bag"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:complexType name="XMPMapsTo">
-		<xs:complexContent>
-			<xs:extension base="BaseMapsTo">
-				<xs:sequence>
-					<xs:element name="mapsTo" type="XMPMapsTo" minOccurs="0" maxOccurs="unbounded"/>
-				</xs:sequence>
-				<xs:attribute name="targetNamespace" use="required">
-					<xs:annotation>
-						<xs:documentation>XMP namespace of this metadata</xs:documentation>
-					</xs:annotation>
-					<xs:simpleType>
-						<xs:restriction base="xs:string">
-							<xs:enumeration value="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/"/>
-							<xs:enumeration value="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
-							<xs:enumeration value="http://purl.org/dc/elements/1.1/"/>
-							<xs:enumeration value="http://ns.adobe.com/photoshop/1.0/"/>
-							<xs:enumeration value="http://ns.adobe.com/xap/1.0/rights/"/>
-							<xs:enumeration value="http://ns.useplus.org/ldf/xmp/1.0/"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:attribute>
-				<xs:attribute name="targetType" type="XMPMappingTargetType" use="required">
-					<xs:annotation>
-						<xs:documentation>Type of the metadata regarding the XMP specification</xs:documentation>
-					</xs:annotation>
-				</xs:attribute>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="XMPMapping">
-		<xs:complexContent>
-			<xs:extension base="BaseMetadataType">
-				<xs:sequence>
-					<xs:element name="mapsTo" type="XMPMapsTo" maxOccurs="unbounded">
-						<xs:annotation>
-							<xs:documentation>Defintiion of the target data object within the XMP container</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:simpleType name="IIMMappingTargetType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="STRING"/>
-			<xs:enumeration value="LIST_OF_STRING"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:complexType name="IIMMapping">
-		<xs:complexContent>
-			<xs:extension base="BaseMetadataType">
-				<xs:sequence>
-					<xs:element name="mapsTo" maxOccurs="unbounded">
-						<xs:annotation>
-							<xs:documentation>Defiinition of the target data set within the IIM record</xs:documentation>
-						</xs:annotation>
-						<xs:complexType>
-							<xs:complexContent>
-								<xs:extension base="BaseMapsTo">
-									<xs:attribute name="dataset" type="xs:integer" use="required">
-										<xs:annotation>
-											<xs:documentation>Dataset within the IIM Record 2</xs:documentation>
-										</xs:annotation>
-									</xs:attribute>
-									<xs:attribute name="targetType" type="IIMMappingTargetType" use="required">
-										<xs:annotation>
-											<xs:documentation>Type of the data set</xs:documentation>
-										</xs:annotation>
-									</xs:attribute>
-								</xs:extension>
-							</xs:complexContent>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="XMPMapsTo">
+        <xs:complexContent>
+            <xs:extension base="BaseMapsTo">
+                <xs:sequence>
+                    <xs:element name="mapsTo" type="XMPMapsTo" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="targetNamespace" use="required">
+                    <xs:annotation>
+                        <xs:documentation>XMP namespace of this metadata</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/"/>
+                            <xs:enumeration value="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"/>
+                            <xs:enumeration value="http://purl.org/dc/elements/1.1/"/>
+                            <xs:enumeration value="http://ns.adobe.com/photoshop/1.0/"/>
+                            <xs:enumeration value="http://ns.adobe.com/xap/1.0/rights/"/>
+                            <xs:enumeration value="http://ns.useplus.org/ldf/xmp/1.0/"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="targetType" type="XMPMappingTargetType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Type of the metadata regarding the XMP specification</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="XMPMapping">
+        <xs:complexContent>
+            <xs:extension base="BaseMetadataType">
+                <xs:sequence>
+                    <xs:element name="mapsTo" type="XMPMapsTo" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Defintiion of the target data object within the XMP container</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="IIMMappingTargetType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="STRING"/>
+            <xs:enumeration value="DATE"/>
+            <xs:enumeration value="LIST_OF_STRING"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="IIMMapping">
+        <xs:complexContent>
+            <xs:extension base="BaseMetadataType">
+                <xs:sequence>
+                    <xs:element name="mapsTo" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Defiinition of the target data set within the IIM record</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="BaseMapsTo">
+                                    <xs:attribute name="dataset" type="xs:integer" use="required">
+                                        <xs:annotation>
+                                            <xs:documentation>Dataset within the IIM Record 2</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="targetType" type="IIMMappingTargetType" use="required">
+                                        <xs:annotation>
+                                            <xs:documentation>Type of the data set</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="dateParserRef" type="xs:string">
+                                        <xs:annotation>
+                                            <xs:documentation>Refers a date parser to use when specifying target type DATE.
+                                                Type is xs:string and not xs:IDREF in order to be able to overwrite the
+                                                parser in derived versions of a mapping definition.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="outputDateFormat" type="xs:string">
+                                        <xs:annotation>
+                                            <xs:documentation>Specifies the output date format.Please refer to
+                                                http://docs.oracle.com/javase/7/docs/api/ for valid specifier.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 
-	<xs:complexType name="CharacterMappingType">
-		<xs:sequence>
-			<xs:element name="character" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:attribute name="from" type="xs:string" use="required">
-						<xs:annotation>
-							<xs:documentation>source character to be replaced</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="to" type="xs:string" use="required">
-						<xs:annotation>
-							<xs:documentation>Character used to replace the source character</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="comment">
-						<xs:annotation>
-							<xs:documentation>String representation to display the source and destination character. This attribute has no functionality</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-		<xs:attribute name="id" type="xs:ID" use="required">
-			<xs:annotation>
-				<xs:documentation>ID of a character mapping definition. This ID may referenced within the global configuration</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-	</xs:complexType>
+    <xs:complexType name="CharacterMappingType">
+        <xs:sequence>
+            <xs:element name="character" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="from" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>source character to be replaced</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="to" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>Character used to replace the source character</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="comment">
+                        <xs:annotation>
+                            <xs:documentation>String representation to display the source and destination character. This attribute has no
+                                functionality
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required">
+            <xs:annotation>
+                <xs:documentation>ID of a character mapping definition. This ID may referenced within the global configuration
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
 </xs:schema>

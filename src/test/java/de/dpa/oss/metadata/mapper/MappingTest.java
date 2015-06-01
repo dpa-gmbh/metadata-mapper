@@ -3,11 +3,13 @@ package de.dpa.oss.metadata.mapper;
 import de.dpa.oss.common.ResourceUtil;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +37,11 @@ public class MappingTest
                         + "-shouldApplyCustomizedMapping.jpg");
 
         // then
+        StringWriter sw = new StringWriter();
+        MetadataMapper.explainMapping().xmlDocument(document)
+                .useDefaultMappingOverridenBy("example/dpa-mapping.xml")
+        .explainMapping(sw);
+        System.out.println(sw);
         File generatedJPG = new File("target/" + this.getClass().getSimpleName()
                 + "-shouldApplyCustomizedMapping.jpg");
         List iptc = ExifToolWrapper.anExifTool().build().readTagGroup(generatedJPG, "IPTC:ALL");

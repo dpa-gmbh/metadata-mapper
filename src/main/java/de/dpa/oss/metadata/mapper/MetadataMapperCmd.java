@@ -6,15 +6,18 @@ import com.sampullara.cli.Argument;
 import de.dpa.oss.common.StringCharacterMappingTable;
 import de.dpa.oss.metadata.mapper.imaging.ConfigStringCharacterMappingBuilder;
 import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
-import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CharacterMappingType;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +26,8 @@ import java.util.Map;
  */
 public class MetadataMapperCmd
 {
+    private static Logger logger = LoggerFactory.getLogger(MetadataMapperCmd.class);
+
     @Argument(alias = "i", required = false, description = "filename of input image")
     protected static String inputImage = null;
 
@@ -60,8 +65,13 @@ public class MetadataMapperCmd
     @Argument(alias = "R", required = false, description = "Removes all metadata from given file before processing")
     protected static Boolean removeAllTagGroups = false;
 
+    @Argument(alias = "x", required = false, description = "Experimental feature: Dumps mapping information based on a given "
+            + "document. At present state the output for XMP is not complete")
+    protected static Boolean explainMapping = false;
+
     @Argument(alias = "h", required = false)
     protected static boolean help = false;
+
 
     private static void performMapping() throws Exception
     {
@@ -71,19 +81,19 @@ public class MetadataMapperCmd
             System.exit(1);
         }
 
-        System.out.println("Mapping metadata taken from \"" + g2doc + "\" into image given by input file \"" + inputImage
+        logger.info("Mapping metadata taken from \"" + g2doc + "\" into image given by input file \"" + inputImage
                 + "\", writing result to output file \"" + outputImage + "\". ");
 
         MetadataMapper metadataMapper = MetadataMapper.modifyImageAt(inputImage);
 
         if (mappingCustomization == null)
         {
-            System.out.println("Using default mappingCustomization.");
+            logger.info("Using default mappingCustomization.");
             metadataMapper.useDefaultMapping();
         }
         else
         {
-            System.out.println("Using mappingCustomization file \"" + mappingCustomization + "\".");
+            logger.info("Using mappingCustomization file \"" + mappingCustomization + "\".");
             metadataMapper.useDefaultMappingOverridenBy(mappingCustomization);
         }
 
@@ -94,7 +104,7 @@ public class MetadataMapperCmd
 
         if (removeAllTagGroups)
         {
-            System.out.println( "Removing ALL metadata properties before processing");
+            logger.info("Removing ALL metadata properties before processing");
             metadataMapper.removeAllTagGroups();
         }
         else if (!Strings.isNullOrEmpty(removeTagGroups))
@@ -106,7 +116,7 @@ public class MetadataMapperCmd
                 String[] tagGroupWithTag = tagGroup.split(":");
                 if (tagGroupWithTag.length != 2)
                 {
-                    System.out.println("** Illegal format for tag group to remove: " + tagGroup
+                    System.err.println("** Illegal format for tag group to remove: " + tagGroup
                             + ". Required format looks like IPTC:ALL. Ignoring this entry.");
                 }
                 else
@@ -120,46 +130,81 @@ public class MetadataMapperCmd
         metadataMapper.xmlDocument(g2doc)
                 .executeMapping(outputImage);
 
-        System.out.println("Mappingperformed successfully");
+        logger.info("Mappingperformed successfully");
+    }
+
+    private static void explainMapping() throws Exception
+    {
+        if (!validateArgsForMapping())
+        {
+            Args.usage(MetadataMapperCmd.class);
+            System.exit(1);
+        }
+
+        MetadataMapper metadataMapper = MetadataMapper.explainMapping();
+
+        if (mappingCustomization == null)
+        {
+            metadataMapper.useDefaultMapping();
+        }
+        else
+        {
+            metadataMapper.useDefaultMappingOverridenBy(mappingCustomization);
+        }
+
+        StringWriter stringWriter = new StringWriter();
+        metadataMapper.xmlDocument(g2doc).explainMapping(stringWriter);
+        System.out.println(stringWriter.toString());
     }
 
     private static boolean validateArgsForMapping() throws IOException
     {
         boolean checkSuccessful = true;
 
-        if (inputImage == null)
+        if (explainMapping)
         {
-            System.err.println("* ERROR: input image file not given");
-            checkSuccessful = false;
-        }
-        else
-        {
-            File fileToCheck = new File(inputImage);
-            if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
+            if (g2doc == null)
             {
-                System.err.println("* ERROR: input image file \"" + inputImage + "\" must exists and must be readable");
+                System.err.println("Explain mode requires an input document (-d)");
                 checkSuccessful = false;
             }
         }
-
-        if (outputImage == null)
-        {
-            System.err.println("* ERROR: output image (-o) not given");
-            checkSuccessful = false;
-        }
-
-        if (g2doc == null)
-        {
-            System.err.println("* ERROR: g2doc file not given");
-            checkSuccessful = false;
-        }
         else
         {
-            File fileToCheck = new File(g2doc);
-            if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
+            if (inputImage == null)
             {
-                System.err.println("* ERROR: g2 document file\"" + g2doc + "\" must exists and must be readable");
+                System.err.println("* ERROR: input image file not given");
                 checkSuccessful = false;
+            }
+            else
+            {
+                File fileToCheck = new File(inputImage);
+                if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
+                {
+                    System.err.println("* ERROR: input image file \"" + inputImage + "\" must exists and must be readable");
+                    checkSuccessful = false;
+                }
+            }
+
+            if (outputImage == null)
+            {
+                System.err.println("* ERROR: output image (-o) not given");
+                checkSuccessful = false;
+            }
+
+            if (g2doc == null)
+            {
+                System.err.println("* ERROR: g2doc file not given");
+                checkSuccessful = false;
+            }
+            else
+            {
+                File fileToCheck = new File(g2doc);
+                if (!fileToCheck.exists() || !fileToCheck.isFile() || !fileToCheck.canRead())
+                {
+                    System.err.println("* ERROR: g2 document file\"" + g2doc + "\" must exists and must be readable");
+                    checkSuccessful = false;
+                }
             }
         }
 
@@ -188,11 +233,11 @@ public class MetadataMapperCmd
         final MappingType mappingTable;
         if (mappingCustomization == null)
         {
-            mappingTable = MetadataMapper.getDefaultMapping();
+            mappingTable = MetadataMapperConfigReader.getDefaultMapping();
         }
         else
         {
-            mappingTable = MetadataMapper.getDefaultConfigOverridenBy(mappingCustomization);
+            mappingTable = MetadataMapperConfigReader.getDefaultConfigOverridenBy(mappingCustomization);
         }
 
         Map<Integer, String> codepointAlternativeCharacters = new HashMap<>();
@@ -240,12 +285,12 @@ public class MetadataMapperCmd
             System.err.println("* ERROR: Unable to read mappingCustomization config: " + validateMapping);
         }
 
-        final MappingType mappingToValidate = MetadataMapper.getDefaultConfigOverridenBy(validateMapping);
+        final MappingType mappingToValidate = MetadataMapperConfigReader.getDefaultConfigOverridenBy(validateMapping);
         try
         {
             MetadataMapper.validate(mappingToValidate);
 
-            System.out.println("Mapping file \"" + validateMapping + "\" validated successfully.");
+            logger.info("Mapping file \"" + validateMapping + "\" validated successfully.");
             System.exit(0);
         }
         catch (ConfigValidationException ex)
@@ -258,8 +303,7 @@ public class MetadataMapperCmd
 
     public static void main(String argv[])
     {
-        System.out.println("** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH");
-
+        //System.out.println("** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH");
         try
         {
             Args.parse(MetadataMapperCmd.class, argv);
@@ -292,6 +336,10 @@ public class MetadataMapperCmd
                 if (validateMapping != null)
                 {
                     validateConfig();
+                }
+                else if (explainMapping)
+                {
+                    explainMapping();
                 }
                 else
                 {

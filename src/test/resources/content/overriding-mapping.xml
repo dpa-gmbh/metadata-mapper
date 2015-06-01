@@ -4,6 +4,12 @@
         <timezone>Europe/London</timezone>
         <iim charset="utf-8"/>
         <xmp charset="utf-8"/>
+
+        <!-- add date parser by: -->
+        <dateParser inputDateFormat="YYYY-mm-dd HH:mm" id="additionalDatParser"/>
+
+        <!-- override date parser by: -->
+        <dateParser inputDateFormat="YYYYmmdd" id="dateParser-dayOnly"/>
     </config>
     <metadata name="Headline">
         <xpath rank="1"><![CDATA[//contentMeta/headline[@rank='1']]]></xpath>

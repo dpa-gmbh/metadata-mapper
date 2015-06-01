@@ -1,0 +1,99 @@
+<newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/" xmlns:dpa="http://www.dpa.com/iptc/nar/2008-12-01/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <header>
+    <sent>2015-05-29T10:00:32+02:00</sent>
+    <priority>5</priority>
+    <origin>ines</origin>
+    <destination>report</destination>
+    <destination>Basis</destination>
+    <destination>pool</destination>
+  </header>
+  <itemSet>
+    <newsItem standard="NewsML-G2" standardversion="2.8" conformance="power" xml:lang="de" version="2" guid="urn:newsml:dpa.com:20090101:150529-96-00696">
+      <catalogRef href="http://newsml.dpa.com/catalog/catalog_6.xml" />
+      <rightsInfo>
+        <copyrightHolder literal="ID0RB">
+          <name>dpa</name>
+        </copyrightHolder>
+        <rightsInfoExtProperty rel="dparel:hasMinimumFee" value="true" valuedatatype="xs:boolean" custom="true" />
+      </rightsInfo>
+      <itemMeta>
+        <itemClass qcode="ninat:picture" />
+        <provider literal="ID0RB">
+          <name>dpa</name>
+          <facet type="dpatype:logo">
+            <name>dpa</name>
+          </facet>
+        </provider>
+        <versionCreated>2015-05-29T10:00:32+02:00</versionCreated>
+        <generator versioninfo="7.5.0.20965">ines-g2-exporter</generator>
+        <profile versioninfo="1.0.0">ines/picture</profile>
+        <service qcode="dpasrv:barch">
+          <name>report</name>
+        </service>
+        <service qcode="dpasrv:bbasis">
+          <name>Basis</name>
+        </service>
+      </itemMeta>
+      <contentMeta>
+        <urgency>5</urgency>
+        <contentCreated>2015-05-26</contentCreated>
+        <contentModified>2015-05-29+02:00</contentModified>
+        <located literal="ID0RB" type="cpnat:poi">
+          <name>Wald</name>
+        </located>
+        <creator literal="ID0RB">
+          <name>Daniel Naupold</name>
+          <facet type="dpatype:accno" qcode="dpaaccno:A4468">
+            <name>A4468</name>
+          </facet>
+        </creator>
+        <contributor literal="ID0RB">
+          <name>dna</name>
+        </contributor>
+        <altId type="dpatype:orgTransRef">sgt401</altId>
+        <genre type="dpatype:photogenre" literal="ID0EHC">
+          <name>Aktion</name>
+        </genre>
+        <subject type="dpatype:category" literal="ID0RB">
+          <name>vm</name>
+        </subject>
+        <keyword role="dparole:keyword">Kriminalität</keyword>
+        <keyword role="dparole:keyword">lsw</keyword>
+        <keyword role="dparole:keyword">wusel</keyword>
+        <keyword role="dparole:keyword">lesuw</keyword>
+        <keyword role="dparole:keyword">werner</keyword>
+        <keyword role="dparole:catchword">Kupfer</keyword>
+        <keyword role="dparole:catchword">Kupferdiebe</keyword>
+        <keyword role="dparole:catchword">Kupferleitung</keyword>
+        <subject type="cpnat:person" literal="ID0ELC">
+          <name>Ralf Möller</name>
+        </subject>
+        <subject type="cpnat:poi" literal="poiID" />
+        <headline>Kupferdiebstahl</headline>
+        <creditline>dpa</creditline>
+        <description role="drol:caption">Kupferkabel sind am 26.05.2015 auf einem Schrottplatz in Stuttgart (Baden-Württemberg) zu sehen. In einem ehemaligen Tuttlinger Schlachthof montierten Unbekannte mehrere Kupferleitungen und Kupferkabel ab und stahlen zudem einen gelben Winkelschleifer, wie die Polizei am Mittwoch mitteilte. Foto: Mr X / dpa (zu lsw "Kupferdiebe klauen Skulpturen, Kabel und Winkelschleifer" vom 26.05.2015)  +++(c) dpa - Bildfunk+++</description>
+      </contentMeta>
+      <assert literal="poiID">
+        <POIDetails>
+          <contactInfo>
+            <address>
+              <locality type="dpatype:city" literal="ID0RB">
+                <name>Stuttgart</name>
+              </locality>
+              <area type="dpatype:provstate" literal="ID0RB">
+                <name>Baden-Württemberg</name>
+              </area>
+              <country type="dpatype:country" literal="ID0RB">
+                <name role="nrol:display">Deutschland</name>
+                <name role="nrol:short">DEU</name>
+              </country>
+            </address>
+          </contactInfo>
+        </POIDetails>
+      </assert>
+      <contentSet>
+        <remoteContent contenttype="image/jpeg" href="150529-96-00696.jpeg" residref="150527-890-012691" dpa:imageformat="Landscape" />
+      </contentSet>
+    </newsItem>
+  </itemSet>
+</newsMessage>

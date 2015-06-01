@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
 
@@ -74,5 +75,25 @@ public class G2ToMetadataMapperTest
         assertThat( ((XMPString) bag.getMetadata().get(1)).getValue(), is( "bag2"));
         assertThat( bag.getMetadata().get(2), instanceOf( XMPString.class));
         assertThat( ((XMPString) bag.getMetadata().get(2)).getValue(), is( "bag3"));
+    }
+
+    @Test
+    public void shouldExplainMapping() throws Exception
+    {
+        // given
+        InputStream mappingConfig = ResourceUtil.resourceAsStream("/image-metadata-mapping/default-mapping.xml", this);
+        String xmlDocument = ResourceUtil.resourceAsString("/content/bild-senden-national-out_40458479_150529-96-00696_2.xml",this);
+
+        Document document = XmlUtils.toDocument(xmlDocument);
+        MappingType mapping = new MetadataMapperConfigReader().readCustomizedDefaultConfig(mappingConfig);
+        G2ToMetadataMapper g2ToMetadataMapper = new G2ToMetadataMapper(mapping);
+        ImageMetadata imageMetadata = new ImageMetadata();
+        StringWriter output = new StringWriter();
+
+        // when
+        g2ToMetadataMapper.explainMapToImageMetadata(document, output);
+
+        // then
+        assertThat(output.toString(), not(isEmptyOrNullString()));
     }
 }

@@ -5,6 +5,8 @@
 		<!--timezone tz="CET"/-->
 		<iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
 		<xmp charset="utf-8" defaultReplaceChar="·"/>
+        <dateParser id="dateParser-dayOnly" inputDateFormat="yyyy-MM-dd"/>
+        <dateParser id="dateParser-timestamp" inputDateFormat="yyyy-MM-dd'T'HH:mm:ssZZZ"/>
 	</config>
 
     <metadata name="City (legacy)">
@@ -152,7 +154,7 @@
 	<metadata name="Date Created">
 		<xpath><![CDATA[//contentMeta/contentCreated]]></xpath>
 		<iim>
-			<mapsTo dataset="55" field="DateCreated" targetType="STRING"/>
+			<mapsTo dataset="55" field="DateCreated" targetType="DATE" dateParserRef="dateParser-dayOnly" outputDateFormat="yyyy:MM:dd"/>
 		</iim>
 		<xmp>
 			<mapsTo targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Date" field="DateCreated"/>

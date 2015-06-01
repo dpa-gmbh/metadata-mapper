@@ -2,7 +2,7 @@ package de.dpa.oss.metadata.mapper.imaging;
 
 import com.google.common.collect.Multimap;
 import de.dpa.oss.common.ResourceUtil;
-import de.dpa.oss.metadata.mapper.MetadataMapper;
+import de.dpa.oss.metadata.mapper.MetadataMapperConfigReader;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class MetadataProcessingInfoTest
                 .resourceAsString("/content/imageMetadata/metadata-processing-info-test-input.xml", this.getClass());
         Document document = XmlUtils.toDocument(xmlDocument);
 
-        MappingType mapping = MetadataMapper
+        MappingType mapping = MetadataMapperConfigReader
                 .getDefaultConfigOverridenBy("/content/imageMetadata/metadata-processing-info-test-mapping.xml", this.getClass());
 
         MetadataProcessingInfo processing = new MetadataProcessingInfo(mapping.getMetadata().get(0));
@@ -48,7 +48,7 @@ public class MetadataProcessingInfoTest
                 .resourceAsString("/content/imageMetadata/metadata-processing-info-test-input.xml", this.getClass());
         Document document = XmlUtils.toDocument(xmlDocument);
 
-        MappingType mapping = MetadataMapper
+        MappingType mapping = MetadataMapperConfigReader
                 .getDefaultConfigOverridenBy("/content/imageMetadata/metadata-processing-info-test-mapping.xml", this.getClass());
 
         MetadataProcessingInfo processing = new MetadataProcessingInfo(mapping.getMetadata().get(1));

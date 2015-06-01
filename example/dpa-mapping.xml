@@ -20,7 +20,7 @@
 	</metadata>
 
 	<metadata name="Keywords">
-		<xpath><![CDATA[//contentMeta/keyword | //contentMeta/subject[not(@type = 'dpatype:category')]/name]]></xpath>
+		<xpath><![CDATA[//contentMeta/keyword | //contentMeta/subject[not(@type != '') or @type='cpnat:abstract']/name]]></xpath>
 		<iim>
 			<mapsTo dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
 		</iim>

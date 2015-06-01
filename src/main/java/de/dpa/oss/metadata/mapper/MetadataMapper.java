@@ -2,15 +2,14 @@ package de.dpa.oss.metadata.mapper;
 
 import com.adobe.xmp.XMPException;
 import com.google.common.io.ByteStreams;
-import de.dpa.oss.common.ResourceUtil;
 import de.dpa.oss.metadata.mapper.common.XmlUtils;
 import de.dpa.oss.metadata.mapper.common.YAXPathExpressionException;
 import de.dpa.oss.metadata.mapper.imaging.ChainedImageMetadataOperations;
 import de.dpa.oss.metadata.mapper.imaging.ConfigToExifToolTagNames;
 import de.dpa.oss.metadata.mapper.imaging.ConfigValidationException;
 import de.dpa.oss.metadata.mapper.imaging.G2ToMetadataMapper;
-import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroupItem;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
@@ -56,9 +55,19 @@ public class MetadataMapper
         return new MetadataMapper(sourceImage);
     }
 
+    public static MetadataMapper explainMapping()
+    {
+        return new MetadataMapper();
+    }
+
     private MetadataMapper(final String pathToSourceImage) throws FileNotFoundException
     {
         this(new FileInputStream(pathToSourceImage));
+    }
+
+    private MetadataMapper()
+    {
+        imageInputStream = null;
     }
 
     private MetadataMapper(final InputStream imageInputStream)
@@ -83,14 +92,14 @@ public class MetadataMapper
     public MetadataMapper useDefaultMapping() throws JAXBException
     {
         logger.debug("Using DefaultMapping");
-        this.mapping = getDefaultMapping();
+        this.mapping = MetadataMapperConfigReader.getDefaultMapping();
         return this;
     }
 
     public MetadataMapper useDefaultMappingOverridenBy(final String pathToMapping) throws FileNotFoundException, JAXBException
     {
         logger.debug("Overriding default mapping by mapping definitions defined in:" + pathToMapping);
-        this.mapping = getDefaultConfigOverridenBy(pathToMapping);
+        this.mapping = MetadataMapperConfigReader.getDefaultConfigOverridenBy(pathToMapping);
         return this;
     }
 
@@ -166,31 +175,23 @@ public class MetadataMapper
 
         chainedImageMetadataOperations.setMetadata(imageMetadata);
         chainedImageMetadataOperations.execute(ExifToolWrapper.anExifTool().build());
-
-    }
-
-    public static MappingType getDefaultConfigOverridenBy(final String resourcePath, Object caller)
-            throws FileNotFoundException, JAXBException
-    {
-        return getDefaultConfigOverridenBy(ResourceUtil.resourceAsStream(resourcePath, caller.getClass()));
-    }
-
-    public static MappingType getDefaultConfigOverridenBy(final String path) throws FileNotFoundException, JAXBException
-    {
-        return getDefaultConfigOverridenBy(new FileInputStream(path));
     }
 
     /**
-     * Reads the default configuration and overrides it with the specified one
+     * Used to dump the mapping. The dump includes the xpaths, the selected values and the list of target
+     * fields.
+     *
+     * Note: this implementation is in experimental state. The XMP-part is not dumped out accordingly.
      */
-    public static MappingType getDefaultConfigOverridenBy(final InputStream is) throws JAXBException
+    public void explainMapping( final Writer writer ) throws IOException, YAXPathExpressionException
     {
-        return new MetadataMapperConfigReader().readCustomizedDefaultConfig(is);
-    }
+        if (writer == null || xmlDocument == null || mapping == null)
+        {
+            throw new IllegalArgumentException("At least one parameter (writer, source xml, mapping) is missing");
+        }
 
-    public static MappingType getDefaultMapping() throws JAXBException
-    {
-        return new MetadataMapperConfigReader().getDefaultConfig();
+        ImageMetadata imageMetadata = new ImageMetadata();
+        new G2ToMetadataMapper(mapping).explainMapToImageMetadata(xmlDocument, writer);
     }
 
     protected static synchronized TagInfo getExifToolTagInfo() throws ExifToolIntegrationException

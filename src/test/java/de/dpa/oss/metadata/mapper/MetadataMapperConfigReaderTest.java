@@ -1,9 +1,6 @@
 package de.dpa.oss.metadata.mapper;
 
-import de.dpa.oss.metadata.mapper.imaging.configuration.generated.CustomizedMappingType;
-import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMEncodingType;
-import de.dpa.oss.metadata.mapper.imaging.configuration.generated.IIMMapping;
-import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType;
+import de.dpa.oss.metadata.mapper.imaging.configuration.generated.*;
 import de.dpa.oss.metadata.mapper.imaging.configuration.generated.MappingType.Metadata;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -14,8 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 public class MetadataMapperConfigReaderTest
@@ -113,6 +109,80 @@ public class MetadataMapperConfigReaderTest
         assertThat(customizedDefaultConfig.getConfig(), is(Matchers.notNullValue()));
         assertThat(customizedDefaultConfig.getConfig().getTimezone(), is("Europe/London"));
         assertThat(customizedDefaultConfig.getConfig().getIim().getCharset(), is(IIMEncodingType.UTF_8));
+    }
 
+    @Test
+    public void shouldRegisterAdditionalDateParser() throws JAXBException
+    {
+        // given
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
+                .getResourceAsStream("/content/overriding-mapping.xml"));
+
+        // when
+        List<ConfigType.DateParser> dateParsers = customizedDefaultConfig.getConfig().getDateParser();
+
+        // then
+        assertThat(dateParsers.size(), is(greaterThanOrEqualTo(1)));
+        ConfigType.DateParser additionalDateParser = null;
+        for (ConfigType.DateParser dateParser : dateParsers)
+        {
+            if( dateParser.getId().equals("additionalDatParser"))
+            {
+                additionalDateParser = dateParser;
+                break;
+            }
+        }
+        assertThat( additionalDateParser, is(Matchers.notNullValue()));
+        assertThat( additionalDateParser.getInputDateFormat(), is("YYYY-mm-dd HH:mm"));
+
+    }
+
+    @Test
+    public void shouldOverrideDateParser() throws JAXBException
+    {
+        // given
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
+                .getResourceAsStream("/content/overriding-mapping.xml"));
+
+        // when
+        List<ConfigType.DateParser> dateParsers = customizedDefaultConfig.getConfig().getDateParser();
+
+        // then
+        assertThat(dateParsers.size(), is(greaterThanOrEqualTo(1)));
+        ConfigType.DateParser overridenDateParser = null;
+        for (ConfigType.DateParser dateParser : dateParsers)
+        {
+            if( dateParser.getId().equals("dateParser-dayOnly"))
+            {
+                overridenDateParser = dateParser;
+                break;
+            }
+        }
+        assertThat( overridenDateParser, is(Matchers.notNullValue()));
+        assertThat( overridenDateParser.getInputDateFormat(), is("YYYYmmdd"));
+    }
+
+    @Test
+    public void shouldOvertakeDateParserFromDefaultMapping() throws JAXBException
+    {
+        // given
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
+                .getResourceAsStream("/content/overriding-mapping.xml"));
+
+        // when
+        List<ConfigType.DateParser> dateParsers = customizedDefaultConfig.getConfig().getDateParser();
+
+        // then
+        assertThat(dateParsers.size(), is(greaterThanOrEqualTo(1)));
+        ConfigType.DateParser inheritedParser = null;
+        for (ConfigType.DateParser dateParser : dateParsers)
+        {
+            if( dateParser.getId().equals("dateParser-timestamp"))
+            {
+                inheritedParser = dateParser;
+                break;
+            }
+        }
+        assertThat( inheritedParser, is(Matchers.notNullValue()));
     }
 }
