@@ -45,7 +45,7 @@ public class ChainedImageMetadataOperationsTest
         InputStream mappingConfig = ResourceUtil.resourceAsStream("/content/imageMetadata/simple-test-mapping.xml", this.getClass());
         String xmlDocument = ResourceUtil.resourceAsString("/content/imageMetadata/simple-test-inputfile.xml", this.getClass());
         Document document = XmlUtils.toDocument(xmlDocument);
-        MappingType mapping = new MetadataMapperConfigReader().readCustomizedDefaultConfig(mappingConfig);
+        MappingType mapping = new MetadataMapperConfigReader().readCustomConfigOverridingDefault(mappingConfig);
 
         ImageMetadata imageMetadata = new ImageMetadata();
         new G2ToMetadataMapper( mapping ).mapToImageMetadata(document, imageMetadata);

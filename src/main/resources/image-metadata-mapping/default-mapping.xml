@@ -9,6 +9,13 @@
         <dateParser id="dateParser-timestamp" inputDateFormat="yyyy-MM-dd'T'HH:mm:ssZZZ"/>
 	</config>
 
+    <metadata name="IPTC Default Headers">
+        <default part="ApplicationRecordVersion">4</default>
+        <iim>
+            <mapsTo part-ref="ApplicationRecordVersion" field="ApplicationRecordVersion" dataset="0" targetType="STRING"/>
+        </iim>
+    </metadata>
+    
     <metadata name="City (legacy)">
         <xpath rank="1"><![CDATA[//contentMeta/located/POIDetails/address/locality/name]]></xpath>
         <xpath rank="2"><![CDATA[//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/locality/name]]></xpath>

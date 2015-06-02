@@ -69,6 +69,16 @@
         </xmp>
     </metadata>
 
+    <metadata name="Constant Value Mapping">
+        <default part="OriginatingProgram">metadatamapper</default>
+        <default part="ProgramVersion">23</default>
+
+        <iim>
+            <mapsTo part-ref="OriginatingProgram" field="OriginatingProgram" dataset="65" targetType="STRING"/>
+            <mapsTo part-ref="ProgramVersion" field="ProgramVersion" dataset="70" targetType="STRING"/>
+        </iim>
+    </metadata>
+
     <!--metadata name="bagOfStructMapping" cardinality="ONE">
         <xpath part="author"><![CDATA[//bagOfStruct/author]]></xpath>
         <xpath part="title"><![CDATA[//bagOfStruct/book/title]]></xpath>

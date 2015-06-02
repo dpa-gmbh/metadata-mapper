@@ -6,6 +6,16 @@
 		<xmp charset="utf-8" defaultReplaceChar="·"/>
 	</config>
 
+    <metadata name="Technical Metadata">
+        <default part="OriginatingProgram">dpa metadata mapper</default>
+        <default part="ProgramVersion">1.1</default>
+
+        <iim>
+            <mapsTo part-ref="OriginatingProgram" field="OriginatingProgram" dataset="65" targetType="STRING"/>
+            <mapsTo part-ref="ProgramVersion" field="ProgramVersion" dataset="70" targetType="STRING"/>
+        </iim>
+    </metadata>
+
 	<metadata name="Country Code (legacy)">
 		<xpath rank="1" returnType="STRING"><![CDATA[substring(//assert[@literal=//contentMeta/located/@literal]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>
 		<xpath rank="2" returnType="STRING"><![CDATA[substring(//assert[@qcode=//contentMeta/located/@qcode]/POIDetails/address/country/sameAs[substring(@qcode, 1, 12) ="iso3166-1a3:"]/@qcode,13)]]></xpath>

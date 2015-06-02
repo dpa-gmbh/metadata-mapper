@@ -34,7 +34,7 @@ public class MetadataMapperConfigReaderTest
         // given
 
         // when
-        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomConfigOverridingDefault(this.getClass()
                 .getResourceAsStream("/content/overriding-mapping.xml"));
 
         MappingType defaultConfig = new MetadataMapperConfigReader().getDefaultConfig();
@@ -74,7 +74,7 @@ public class MetadataMapperConfigReaderTest
         // given
 
         // when
-        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomConfigOverridingDefault(this.getClass()
                 .getResourceAsStream("/content/overriding-mapping.xml"));
 
         MappingType defaultConfig = new MetadataMapperConfigReader().getDefaultConfig();
@@ -102,7 +102,7 @@ public class MetadataMapperConfigReaderTest
     public void shouldOverrideConfig() throws JAXBException
     {
         // given
-        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomConfigOverridingDefault(this.getClass()
                 .getResourceAsStream("/content/overriding-mapping.xml"));
 
         // then
@@ -115,7 +115,7 @@ public class MetadataMapperConfigReaderTest
     public void shouldRegisterAdditionalDateParser() throws JAXBException
     {
         // given
-        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomConfigOverridingDefault(this.getClass()
                 .getResourceAsStream("/content/overriding-mapping.xml"));
 
         // when
@@ -141,7 +141,7 @@ public class MetadataMapperConfigReaderTest
     public void shouldOverrideDateParser() throws JAXBException
     {
         // given
-        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomConfigOverridingDefault(this.getClass()
                 .getResourceAsStream("/content/overriding-mapping.xml"));
 
         // when
@@ -166,7 +166,7 @@ public class MetadataMapperConfigReaderTest
     public void shouldOvertakeDateParserFromDefaultMapping() throws JAXBException
     {
         // given
-        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomizedDefaultConfig(this.getClass()
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readCustomConfigOverridingDefault(this.getClass()
                 .getResourceAsStream("/content/overriding-mapping.xml"));
 
         // when

@@ -47,12 +47,20 @@ public class MetadataMapperConfigReader
      */
     public static MappingType getDefaultConfigOverridenBy(final InputStream is) throws JAXBException
     {
-        return new MetadataMapperConfigReader().readCustomizedDefaultConfig(is);
+        return new MetadataMapperConfigReader().readCustomConfigOverridingDefault(is);
     }
 
     public static MappingType getDefaultMapping() throws JAXBException
     {
         return new MetadataMapperConfigReader().getDefaultConfig();
+    }
+
+    /**
+     * Reads a configuration file without inheriting from the default mapping.
+     */
+    public CustomizedMappingType readConfig( final InputStream customizationsIS ) throws JAXBException
+    {
+        return readConfig(customizationsIS, CustomizedMappingType.class);
     }
 
     /**
@@ -72,7 +80,7 @@ public class MetadataMapperConfigReader
      *     </li>
      * </ul>
      */
-    public CustomizedMappingType readCustomizedDefaultConfig(final InputStream customizationsIS) throws JAXBException
+    public CustomizedMappingType readCustomConfigOverridingDefault(final InputStream customizationsIS) throws JAXBException
     {
         final CustomizedMappingType customizations = readConfig(customizationsIS, CustomizedMappingType.class);
         final MappingType defaultMapping = getDefaultConfig();

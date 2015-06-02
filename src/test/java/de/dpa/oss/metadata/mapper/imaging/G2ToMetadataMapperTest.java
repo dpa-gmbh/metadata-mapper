@@ -1,5 +1,6 @@
 package de.dpa.oss.metadata.mapper.imaging;
 
+import com.google.common.collect.ListMultimap;
 import de.dpa.oss.common.ResourceUtil;
 import de.dpa.oss.metadata.mapper.MetadataMapperConfigReader;
 import de.dpa.oss.metadata.mapper.common.DateTimeUtils;
@@ -29,7 +30,7 @@ public class G2ToMetadataMapperTest
         String xmlDocument = ResourceUtil.resourceAsString("/content/imageMetadata/simple-test-inputfile.xml",this);
 
         Document document = XmlUtils.toDocument(xmlDocument);
-        MappingType mapping = new MetadataMapperConfigReader().readCustomizedDefaultConfig(mappingConfig);
+        MappingType mapping = new MetadataMapperConfigReader().readCustomConfigOverridingDefault(mappingConfig);
 
         G2ToMetadataMapper g2ToMetadataMapper = new G2ToMetadataMapper(mapping);
 
@@ -40,7 +41,7 @@ public class G2ToMetadataMapperTest
         assertThat( imageMetadata.getXmpMetadata(), is(notNullValue()));
         
         List<XMPMetadata> xmpMetadata = imageMetadata.getXmpMetadata();
-        assertThat(xmpMetadata, hasSize(8));
+        assertThat(xmpMetadata, hasSize(10));
         assertThat(xmpMetadata.get(0), instanceOf(XMPString.class));
         assertThat( ((XMPString) xmpMetadata.get(0)).getValue(), is("A sample string") );
         assertThat(xmpMetadata.get(1), instanceOf( XMPInteger.class));
@@ -85,9 +86,8 @@ public class G2ToMetadataMapperTest
         String xmlDocument = ResourceUtil.resourceAsString("/content/example-g2.xml",this);
 
         Document document = XmlUtils.toDocument(xmlDocument);
-        MappingType mapping = new MetadataMapperConfigReader().readCustomizedDefaultConfig(mappingConfig);
+        MappingType mapping = new MetadataMapperConfigReader().readCustomConfigOverridingDefault(mappingConfig);
         G2ToMetadataMapper g2ToMetadataMapper = new G2ToMetadataMapper(mapping);
-        ImageMetadata imageMetadata = new ImageMetadata();
         StringWriter output = new StringWriter();
 
         // when
@@ -95,5 +95,31 @@ public class G2ToMetadataMapperTest
 
         // then
         assertThat(output.toString(), not(isEmptyOrNullString()));
+    }
+
+    @Test
+    public void shouldMapConstantValues() throws Exception
+    {
+        // given
+        InputStream mappingConfig = ResourceUtil.resourceAsStream("/content/imageMetadata/simple-test-mapping.xml", this);
+        String xmlDocument = ResourceUtil.resourceAsString("/content/imageMetadata/simple-test-inputfile.xml",this);
+
+        Document document = XmlUtils.toDocument(xmlDocument);
+        MappingType mapping = new MetadataMapperConfigReader().readConfig(mappingConfig);
+
+        G2ToMetadataMapper g2ToMetadataMapper = new G2ToMetadataMapper(mapping);
+
+        // when
+        ImageMetadata imageMetadata = new ImageMetadata();
+        g2ToMetadataMapper.mapToImageMetadata(document, imageMetadata);
+
+        // then
+        ListMultimap<String, String> iptcEntries = imageMetadata.getIptcEntries();
+        assertThat( iptcEntries.keys(), hasItem("OriginatingProgram"));
+        List<String> originatingProgram = iptcEntries.get("OriginatingProgram");
+        assertThat( originatingProgram, contains("metadatamapper"));
+        assertThat(iptcEntries.keys(), hasItem("ProgramVersion"));
+        List<String> programmVersion = iptcEntries.get("ProgramVersion");
+        assertThat( programmVersion, contains( "23"));
     }
 }

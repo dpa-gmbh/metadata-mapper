@@ -75,6 +75,16 @@ public class MetadataProcessingInfo
             }
         }
 
+        /*
+         * now use default in cases where no value has been found
+         */
+        for (String partname : partnameToDefaultValues.keySet())
+        {
+            if( !partnameToValue.containsKey(partname) || partnameToValue.get(partname).isEmpty())
+            {
+                partnameToValue.put(partname, partnameToDefaultValues.get(partname));
+            }
+        }
         return partnameToValue;
     }
 
