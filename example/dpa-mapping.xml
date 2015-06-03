@@ -118,8 +118,13 @@
 	</metadata>
 
     <metadata name="CreatorsJobtitle">
-        <xpath><![CDATA[//contentMeta/creator/facet]]></xpath>
-        <!-- override default mapping. do not map -->
+        <default part="Byline-Title"></default>
+        <iim>
+            <mapsTo part-ref="Byline-Title" dataset="85" field="By-lineTitle" targetType="STRING"/>
+        </iim>
+        <xmp>
+            <mapsTo part-ref="Byline-Title" targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="AuthorsPosition"/>
+        </xmp>
     </metadata>
 
 	<characterMapping id="utf8-to-iso8859-1">
