@@ -253,7 +253,7 @@
 		</xmp>
 	</metadata>
 
-	<metadata name="Creator's Jobtitle">
+	<metadata name="CreatorsJobtitle">
 		<xpath><![CDATA[//contentMeta/creator/facet]]></xpath>
 		<iim>
 			<mapsTo dataset="85" field="By-lineTitle" targetType="STRING"/>

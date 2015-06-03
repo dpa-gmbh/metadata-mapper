@@ -117,7 +117,7 @@
 		</xmp>
 	</metadata>
 
-    <metadata name="Creator's Jobtitle">
+    <metadata name="CreatorsJobtitle">
         <xpath><![CDATA[//contentMeta/creator/facet]]></xpath>
         <!-- override default mapping. do not map -->
     </metadata>
