@@ -9,10 +9,12 @@
     <metadata name="Technical Metadata">
         <default part="OriginatingProgram">dpa metadata mapper</default>
         <default part="ProgramVersion">1.1</default>
+        <default part="ImageType">3P</default>
 
         <iim>
             <mapsTo part-ref="OriginatingProgram" field="OriginatingProgram" dataset="65" targetType="STRING"/>
             <mapsTo part-ref="ProgramVersion" field="ProgramVersion" dataset="70" targetType="STRING"/>
+            <mapsTo part-ref="ImageType" field="ImageType" dataset="130" targetType="STRING"/>
         </iim>
     </metadata>
 
@@ -30,7 +32,7 @@
 	</metadata>
 
 	<metadata name="Keywords">
-		<xpath><![CDATA[//contentMeta/keyword | //contentMeta/subject[not(@type != '') or @type='cpnat:abstract']/name]]></xpath>
+		<xpath><![CDATA[//contentMeta/keyword]]></xpath>
 		<iim>
 			<mapsTo dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
 		</iim>
@@ -40,6 +42,13 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
+
+    <metadata name="Supplementary Categories">
+        <xpath><![CDATA[//contentMeta/subject[not(@type != '') or @type='cpnat:abstract']/name]]></xpath>
+        <iim>
+            <mapsTo dataset="20" field="SupplementalCategories" targetType="LIST_OF_STRING"/>
+        </iim>
+    </metadata>
 
 	<metadata name="Subject Code">
 		<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta//subject/sameAs[starts-with(@qcode, 'subj:')]/@qcode, 6)]]></xpath>
@@ -107,6 +116,11 @@
 			<mapsTo targetType="Text" targetNamespace="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" field="DigImageGUID"/>
 		</xmp>
 	</metadata>
+
+    <metadata name="Creator's Jobtitle">
+        <xpath><![CDATA[//contentMeta/creator/facet]]></xpath>
+        <!-- override default mapping. do not map -->
+    </metadata>
 
 	<characterMapping id="utf8-to-iso8859-1">
         <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
