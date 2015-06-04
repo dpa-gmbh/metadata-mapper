@@ -32,7 +32,7 @@
 	</metadata>
 
 	<metadata name="Keywords">
-		<xpath><![CDATA[//contentMeta/keyword]]></xpath>
+        <xpath><![CDATA[//contentMeta/keyword | //contentMeta/subject[not(@type != '') or @type='cpnat:abstract']/name]]></xpath>
 		<iim>
 			<mapsTo dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
 		</iim>
@@ -42,13 +42,6 @@
 			</mapsTo>
 		</xmp>
 	</metadata>
-
-    <metadata name="Supplementary Categories">
-        <xpath><![CDATA[//contentMeta/subject[not(@type != '') or @type='cpnat:abstract']/name]]></xpath>
-        <iim>
-            <mapsTo dataset="20" field="SupplementalCategories" targetType="LIST_OF_STRING"/>
-        </iim>
-    </metadata>
 
 	<metadata name="Subject Code">
 		<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta//subject/sameAs[starts-with(@qcode, 'subj:')]/@qcode, 6)]]></xpath>
