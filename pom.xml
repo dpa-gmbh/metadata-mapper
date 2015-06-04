@@ -6,7 +6,7 @@
     <artifactId>metadata-mapper</artifactId>
     <packaging>jar</packaging>
     <name>dpa - metadata mapper</name>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.2-SNAPSHOT</version>
     <inceptionYear>2015</inceptionYear>
     <description>
         The metadata mapper writes image metadata by extracting content elements from an XML
