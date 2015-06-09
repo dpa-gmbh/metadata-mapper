@@ -8,7 +8,7 @@
 
     <metadata name="Technical Metadata">
         <default part="OriginatingProgram">dpa metadata mapper</default>
-        <default part="ProgramVersion">1.3</default>
+        <default part="ProgramVersion">1.1.3</default>
         <default part="ImageType">3P</default>
 
         <iim>
