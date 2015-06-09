@@ -8,7 +8,7 @@
 
     <metadata name="Technical Metadata">
         <default part="OriginatingProgram">dpa metadata mapper</default>
-        <default part="ProgramVersion">1.1</default>
+        <default part="ProgramVersion">1.3</default>
         <default part="ImageType">3P</default>
 
         <iim>
@@ -79,24 +79,19 @@
 		</xmp>
 	</metadata>
 
-	<metadata name="Creator's Jobtitle">
-		<xpath returnType="STRING"><![CDATA[substring(//contentMeta/creator/related[starts-with(@qcode, 'dpaaccno:')]/@qcode, 10)]]></xpath>
-        <iim>
-			<mapsTo dataset="85" field="By-lineTitle" targetType="STRING"/>
-		</iim>
-		<xmp>
-			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="AuthorsPosition"/>
-		</xmp>
-	</metadata>
-
 	<metadata name="Category">
-		<xpath rank="1"><![CDATA[//contentMeta/subject[@type='dpatype:category']/name[@role='nrol:mnemonic']]]></xpath>
-		<xpath rank="2"><![CDATA[//contentMeta/subject[@type='dpatype:category']/name[1]]]></xpath>
+		<xpath part="category" rank="1"><![CDATA[//contentMeta/subject[@type='dpatype:category']/name[@role='nrol:mnemonic']]]></xpath>
+		<xpath part="category" rank="2"><![CDATA[//contentMeta/subject[@type='dpatype:category']/name[1]]]></xpath>
+
+        <processors>
+            <processor part-ref="category" class="de.dpa.oss.metadata.mapper.processor.ToUpperCase" />
+        </processors>
+
 		<iim>
-			<mapsTo dataset="15" field="Category" targetType="STRING"/>
+			<mapsTo part-ref="category" dataset="15" field="Category" targetType="STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Category"/>
+			<mapsTo part-ref="category" targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="Category"/>
 		</xmp>
 	</metadata>
 
@@ -111,12 +106,33 @@
 	</metadata>
 
     <metadata name="CreatorsJobtitle">
-        <default part="Byline-Title"></default>
+        <!-- do not map field. Override default mapping here accordingly -->
+        <default part="Byline-Title"/>
         <iim>
             <mapsTo part-ref="Byline-Title" dataset="85" field="By-lineTitle" targetType="STRING"/>
         </iim>
         <xmp>
             <mapsTo part-ref="Byline-Title" targetType="Text" targetNamespace="http://ns.adobe.com/photoshop/1.0/" field="AuthorsPosition"/>
+        </xmp>
+    </metadata>
+
+    <metadata name="Copyright Notice">
+        <xpath rank="1" part="copyright"><![CDATA[//rightsInfo/copyrightNotice]]></xpath>
+        <xpath rank="2" returnType="STRING" part="copyright"><![CDATA[//rightsInfo/copyrightHolder/name]]></xpath>
+
+        <processors>
+            <processor part-ref="copyright" class="de.dpa.oss.metadata.mapper.processor.ModifyValueIfNotEmpty">
+                <parameter name="prependString" value="(c) "/>
+            </processor>
+        </processors>
+
+        <default part="copyright">(c) dpa</default>
+
+        <iim>
+            <mapsTo part-ref="copyright" dataset="116" field="CopyrightNotice" targetType="STRING"/>
+        </iim>
+        <xmp>
+            <mapsTo part-ref="copyright" targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="rights"/>
         </xmp>
     </metadata>
 

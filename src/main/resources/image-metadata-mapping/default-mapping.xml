@@ -209,14 +209,19 @@
 	</metadata>
 
     <metadata name="Copyright Notice">
-		<xpath rank="1"><![CDATA[//rightsInfo/copyrightNotice]]></xpath>
-		<xpath rank="2" returnType="STRING"><![CDATA[concat('(c) ',//rightsInfo/copyrightHolder/name)]]></xpath>
-		<default>(c) dpa</default>
+		<xpath rank="1" part="copyright"><![CDATA[//rightsInfo/copyrightNotice]]></xpath>
+		<xpath rank="2" returnType="STRING" part="copyright"><![CDATA[//rightsInfo/copyrightHolder/name]]></xpath>
+
+        <processors>
+            <processor part-ref="copyright" class="de.dpa.oss.metadata.mapper.processor.ModifyValueIfNotEmpty">
+                <parameter name="prependString" value="(c) "/>
+            </processor>
+        </processors>
 		<iim>
-			<mapsTo dataset="116" field="CopyrightNotice" targetType="STRING"/>
+			<mapsTo part-ref="copyright" dataset="116" field="CopyrightNotice" targetType="STRING"/>
 		</iim>
 		<xmp>
-			<mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="rights"/>
+			<mapsTo part-ref="copyright" targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="rights"/>
 		</xmp>
 	</metadata>
 

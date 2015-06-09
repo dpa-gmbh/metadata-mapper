@@ -7,7 +7,7 @@
         targetNamespace="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"
         elementFormDefault="qualified"
         attributeFormDefault="unqualified"
-        version="1.0">
+        version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb/2.1 ">
 
     <xs:element name="mapping" type="MappingType">
         <xs:annotation>
@@ -44,6 +44,13 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="xpath" type="QualifiedXPath" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="processors" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="processor" type="ProcessorType" maxOccurs="unbounded"></xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
                         <xs:element name="default" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                                 <xs:simpleContent>
@@ -217,7 +224,7 @@
     </xs:complexType>
     <xs:complexType name="BaseMetadataType">
         <xs:sequence>
-            <xs:element name="processor" minOccurs="0">
+            <!--xs:element name="processor" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>Processor to provide the source data</xs:documentation>
                 </xs:annotation>
@@ -228,8 +235,26 @@
                         </xs:annotation>
                     </xs:attribute>
                 </xs:complexType>
+            </xs:element-->
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ProcessorType">
+        <xs:annotation>
+            <xs:documentation>A process allows to post-process data selected by xpaths. It does not
+                post-process default values
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="value" type="xs:string" use="required"/>
+                </xs:complexType>
             </xs:element>
         </xs:sequence>
+        <xs:attribute name="part-ref" type="xs:string" use="required"/>
+        <xs:attribute name="class" type="xs:string" use="required"/>
+
     </xs:complexType>
     <xs:complexType name="BaseMapsTo" abstract="true">
         <xs:attribute name="field" type="xs:string" use="required">

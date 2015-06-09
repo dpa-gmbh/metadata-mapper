@@ -41,7 +41,7 @@ public class G2ToMetadataMapperTest
         assertThat( imageMetadata.getXmpMetadata(), is(notNullValue()));
         
         List<XMPMetadata> xmpMetadata = imageMetadata.getXmpMetadata();
-        assertThat(xmpMetadata, hasSize(10));
+        assertThat(xmpMetadata, hasSize(9));
         assertThat(xmpMetadata.get(0), instanceOf(XMPString.class));
         assertThat( ((XMPString) xmpMetadata.get(0)).getValue(), is("A sample string") );
         assertThat(xmpMetadata.get(1), instanceOf( XMPInteger.class));

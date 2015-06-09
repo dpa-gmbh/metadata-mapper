@@ -20,4 +20,15 @@
         </xmp>
     </metadata>
 
+    <metadata name="TestProcessor">
+        <xpath part="example" returnType="STRING"><![CDATA[substring(//returnedAsString,3,44)]]></xpath>
+        <processors>
+            <processor part-ref="example" class="de.dpa.oss.metadata.mapper.imaging.TestProcessor">
+                <parameter name="valueToSet" value="processedValue"/>
+            </processor>
+        </processors>
+        <xmp>
+            <mapsTo part-ref="example" field="CaptionWriter" targetNamespace="http://ns.adobe.com/photoshop/1.0/" targetType="Text"/>
+        </xmp>
+    </metadata>
 </mapping>
