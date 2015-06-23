@@ -18,6 +18,11 @@ public class ExifTool
     private List<String> tagModifications = new ArrayList<>();
     private List<String> codedCharsetOptions = new ArrayList<>();
     private List<String> tagGroupsToClear = new ArrayList<>();
+    /**
+     * This flag controls whether exiftool should overwrite the original or should backup the file to
+     * "originalfilename.original"
+     */
+    private boolean overwriteOriginal = true;
 
     public enum CodedCharset
     {
@@ -56,6 +61,17 @@ public class ExifTool
     private ExifTool(final File inputSource)
     {
         this.inputSource = inputSource;
+    }
+
+    /**
+     * @param overwriteOriginal if false then exiftool will preserve the original file by copying the original content to
+     *                          the file ending with suffix "original"
+     *                          Default is true
+     */
+    public ExifTool overwriteOriginalFile( final boolean overwriteOriginal)
+    {
+        this.overwriteOriginal = overwriteOriginal;
+        return this;
     }
 
     public ExifTool setImageMetadata(ListMultimap<String, String> tags)
@@ -105,6 +121,11 @@ public class ExifTool
         cmdArgs.addAll(this.codedCharsetOptions);
         cmdArgs.addAll(tagGroupsToClear);
         cmdArgs.addAll(tagModifications);
+
+        if( overwriteOriginal )
+        {
+            cmdArgs.add("-overwrite_original");
+        }
         exifTool.runExiftool(inputSource, cmdArgs);
     }
 }

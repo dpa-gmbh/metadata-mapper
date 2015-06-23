@@ -5,20 +5,32 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.io.ByteStreams;
-import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
-import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolIntegrationException;
+import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifToolWrapper;
 import de.dpa.oss.metadata.mapper.imaging.common.ImageMetadata;
 import de.dpa.oss.metadata.mapper.imaging.xmp.metadata.XMPMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * @author oliver langer
  */
 public class ChainedImageMetadataOperations
 {
+    private static Logger logger = LoggerFactory.getLogger(ChainedImageMetadataOperations.class);
+
+    Path tmpFileDir = null;
     final private InputStream inputImage;
     final private OutputStream modifiedImage;
     private ListMultimap<String, String> tagsToSet = null;
@@ -36,6 +48,12 @@ public class ChainedImageMetadataOperations
     {
         this.inputImage = inputImage;
         this.modifiedImage = modifiedImage;
+    }
+
+    public ChainedImageMetadataOperations useTemporaryDirectory(final Path tmpFileDir)
+    {
+        this.tmpFileDir = tmpFileDir;
+        return this;
     }
 
     public ChainedImageMetadataOperations setMetadata(final ImageMetadata imageMetadata) throws XMPException
@@ -57,7 +75,7 @@ public class ChainedImageMetadataOperations
         return this;
     }
 
-    public ChainedImageMetadataOperations useTimeZone(final TimeZone timeZone)
+    @SuppressWarnings("UnusedDeclaration") public ChainedImageMetadataOperations useTimeZone(final TimeZone timeZone)
     {
         this.timeZone = timeZone;
         return this;
@@ -113,16 +131,26 @@ public class ChainedImageMetadataOperations
 
     public void execute(final ExifToolWrapper exifTool) throws XMPException, ExifToolIntegrationException, IOException
     {
-
-        File tempImageFile = null;
+        Path tmpFilePath = null;
         try
         {   // copy input image to tempoary file
-            tempImageFile = File.createTempFile("metadata-mapper", "tmpimage");
-            FileOutputStream fis = new FileOutputStream(tempImageFile);
-            ByteStreams.copy(inputImage, fis);
-            fis.close();
+            if (tmpFileDir != null)
+            {
+                tmpFilePath = Files.createTempFile(tmpFileDir, "metadata-mapper", "tmpimage");
+            }
+            else
+            {
+                tmpFilePath = Files.createTempFile("metadata-mapper", "tmpimage");
+            }
 
-            ExifTool exifToolOperationChainBuilder = ExifTool.modifyImage(tempImageFile);
+            logger.debug("Using temporary file \"" + tmpFilePath + "\" for image processing.");
+            try (OutputStream fos = Files.newOutputStream(tmpFilePath))
+            {
+                ByteStreams.copy(inputImage, fos);
+            }
+
+            ExifTool exifToolOperationChainBuilder = ExifTool.modifyImage(tmpFilePath.toFile());
+            exifToolOperationChainBuilder.overwriteOriginalFile(true);
 
             if (tagsToSet != null)
             {
@@ -146,16 +174,17 @@ public class ChainedImageMetadataOperations
             }
 
             exifToolOperationChainBuilder.execute(exifTool);
-            FileInputStream modifiedTempStream = new FileInputStream(tempImageFile);
-            ByteStreams.copy(modifiedTempStream, modifiedImage);
-            tempImageFile.delete();
-            tempImageFile = null;
+            try (InputStream inputStream = Files.newInputStream(tmpFilePath))
+            {
+                //Files.co
+                ByteStreams.copy(inputStream, modifiedImage);
+            }
         }
         finally
         {
-            if (tempImageFile != null)
+            if (tmpFilePath != null)
             {
-                tempImageFile.delete();
+                Files.delete(tmpFilePath);
             }
         }
     }

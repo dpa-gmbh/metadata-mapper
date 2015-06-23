@@ -16,7 +16,7 @@
 			<catalogRef href="http://g2.dpa.com/catalog/catalog001.xml"/>
 			<rightsInfo>
 				<copyrightHolder>
-					<name>dpa-Zentralbild</name>
+					<name>Copyright Holder</name>
 				</copyrightHolder>
 				<rightsInfoExtProperty custom="true" rel="dparel:hasMinimumFee" value="false" valuedatatype="xs:boolean"/>
 			</rightsInfo>
@@ -48,9 +48,9 @@
 					<name>Gaza</name>
 				</located>
 				<creator>
-					<name>Mr X</name>
-					<related qcode="dpaaccno:ZZZZZ">
-						<name role="nrol:full">Mr X</name>
+					<name>Photograph</name>
+					<related qcode="any:xyz">
+						<name role="nrol:full">Photograph</name>
 					</related>
 				</creator>
 				<contributor>
@@ -59,12 +59,12 @@
 				<altId type="dpatype:orgTransRef">jbu052</altId>
 				<language tag="de"/>
 				<genre qcode="dpascn:24">
-					<name xml:lang="de">Aufführung</name>
+					<name xml:lang="de">ObjectAttributeReference Value</name>
 				</genre>
 				<subject qcode="dpasubject:114">
 					<name xml:lang="de">Konflikte</name>
 					<sameAs qcode="medtop:16000000">
-						<name xml:lang="de">Krise, Krieg, Konflikte</name>
+						<name xml:lang="de">TestSubject,TestDocumentSubject,QASubject</name>
 					</sameAs>
 				</subject>
 				<subject qcode="dpacat:pl" type="dpatype:category">

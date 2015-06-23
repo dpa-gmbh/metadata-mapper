@@ -49,4 +49,32 @@ public class MappingTest
         tagValues = (Map<String,String>) iptc.get(0);
         assertThat( tagValues, hasEntry("ObjectName", "urn:newsml:dpa.com:20090101:150105-99-07656"));
     }
+
+    @Test
+    public void shouldMapDPAMappingCorrectly() throws Exception
+    {
+        // given
+        InputStream imageInputStream = ResourceUtil.resourceAsStream("/content/mapping-dpa-example-image.jpeg", this.getClass());
+        String xmlDocument = ResourceUtil.resourceAsString("/content/example-g2.xml", this.getClass());
+        Document document = XmlUtils.toDocument(xmlDocument);
+
+        // when
+        MetadataMapper.modifyImageAt(imageInputStream)
+                .useDefaultMappingOverridenBy("example/dpa-mapping.xml")
+                .xmlDocument(document)
+                .executeMapping("target/" + this.getClass().getSimpleName()
+                        + "-shouldApplyCustomizedMapping.jpg");
+
+        // then
+        StringWriter sw = new StringWriter();
+        MetadataMapper.explainMapping().xmlDocument(document)
+                .useDefaultMappingOverridenBy("example/dpa-mapping.xml")
+                .explainMapping(sw);
+        System.out.println(sw);
+        File generatedJPG = new File("target/" + this.getClass().getSimpleName()
+                + "-shouldApplyCustomizedMapping.jpg");
+        List iptc = ExifToolWrapper.anExifTool().build().readTagGroup(generatedJPG, "IPTC:ALL");
+        System.out.println(iptc);
+         }
+
 }

@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.List;
 
+import static org.junit.Assert.fail;
+
 public class MetadataMapperTest
 {
     @Test
@@ -138,5 +140,31 @@ public class MetadataMapperTest
         MetadataMapper.validate(defaultMapping);
 
         // then it should not throw any exception
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowAnExceptionIfTemporaryDirectoryDoesNotExist() throws FileNotFoundException
+    {
+        // given
+        MetadataMapper metadataMapper = MetadataMapper.modifyImageAt(this.getClass().getResourceAsStream("/content/150529-96-00696.jpeg"));
+
+        // when
+        metadataMapper.useTemporaryDirectory( "doesNotExist");
+
+        // then
+        fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowAnExceptionIfTemporaryDirectoryIsAFile() throws FileNotFoundException
+    {
+        // given
+        MetadataMapper metadataMapper = MetadataMapper.modifyImageAt(this.getClass().getResourceAsStream("/content/150529-96-00696.jpeg"));
+
+        // when
+        metadataMapper.useTemporaryDirectory( "README.md");
+
+        // then
+        fail();
     }
 }

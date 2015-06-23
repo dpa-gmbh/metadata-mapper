@@ -23,6 +23,9 @@ import org.w3c.dom.Document;
 
 import javax.xml.bind.JAXBException;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 /**
@@ -44,6 +47,7 @@ public class MetadataMapper
     private boolean emptyTargetTagGroups = false;
     private Map<String, String> tagGroupsToClear = null;
     private boolean removeAllTagGroups = false;
+    private Path temporaryDirectory = null;
 
     public static MetadataMapper modifyImageAt(final String pathToSourceImage) throws FileNotFoundException
     {
@@ -73,6 +77,17 @@ public class MetadataMapper
     private MetadataMapper(final InputStream imageInputStream)
     {
         this.imageInputStream = imageInputStream;
+    }
+
+    public MetadataMapper useTemporaryDirectory( final String temporaryDirectoryPath )
+    {
+        temporaryDirectory = Paths.get(temporaryDirectoryPath);
+
+        if( !Files.isDirectory(temporaryDirectory))
+        {
+            throw new IllegalArgumentException( "Given path does not point to a directory:" + temporaryDirectoryPath);
+        }
+        return this;
     }
 
     public MetadataMapper xmlDocument(final String pathToXMLDocument) throws Exception
@@ -158,6 +173,11 @@ public class MetadataMapper
         new G2ToMetadataMapper(mapping).mapToImageMetadata(xmlDocument, imageMetadata);
         ChainedImageMetadataOperations chainedImageMetadataOperations = ChainedImageMetadataOperations
                 .modifyImage(imageInputStream, imageOutput);
+
+        if( temporaryDirectory != null )
+        {
+            chainedImageMetadataOperations.useTemporaryDirectory(temporaryDirectory);
+        }
 
         if (emptyTargetTagGroups)
         {
