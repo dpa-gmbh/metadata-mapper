@@ -360,7 +360,7 @@
                                     <xs:attribute name="outputDateFormat" type="xs:string">
                                         <xs:annotation>
                                             <xs:documentation>Specifies the output date format.Please refer to
-                                                http://docs.oracle.com/javase/7/docs/api/ for valid specifier.
+                                                http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html for valid specifier.
                                             </xs:documentation>
                                         </xs:annotation>
                                     </xs:attribute>

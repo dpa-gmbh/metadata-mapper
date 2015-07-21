@@ -32,6 +32,8 @@
             <item name="Download" href="./download.html"/>
             <item name="Build Info" href="./build-info.html"/>
             <item name="Usage" href="./usage.html"/>
+            <item name="Mapping" href="./mapping-config.html" />
+
             <!--item name="Goals" href="./goals.html"/>
             <item name="Getting started" href="./gettings-started.html"/>
             <item name="Files" href="./files.html"/-->

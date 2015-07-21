@@ -1,5 +1,10 @@
 = Introduction =
 
+The International Press Telecommunications Council (IPTC) published the IPTC Photo Metadata Standard
+at https://iptc.org/standards/photo-metadata. This standard provides a structure for fields and descriptions of how to use
+those fields in image metadata records in order to describe images accordingly. It also defines how to map
+NewsML-G2 XML document content to fields. This is where the metadata mapper comes into play.
+
 The metadata mapper writes image metadata by extracting content elements from an XML document and mapping these elements to corresponding
 fields of the Information Interchange Model (IIM) records and Extensible Metadata Platform (XMP) of an JPEG image.
 
