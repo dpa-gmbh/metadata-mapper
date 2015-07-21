@@ -1,0 +1,335 @@
+== Metadata Mapping Configuration ==
+
+The mapping configuration is given by an XML file and it's overall structure basically looks like this:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<customized-mapping name="myMappingOverrides"
+  xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/">
+	<config>
+		<timezone>Europe/Berlin</timezone>
+	</config>
+
+    <metadata name="Copyright Notice">
+        <xpath rank="1" part="copyright"><![CDATA[//rightsInfo/copyrightNotice]] /> <!-- <1> -->
+        <default part="copyright">(c) my company</default>
+
+        <iim>
+            <mapsTo part-ref="copyright"
+               dataset="116"
+               field="CopyrightNotice"
+               targetType="STRING"/>
+        </iim>
+        <xmp>
+            <mapsTo part-ref="copyright"
+              targetType="LangAlt"
+              targetNamespace="http://purl.org/dc/elements/1.1/"
+              field="rights"/>
+        </xmp>
+    </metadata>
+
+    <characterMapping id="utf8-to-iso8859-1">
+        <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
+    </characterMapping>
+</customized-mapping>
+----
+
+It has a configuration section, a set of mapping definitions and optional character mappings. The root tag
+`customized-mapping` indicates that the mapping configuration customizes a (default) mapping. In this
+context customization means that it
+
+ * may add mappings
+ * may override existing mappings
+ * may change the configuration and character mappings
+
+
+=== Mapping Metadata ===
+
+==== Mapping Name and Overriding Definitions ====
+A mapping is defined by
+[source,xml]
+----
+<metadata name="Copyright Notice">
+----
+
+The name of the metadata element is a required attribute. To override a default metadata mapping the name of
+this mapping has smply to be reused in the related customized metadata mapping. In the given example the
+default metadata mapping for `Copyright Notice` is overriden.
+
+==== Selecting Data ====
+
+===== XPath Expressions =====
+Each mapping starts with a set of XPath expressions used to select the data out of the source document:
+[source,xml]
+----
+<xpath part="source" rank="1"><![CDATA[//rightsInfo/copyrightHolder/name]]</xpath>
+----
+
+The XPath expressions have to be compliant to XPath 1.0 and are specified in a CDATA child element.
+The `part` of the `xpath` element is the name for the selection. The `rank` attribute allows
+the specifiy multiple XPath expressions (alternatives) for a `part`. These alternatives are looked
+up in the order of their underlying `rank` value.
+
+.Example of alternative XPath expressions for copyright holder:
+[source,xml]
+----
+<xpath part="source" rank="1"><![CDATA[//rightsInfo/copyrightHolder/name]]></xpath>
+<xpath part="source" rank="2"><![CDATA[//rightsInfo/copyrightHolder/@literal]]></xpath>
+----
+
+By default the implementation of the Metadata Mapper expects `NODE` or `NODELIST` as the result type
+for an XPath expression. Result types different from these two have to be declared in the mapping:
+.An XPath expression returning a string:
+[source,xml]
+----
+<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta/language/@tag,1,2)]]></xpath>
+----
+
+===== Default Values =====
+
+Default values function as fallbacks in case the entire set of XPath expressions of a given name does
+not match. Defaults can also be used to write a constant value into an image metadata field.
+
+===== Processors =====
+
+In some cases a post-processing of the selected data is appropriate. For these cases a processor
+can be used.
+
+.Example of a processor
+[source,xml]
+----
+<metadata name="Copyright Notice">
+  <xpath part="copyright"><![CDATA[//rightsInfo/copyrightNotice]]></xpath>
+
+  <processors>
+     <processor part-ref="copyright" class="de.dpa.oss.metadata.mapper.processor.ModifyValueIfNotEmpty">
+        <parameter name="prependString" value="(c) "/>
+     </processor>
+  </processors>
+  ...
+</metadata>
+----
+
+A Processor refers a part and a class implementing the interface `Processor`.
+
+.Processor Interface
+----
+public interface Processor
+{
+  /**
+   * @param values selected by xpath expression. Empty array if no values have been
+   *               selected
+   * @return post-processed values
+   */
+  List<String> process(final List<String> values);
+}
+----
+
+The class gets all the values selected by the referred XPath expression and returns the new
+list of values.
+
+
+.Example of a default value
+[source,xml]
+----
+<default part="copyright">(c) dpa</default>
+----
+
+==== Definition of Data Output ====
+
+The metadata mapper supports the image metadata standards IPTC Information Interchange Model (IPTC IIM) and
+Extensible Metadata Platform (XMP). Regarding XMP it supports the namespaces
+
+* http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/
+* http://iptc.org/std/Iptc4xmpExt/2008-02-29/
+* http://purl.org/dc/elements/1.1/
+* http://ns.adobe.com/photoshop/1.0/
+* http://ns.adobe.com/xap/1.0/rights/
+* http://ns.useplus.org/ldf/xmp/1.0/
+
+
+===== Output of Selected Data in General =====
+
+A typical metadata mapping may look like follows:
+[source,xml]
+----
+<metadata name="Keywords">
+	<xpath part="keywords"><![CDATA[//contentMeta/keyword | //contentMeta/subject/name]]></xpath>
+	<iim>
+		<mapsTo part-ref="keywords" dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
+	</iim>
+	<xmp>
+		<mapsTo field="subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/">
+			<mapsTo part-ref="keywords" field="subject" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+		</mapsTo>
+	</xmp>
+</metadata>
+----
+
+Each output definition is enclosed in a `<iim>` or `<xmp>` tag and consists of a set of `<mapsTo>`
+element. Since XMP supports complex, nested data structures, like e. g. sets, structures,
+sets of structures and so on, `<mapsTo>` elements can be appropriately nested in the mapping
+definition too.
+
+The relation between data selection and data output is implemented by the part name of an
+`<xpath>` element: each `<mapsTo>` element refers its' data source via the `part-ref` attribute.
+Structure, cardinality and type of the output data field is only determined by the `<mapsTo>` element. The
+selected data functions only as source of information. If the selected data contains an array of elements
+and the `<mapsTo>` targets a single string then the first element of the array may be output only.
+
+===== Mapping to IIM =====
+
+An IIM mapping contains of a set of `<mapsTo>` elements. These elements can store a string, a date or
+a list of strings. They cannot be nested since IIM des not define structures and the like.
+
+The following attributes are supported for `<mapsTo>` elements:
+
+.Attributes of IIM <mapsTo> elements
+[grid="all",frame="all",options="header"]
+|===
+|Attribute |Type |Usage |Description
+
+|part-ref
+|String
+|required
+|Refers to a `<xpath>` element
+
+|field
+|String
+|required
+|Name for IIM field to fill. This name must exactly match one of those Application Record Tags
+mentioned at http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/IPTC.html#ApplicationRecord
+
+|dataset
+|Number
+|required
+|Dataset number within IIM record 2 (application record)
+
+|targetType
+|String
+|required
+|Target type: `STRING,LIST_OF_STRING,DATE`.
+
+|dateParserRef
+|Reference
+|optional
+|Refers a date input format defined in the configuration section.
+
+|outputDateFormat
+|String
+|optional
+|In case of `targetType=DATE` this attribute specifies the target output format based on a format documented at http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+|===
+
+Specifying the field name and the dataset number is redundant. But currently the software does not support to
+specifiy the dataset only. Effectively the `field` attribute is being used and the dataset functions
+as additional information for those working with these dataset numbers.
+
+The `targetType=DATE` is used to output a date string into a specific format. It requires `dateParserRef` and
+`outputDateFormat` being set too. `dateParserRef` refers a date parser format given in the config section. This
+format is assumed to be given by the input and thus the input string is parsed accordingly. `outputDateFormat`
+specifies the output format to use.
+
+.Example for Mapping a Date into a certain format
+[source,xml]
+----
+<config>
+  <dateParser id="dateParser-dayOnly" inputDateFormat="yyyy-MM-dd"/>
+</config>
+
+<metadata name="Date Created">
+  <xpath part="contentCreated"><![CDATA[//contentMeta/contentCreated]]></xpath>
+  <iim>
+    <mapsTo part-ref="contentCreated" dataset="55" field="DateCreated" targetType="DATE"
+      dateParserRef="dateParser-dayOnly" outputDateFormat="yyyy:MM:dd"/>
+  </iim>
+</metadata>
+----
+
+In this example the content selected by `contentCreated` is expected to have the date format `yyyy-MM-dd` and
+the metadata field `DateCreated` is filled with a date formatted using `yyyy:MM:dd`.
+
+
+===== Mapping to XMP =====
+
+XMP allows the definition of structures and sets (sequences,bags) which can be nested. This may result in
+e. g. a structure containing an array of structures containing...
+In order to define nested structures the `<mapsTo>` elements can be nested in XMP mappings.
+
+.Example of nested `<mapsTo>` elements mapping content to an XMP structure
+[source,xml]
+----
+<metadata name="Creator's Contact Info">
+  <xpath part="line"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/line]]></xpath>
+  <xpath part="city"><![CDATA[//contentMeta/creator/personDetails/contactInfo/address/locality/name]]></xpath>
+  <xmp>
+	<mapsTo field="CreatorContactInfo"
+	        targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/"
+	        targetType="Struct">
+	  <mapsTo part-ref="line"
+	          field="CiAdrExtadr"
+	          targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/"
+	          targetType="Text"/>
+	  <mapsTo part-ref="city"
+              field="CiAdrCity"
+              targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/"
+              targetType="Text"/>
+	</mapsTo>
+  </xmp>
+</metadata>
+----
+
+The following attributes are supported for `<mapsTo>` elements in XMP mappings:
+
+.Attributes of XMP <mapsTo> elements
+[grid="all",frame="all",options="header"]
+|===
+|Attribute |Type |Usage |Description
+
+|part-ref
+|String
+|required
+|Refers to a `<xpath>` element
+
+|targetType
+|String
+|required
+|Possible values: `Text,Integer,Date,LangAlt,Struct,Sequence,Bag`
+
+|field
+|String
+|required
+|Name of XMP target field
+
+|targetNamespace
+|String
+|required
+|Supported namespaces are: http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/,http://iptc.org/std/Iptc4xmpExt/2008-02-29/,
+http://purl.org/dc/elements/1.1/,http://ns.adobe.com/photoshop/1.0/,http://ns.adobe.com/xap/1.0/rights/,http://ns.useplus.org/ldf/xmp/1.0/
+
+|===
+
+In XMP each namespace has a defined set of fields. To find the correct spelling for a field in a
+certain namespace please refer to the http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/XMP.html
+where the supported fields (tags) of each namespace is listed.
+
+====== Limitations of XMP Mapping ======
+
+In general the metadata mapper supports a small subset of XMP complexity. For instance it does
+not support localizations in the form of specifying `xml:lang` attributes for text values.
+
+Due to lack of slice constructs in the configuration language the mapping of sets (sequences,bags)
+is limited to certain constructs:
+* an array of sclars like a bag of strings can be expressed.
+* structures containing arrays of scalars can be expressed
+* array of structures is not possible
+
+
+
+=== Reference ===
+
+[bibliography]
+- [[[XMP-part1]]] "XMP SPECIFICATION PART 1 -- DATA MODEL, SERIALIZATION, AND CORE PROPERTIES", Adobe, http://www.adobe.com/content/dam/Adobe/en/devnet/xmp/pdfs/XMPSpecificationPart1.pdf
