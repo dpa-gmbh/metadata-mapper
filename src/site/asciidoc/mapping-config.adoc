@@ -9,12 +9,12 @@ The mapping configuration is given by an XML file and it's overall structure bas
   xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/">
-	<config>
-		<timezone>Europe/Berlin</timezone>
-	</config>
+    <config>
+      <timezone>Europe/Berlin</timezone>
+    </config>
 
-    <metadata name="Copyright Notice">
-        <xpath rank="1" part="copyright"><![CDATA[//rightsInfo/copyrightNotice]] /> <!-- <1> -->
+     <metadata name="Copyright Notice">
+       <xpath rank="1" part="copyright"><![CDATA[//rightsInfo/copyrightNotice]] /> <!-- <1> -->
         <default part="copyright">(c) my company</default>
 
         <iim>
@@ -45,6 +45,30 @@ context customization means that it
  * may override existing mappings
  * may change the configuration and character mappings
 
+=== Mapping Configurations ===
+
+The configuration section may look as follows:
+[source,xml]
+----
+<config>
+  <timezone>Europe/Berlin</timezone>
+  <iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
+  <xmp charset="utf-8" defaultReplaceChar="·"/>
+  <dateParser id="dateParser-dayOnly" inputDateFormat="yyyy-MM-dd"/>
+  <dateParser id="dateParser-timestamp" inputDateFormat="yyyy-MM-dd'T'HH:mm:ssZZZ"/>
+</config>
+----
+
+It specifies the timezone to use for parsing dates which do not contain a timezone specifier. This
+timezone is also used as default timezone for the output of dates in case they don't have a timezone specifier.
+
+`<iim>` and `<xmp>` define the character encoding for the related outputs. Please refer to
+<<sec.characterMapping>>.
+
+Date Parser are used to parse input dates using the given `inputDateFormat`. The format string syntax
+being used is documented at http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html.
+Mappings may refer Date Parsers in order to parse a date and output this date in a certain date format.
+
 
 === Mapping Metadata ===
 
@@ -56,8 +80,10 @@ A mapping is defined by
 ----
 
 The name of the metadata element is a required attribute. To override a default metadata mapping the name of
-this mapping has smply to be reused in the related customized metadata mapping. In the given example the
+this mapping has simply to be reused in the related customized metadata mapping. In the given example the
 default metadata mapping for `Copyright Notice` is overriden.
+
+By conventions the name is taken from the <<iptcspec>> specification.
 
 ==== Selecting Data ====
 
@@ -70,8 +96,8 @@ Each mapping starts with a set of XPath expressions used to select the data out 
 
 The XPath expressions have to be compliant to XPath 1.0 and are specified in a CDATA child element.
 The `part` of the `xpath` element is the name for the selection. The `rank` attribute allows
-the specifiy multiple XPath expressions (alternatives) for a `part`. These alternatives are looked
-up in the order of their underlying `rank` value.
+the specifiy multiple XPath expressions (alternatives) for a `part`. These alternatives are resolved
+in order of their underlying `rank` value.
 
 .Example of alternative XPath expressions for copyright holder:
 [source,xml]
@@ -82,10 +108,10 @@ up in the order of their underlying `rank` value.
 
 By default the implementation of the Metadata Mapper expects `NODE` or `NODELIST` as the result type
 for an XPath expression. Result types different from these two have to be declared in the mapping:
-.An XPath expression returning a string:
+An XPath expression returning a string:
 [source,xml]
 ----
-<xpath rank="1" returnType="STRING"><![CDATA[substring(//contentMeta/language/@tag,1,2)]]></xpath>
+<xpath part="language" rank="1" returnType="STRING"><![CDATA[substring(//contentMeta/language/@tag,1,2)]]></xpath>
 ----
 
 ===== Default Values =====
@@ -93,19 +119,27 @@ for an XPath expression. Result types different from these two have to be declar
 Default values function as fallbacks in case the entire set of XPath expressions of a given name does
 not match. Defaults can also be used to write a constant value into an image metadata field.
 
+.Example of a default value
+[source,xml]
+----
+<default part="copyright">(c) dpa</default>
+----
+
 ===== Processors =====
 
-In some cases a post-processing of the selected data is appropriate. For these cases a processor
+In some cases a processing of the selected data is appropriate. For these cases a processor
 can be used.
 
-.Example of a processor
+.Example of a processor declaration
 [source,xml]
 ----
 <metadata name="Copyright Notice">
   <xpath part="copyright"><![CDATA[//rightsInfo/copyrightNotice]]></xpath>
 
   <processors>
-     <processor part-ref="copyright" class="de.dpa.oss.metadata.mapper.processor.ModifyValueIfNotEmpty">
+     <processor
+        part-ref="copyright"
+        class="de.dpa.oss.metadata.mapper.processor.ModifyValueIfNotEmpty">
         <parameter name="prependString" value="(c) "/>
      </processor>
   </processors>
@@ -113,9 +147,11 @@ can be used.
 </metadata>
 ----
 
-A Processor refers a part and a class implementing the interface `Processor`.
+A Processor refers a part and a class implementing the interface
+`de.dpa.oss.metadata.mapper.processor.Processor`.
 
 .Processor Interface
+[source,java]
 ----
 public interface Processor
 {
@@ -130,13 +166,6 @@ public interface Processor
 
 The class gets all the values selected by the referred XPath expression and returns the new
 list of values.
-
-
-.Example of a default value
-[source,xml]
-----
-<default part="copyright">(c) dpa</default>
-----
 
 ==== Definition of Data Output ====
 
@@ -157,15 +186,15 @@ A typical metadata mapping may look like follows:
 [source,xml]
 ----
 <metadata name="Keywords">
-	<xpath part="keywords"><![CDATA[//contentMeta/keyword | //contentMeta/subject/name]]></xpath>
-	<iim>
-		<mapsTo part-ref="keywords" dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
-	</iim>
-	<xmp>
-		<mapsTo field="subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/">
-			<mapsTo part-ref="keywords" field="subject" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
-		</mapsTo>
-	</xmp>
+  <xpath part="keywords"><![CDATA[//contentMeta/keyword | //contentMeta/subject/name]]></xpath>
+  <iim>
+    <mapsTo part-ref="keywords" dataset="25" field="Keywords" targetType="LIST_OF_STRING"/>
+  </iim>
+  <xmp>
+    <mapsTo field="subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/">
+      <mapsTo part-ref="keywords" field="subject" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+    </mapsTo>
+  </xmp>
 </metadata>
 ----
 
@@ -182,7 +211,7 @@ and the `<mapsTo>` targets a single string then the first element of the array m
 
 ===== Mapping to IIM =====
 
-An IIM mapping contains of a set of `<mapsTo>` elements. These elements can store a string, a date or
+An IIM mapping contains a set of `<mapsTo>` elements. These elements can store a string, a date or
 a list of strings. They cannot be nested since IIM des not define structures and the like.
 
 The following attributes are supported for `<mapsTo>` elements:
@@ -216,7 +245,7 @@ mentioned at http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/IPTC.html#App
 |dateParserRef
 |Reference
 |optional
-|Refers a date input format defined in the configuration section.
+|Refers a date input format defined in the configuration section. Example is given below.
 
 |outputDateFormat
 |String
@@ -224,12 +253,11 @@ mentioned at http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/IPTC.html#App
 |In case of `targetType=DATE` this attribute specifies the target output format based on a format documented at http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
 |===
 
-Specifying the field name and the dataset number is redundant. But currently the software does not support to
-specifiy the dataset only. Effectively the `field` attribute is being used and the dataset functions
-as additional information for those working with these dataset numbers.
+For addressing the IIM record set, only the field attribut is used. To improve readability of the
+mapping declaraction the dataset attribute is mandatory as well.
 
-The `targetType=DATE` is used to output a date string into a specific format. It requires `dateParserRef` and
-`outputDateFormat` being set too. `dateParserRef` refers a date parser format given in the config section. This
+The `targetType=DATE` is used to generate a date string into a specific format. It requires a `dateParserRef` and
+an `outputDateFormat` being set too. `dateParserRef` refers a date parser format given in the config section. This
 format is assumed to be given by the input and thus the input string is parsed accordingly. `outputDateFormat`
 specifies the output format to use.
 
@@ -239,7 +267,7 @@ specifies the output format to use.
 <config>
   <dateParser id="dateParser-dayOnly" inputDateFormat="yyyy-MM-dd"/>
 </config>
-
+...
 <metadata name="Date Created">
   <xpath part="contentCreated"><![CDATA[//contentMeta/contentCreated]]></xpath>
   <iim>
@@ -357,32 +385,8 @@ character could not be found then the mapper checks whether it is a valid charac
 If it is not a valid character then the default chacter given by attribute `defaultReplaceChar` is used.
 
 
-==== Mapping Configurations ====
-
-The configuration section may look as follows:
-[source,xml]
-----
-<config>
-  <timezone>Europe/Berlin</timezone>
-  <iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
-  <xmp charset="utf-8" defaultReplaceChar="·"/>
-  <dateParser id="dateParser-dayOnly" inputDateFormat="yyyy-MM-dd"/>
-  <dateParser id="dateParser-timestamp" inputDateFormat="yyyy-MM-dd'T'HH:mm:ssZZZ"/>
-</config>
-----
-
-It specifies the timezone to use for parsing dates which do not contain a timezone specifier. This
-timezone is also used as default timezone for the output of dates in case they don't have a timezone specifier.
-
-`<iim>` and `<xmp>` define the character encoding for the related outputs. Please refer to
-<<sec.characterMapping>>.
-
-Date Parser are used to parse input dates using the given `inputDateFormat`. The format string syntax
-being used is documented at http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html.
-Mappings may refer Date Parsers in order to parse a date and output this date in a certain date format.
-
-
 === Reference ===
 
 [bibliography]
 - [[[XMP-part1]]] "XMP SPECIFICATION PART 1 -- DATA MODEL, SERIALIZATION, AND CORE PROPERTIES", Adobe, http://www.adobe.com/content/dam/Adobe/en/devnet/xmp/pdfs/XMPSpecificationPart1.pdf
+- [[[iptcspec]]] "Photo Metadata", 2014, IPTC, http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata
