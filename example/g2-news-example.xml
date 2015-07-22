@@ -41,13 +41,10 @@
 				<contentModified>2015-01-06+01:00</contentModified>
 				<located literal="poiID" type="cpnat:poi"/>
 				<creator>
-					<name>Rainer Jensen</name>
-					<related qcode="dpaaccno:A3464">
-						<name role="nrol:mnemonic">A3464</name>
-					</related>
+					<name>Roland Koch</name>
 				</creator>
 				<contributor>
-					<name>rje lof</name>
+					<name>r ko</name>
 				</contributor>
 				<altId type="dpatype:orgTransRef">ber637</altId>
 				<language tag="en"/>
