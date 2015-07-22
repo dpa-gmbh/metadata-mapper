@@ -322,11 +322,64 @@ In general the metadata mapper supports a small subset of XMP complexity. For in
 not support localizations in the form of specifying `xml:lang` attributes for text values.
 
 Due to lack of slice constructs in the configuration language the mapping of sets (sequences,bags)
-is limited to certain constructs:
+only a complete array can be bound to a `<mapsTo>` element. It is not possible to iterate over an array
+with multiple `<mapsTo>` "calls". In practical speaking this means:
+
 * an array of sclars like a bag of strings can be expressed.
 * structures containing arrays of scalars can be expressed
-* array of structures is not possible
+* array of structures is not possible to map.
 
+
+[[sec.characterMapping]]
+==== Character Mapping ====
+
+When using an output character encoding like ISO-8859-1 not all characters of the input document may
+be correctly transfered to the image meta data fields. For this case a character mapping can be declared.
+
+.Example of a Character Mapping
+----
+<characterMapping id="utf8-to-iso8859-1">
+  <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
+  <character from="0xa8" to="0x22" comment="from ¨; to=&quot;"/>
+  <character from="0xb4" to="0x27" comment="from ´; to='"/>
+</characterMapping>
+----
+
+Such a character mapping has to be configured in the config section of the metadata mapping configuration:
+----
+<config>
+  <iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
+</config>
+----
+This configuration defines ISO-8859-1 as target encoding for IIM and refers the character mapping to use.
+With this configuration the metadata mapper first looks up this table in order to map a character. If a
+character could not be found then the mapper checks whether it is a valid character of the target encoding.
+If it is not a valid character then the default chacter given by attribute `defaultReplaceChar` is used.
+
+
+==== Mapping Configurations ====
+
+The configuration section may look as follows:
+[source,xml]
+----
+<config>
+  <timezone>Europe/Berlin</timezone>
+  <iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
+  <xmp charset="utf-8" defaultReplaceChar="·"/>
+  <dateParser id="dateParser-dayOnly" inputDateFormat="yyyy-MM-dd"/>
+  <dateParser id="dateParser-timestamp" inputDateFormat="yyyy-MM-dd'T'HH:mm:ssZZZ"/>
+</config>
+----
+
+It specifies the timezone to use for parsing dates which do not contain a timezone specifier. This
+timezone is also used as default timezone for the output of dates in case they don't have a timezone specifier.
+
+`<iim>` and `<xmp>` define the character encoding for the related outputs. Please refer to
+<<sec.characterMapping>>.
+
+Date Parser are used to parse input dates using the given `inputDateFormat`. The format string syntax
+being used is documented at http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html.
+Mappings may refer Date Parsers in order to parse a date and output this date in a certain date format.
 
 
 === Reference ===
