@@ -1,4 +1,7 @@
+[[chapter.mappingconfig]]
 == Metadata Mapping Configuration ==
+
+
 
 The mapping configuration is given by an XML file and it's overall structure basically looks like this:
 
@@ -14,7 +17,7 @@ The mapping configuration is given by an XML file and it's overall structure bas
     </config>
 
      <metadata name="Copyright Notice">
-       <xpath rank="1" part="copyright"><![CDATA[//rightsInfo/copyrightNotice]] /> <!-- <1> -->
+       <xpath rank="1" part="copyright"><![CDATA[//rightsInfo/copyrightNotice]]></xpath>
         <default part="copyright">(c) my company</default>
 
         <iim>
@@ -138,7 +141,7 @@ By conventions the name is taken from the <<iptcspec>> specification.
 Each mapping starts with a set of XPath expressions used to select the data out of the source document:
 [source,xml]
 ----
-<xpath part="source" rank="1"><![CDATA[//rightsInfo/copyrightHolder/name]]</xpath>
+<xpath part="source" rank="1"><![CDATA[//rightsInfo/copyrightHolder/name]]></xpath>
 ----
 
 The XPath expressions have to be compliant to XPath 1.0 and are specified in a CDATA child element.

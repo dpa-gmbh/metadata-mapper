@@ -1,4 +1,4 @@
-= Introduction =
+== Introduction ==
 
 The International Press Telecommunications Council (IPTC) published the IPTC Photo Metadata Standard
 at https://iptc.org/standards/photo-metadata. This standard provides a structure for fields and descriptions of how to use
@@ -12,7 +12,7 @@ A metadata mapping is based on three files: an input XML, a JPEG file and a mapp
 configuration file. The configuration contains XPath expressions and relates them to
 primitive and complex fields of XMP and IIM image metadata. In this way the metadata
 mapper knows which content to extract out of the input XML file and how to map it to
-image metadata of the input JPEG file. The mapping configuration is documented in [TODO].
+image metadata of the input JPEG file. The mapping configuration is documented in <<mapping-config.adoc#chapter.mappingconfig,Mapping Configuration>>.
 
 XML documents may contain encodings which are not suitable for the target image metadata field.
 Or in some cases you may have XML documents with mixed character sets and you do not want

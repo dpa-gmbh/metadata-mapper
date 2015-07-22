@@ -33,7 +33,7 @@ java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -e -m myroles -i myimage -d 
 
 === List of Options ===
 
-Simply call ``java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -h```:
+Simply call ``java -jar target/metadata-mapper-1.1.4-SNAPSHOT.jar -h```:
 
 ....
 ** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH

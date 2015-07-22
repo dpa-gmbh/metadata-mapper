@@ -27,6 +27,16 @@
         </fluidoSkin>
     </custom>
     <body>
+        <head>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css"/>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/github.min.css"/>
+            <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css"/>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+
+            <script type="text/javascript" src="./js/apache-maven-fluido-1.0.0-SNAPSHOT.min.js"></script>
+
+        </head>
         <menu name="Overview">
             <item name="Introduction" href="./introduction.html"/>
             <item name="Download" href="./download.html"/>

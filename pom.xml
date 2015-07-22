@@ -32,6 +32,9 @@
         <jdk.encoding>utf-8</jdk.encoding>
         <junit.version>4.11</junit.version>
         <guava.version>18.0</guava.version>
+        <maven.site.plugin>3.4</maven.site.plugin>
+        <asciidoc.plugin>1.5.3</asciidoc.plugin>
+        <asciidoc-site-source-highlighter>highlightjs</asciidoc-site-source-highlighter>
     </properties>
 
     <developers>
@@ -263,12 +266,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
+                <version>${maven.site.plugin}</version>
+
                 <dependencies>
                     <dependency>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctor-maven-plugin</artifactId>
-                        <version>1.5.0</version>
+                        <version>${asciidoc.plugin}</version>
                     </dependency>
                     <!-- dpa skin -->
                     <dependency>
@@ -282,7 +286,7 @@
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.2</version>
+                <version>${asciidoc.plugin}</version>
                 <!--
                  Uncomment the following element to override the version of AsciidoctorJ
                 -->
@@ -323,6 +327,7 @@
                                 <idseparator>-</idseparator>
                                 <docinfo1>true</docinfo1>
                             </attributes>
+
                         </configuration>
                     </execution>
                 </executions>
