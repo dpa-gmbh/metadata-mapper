@@ -9,12 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="Date-Revision-yyyymmdd" content="20150722" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>dpa - metadata mapper - 
-
-
-
-
-Usage</title>
+    <title>dpa - metadata mapper &#x2013; </title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.0.0-SNAPSHOT.min.css" />
     <link rel="stylesheet" href="./css/dpa-theme-1.0.0-SNAPSHOT.min.css" />
     <link rel="stylesheet" href="./css/site.css" />
@@ -23,8 +18,26 @@ Usage</title>
       
     <script type="text/javascript" src="./js/apache-maven-fluido-1.0.0-SNAPSHOT.min.js"></script>
 
-    
-    <meta charset="UTF-8" /><!-- [if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"/><![endif] --><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Asciidoctor 1.5.0" />              </head>
+                          
+        
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css"/>
+                      
+        
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/github.min.css"/>
+                      
+        
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css"/>
+                      
+        
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+                      
+        
+<script>hljs.initHighlightingOnLoad();</script>
+                      
+        
+<script src="./js/apache-maven-fluido-1.0.0-SNAPSHOT.min.js" type="text/javascript"></script>
+          
+                  </head>
         <body class="topBarDisabled">
           
     
@@ -139,84 +152,55 @@ Usage</title>
                 
         <div id="bodyColumn"  class="span9" >
                                   
-            
-
-
-
-
-
-
-
-<div class="section" id="_usage">
-<h2 id="_usage">Usage</h2>
-
-
-
-<div class="section" id="_basic_arguments">
-<h3 id="_basic_arguments">Basic Arguments</h3>
-
-
-<p>To map the content of a G2 document <i>mydoc</i> related to a given image <i>myimage</i> the command line tool
+            <div class="sect1">
+<h2 id="a_usage">Usage</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="a_basic_arguments">Basic Arguments</h3>
+<div class="paragraph">
+<p>To map the content of a G2 document <em>mydoc</em> related to a given image <em>myimage</em> the command line tool
 can be called as follows:</p>
-
-
-
-
-<div>
-<pre>java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -i myimage -d mydoc -o result.jpeg</pre></div>
-
-
-
-
-<p>This maps the content of <i>mydoc</i> using the default mapping rules into the image <i>myimage</i> and stores the
-resulting image as <i>result.jpeg</i>.</p>
-
-
-
 </div>
-<div class="section" id="_custom_mappings">
-<h3 id="_custom_mappings">Custom Mappings</h3>
-
-
-<p>If you want to override certain rules of the default mapping you have to provide a custom mapping <i>myrules</i>.
-This mapping can be specified via switch <i>-m</i>:</p>
-
-
-
-
-<div>
-<pre>java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -m myroles -i myimage -d mydoc -o result.jpeg</pre></div>
-
-
-
-
+<div class="literalblock">
+<div class="content">
+<pre>java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -i myimage -d mydoc -o result.jpeg</pre>
 </div>
-<div class="section" id="_empty_containers_in_advance">
-<h3 id="_empty_containers_in_advance">Empty Containers in Advance</h3>
-
-
-<p>To empty all target container before the mapping you may use the switch <i>-e</i>:</p>
-
-
-
-
-<div>
-<pre>java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -e -m myroles -i myimage -d mydoc -o result.jpeg</pre></div>
-
-
-
-
 </div>
-<div class="section" id="_list_of_options">
-<h3 id="_list_of_options">List of Options</h3>
-
-
-<p>Simply call <tt>java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -h</tt>`:</p>
-
-
-
-
-<div>
+<div class="paragraph">
+<p>This maps the content of <em>mydoc</em> using the default mapping rules into the image <em>myimage</em> and stores the
+resulting image as <em>result.jpeg</em>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="a_custom_mappings">Custom Mappings</h3>
+<div class="paragraph">
+<p>If you want to override certain rules of the default mapping you have to provide a custom mapping <em>myrules</em>.
+This mapping can be specified via switch <em>-m</em>:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -m myroles -i myimage -d mydoc -o result.jpeg</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="a_empty_containers_in_advance">Empty Containers in Advance</h3>
+<div class="paragraph">
+<p>To empty all target container before the mapping you may use the switch <em>-e</em>:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>java -jar target/metadata-mapper-1.0.0-SNAPSHOT.jar -e -m myroles -i myimage -d mydoc -o result.jpeg</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="a_list_of_options">List of Options</h3>
+<div class="paragraph">
+<p>Simply call <code>java -jar target/metadata-mapper-1.1.4-SNAPSHOT.jar -h</code>`:</p>
+</div>
+<div class="literalblock">
+<div class="content">
 <pre>** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
 
 Usage: de.dpa.oss.metadata.mapper.MetadataMapper
@@ -232,20 +216,12 @@ Usage: de.dpa.oss.metadata.mapper.MetadataMapper
       table. Does not perform any mappingCustomization. Uses default mappingCustomization file
       if argument -m is omitted
   -exiftoolPath (-t) [String] Path to exiftool. Alternatively you may set environment variable EXIFTOOL
-  -help (-h) [flag]</pre></div>
-
-
-
-
-
-
-
-
-Last updated 2015-07-22 15:28:45 CEST
-
-
-</div></div>
-
+  -help (-h) [flag]</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
                   </div>
             </div>
           </div>

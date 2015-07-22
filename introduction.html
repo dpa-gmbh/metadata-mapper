@@ -9,12 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="Date-Revision-yyyymmdd" content="20150722" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>dpa - metadata mapper - 
-
-
-
-
-Introduction</title>
+    <title>dpa - metadata mapper &#x2013; </title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.0.0-SNAPSHOT.min.css" />
     <link rel="stylesheet" href="./css/dpa-theme-1.0.0-SNAPSHOT.min.css" />
     <link rel="stylesheet" href="./css/site.css" />
@@ -23,8 +18,26 @@ Introduction</title>
       
     <script type="text/javascript" src="./js/apache-maven-fluido-1.0.0-SNAPSHOT.min.js"></script>
 
-    
-    <meta charset="UTF-8" /><!-- [if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"/><![endif] --><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Asciidoctor 1.5.0" />              </head>
+                          
+        
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css"/>
+                      
+        
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/github.min.css"/>
+                      
+        
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css"/>
+                      
+        
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+                      
+        
+<script>hljs.initHighlightingOnLoad();</script>
+                      
+        
+<script src="./js/apache-maven-fluido-1.0.0-SNAPSHOT.min.js" type="text/javascript"></script>
+          
+                  </head>
         <body class="topBarDisabled">
           
     
@@ -139,57 +152,41 @@ Introduction</title>
                 
         <div id="bodyColumn"  class="span9" >
                                   
-            
-
-
-
-
-<h1>Introduction</h1>
-
-
-
-
+            <div class="sect1">
+<h2 id="a_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>The International Press Telecommunications Council (IPTC) published the IPTC Photo Metadata Standard
-at <a class="bare" href="https://iptc.org/standards/photo-metadata">https://iptc.org/standards/photo-metadata</a>. This standard provides a structure for fields and descriptions of how to use
+at <a href="https://iptc.org/standards/photo-metadata" class="bare">https://iptc.org/standards/photo-metadata</a>. This standard provides a structure for fields and descriptions of how to use
 those fields in image metadata records in order to describe images accordingly. It also defines how to map
 NewsML-G2 XML document content to fields. This is where the metadata mapper comes into play.</p>
-
-
-
+</div>
+<div class="paragraph">
 <p>The metadata mapper writes image metadata by extracting content elements from an XML document and mapping these elements to corresponding
 fields of the Information Interchange Model (IIM) records and Extensible Metadata Platform (XMP) of an JPEG image.</p>
-
-
-
+</div>
+<div class="paragraph">
 <p>A metadata mapping is based on three files: an input XML, a JPEG file and a mapping
 configuration file. The configuration contains XPath expressions and relates them to
 primitive and complex fields of XMP and IIM image metadata. In this way the metadata
 mapper knows which content to extract out of the input XML file and how to map it to
-image metadata of the input JPEG file. The mapping configuration is documented in [TODO].</p>
-
-
-
+image metadata of the input JPEG file. The mapping configuration is documented in <a href="mapping-config.html#chapter.mappingconfig">Mapping Configuration</a>.</p>
+</div>
+<div class="paragraph">
 <p>XML documents may contain encodings which are not suitable for the target image metadata field.
 Or in some cases you may have XML documents with mixed character sets and you do not want
 take over this mixture in the metadata of image. In such cases you may want to map and encode
 characters accordingly. The metadata mapper also supports configurable encoding and mapping
 of characters.</p>
-
-
-
+</div>
+<div class="paragraph">
 <p>The implementation contains a mapping configuration which supports extraction of content
 out of NewsML G2 Profile 2 compliant documents and mapping it to to IIM and XMP fields
-according to IPTC &quot;Photo Metadata&quot; standard revision 1.2, October 2014. The source code contains
+according to IPTC "Photo Metadata" standard revision 1.2, October 2014. The source code contains
 an API (ImageMetadataOperation) as well as a Tool supporting simple command-line based operations.</p>
-
-
-
-
-Last updated 2015-07-22 15:28:44 CEST
-
-
-
-
+</div>
+</div>
+</div>
                   </div>
             </div>
           </div>
