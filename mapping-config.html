@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="Date-Revision-yyyymmdd" content="20150723" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>dpa - metadata mapper &#x2013; Metadata Mapping Configuration</title>
+    <title>dpa - metadata mapper &#x2013; </title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.0.0-SNAPSHOT.min.css" />
     <link rel="stylesheet" href="./css/dpa-theme-1.0.0-SNAPSHOT.min.css" />
     <link rel="stylesheet" href="./css/site.css" />
@@ -37,7 +37,7 @@
         
 <script src="./js/apache-maven-fluido-1.0.0-SNAPSHOT.min.js" type="text/javascript"></script>
           
-    <meta charset="UTF-8" /><!-- [if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"/><![endif] --><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Asciidoctor 1.5.2" />              </head>
+                  </head>
         <body class="topBarDisabled">
           
     
@@ -152,379 +152,276 @@
                 
         <div id="bodyColumn"  class="span9" >
                                   
-            
-
-
-
-
-
-
-
-<div class="section" id="chapter.mappingconfig">
+            <div class="sect1">
 <h2 id="chapter.mappingconfig">Metadata Mapping Configuration</h2>
-
-
-
-<p>The mapping configuration is given by an XML file and it&#x2019;s overall structure basically looks like this:</p>
-
-
-
-
-<div>
-<pre class="highlight"><tt>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;customized-mapping name=&quot;myMappingOverrides&quot;
-  xmlns=&quot;http://xml.dpa.com/cl/metadatamapper/2014-08-08/&quot;
-  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-  xsi:schemaLocation=&quot;http://xml.dpa.com/cl/metadatamapper/2014-08-08/&quot;&gt;
+<div class="sectionbody">
+<div class="paragraph">
+<p>The mapping configuration is given by an XML file and it&#8217;s overall structure basically looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;customized-mapping name="myMappingOverrides"
+  xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"&gt;
     &lt;config&gt;
       &lt;timezone&gt;Europe/Berlin&lt;/timezone&gt;
     &lt;/config&gt;
 
-     &lt;metadata name=&quot;Copyright Notice&quot;&gt;
-       &lt;xpath rank=&quot;1&quot; part=&quot;copyright&quot;&gt;&lt;![CDATA[//rightsInfo/copyrightNotice]]&gt;&lt;/xpath&gt;
-        &lt;default part=&quot;copyright&quot;&gt;(c) my company&lt;/default&gt;
+     &lt;metadata name="Copyright Notice"&gt;
+       &lt;xpath rank="1" part="copyright"&gt;&lt;![CDATA[//rightsInfo/copyrightNotice]]&gt;&lt;/xpath&gt;
+        &lt;default part="copyright"&gt;(c) my company&lt;/default&gt;
 
         &lt;iim&gt;
-            &lt;mapsTo part-ref=&quot;copyright&quot;
-               dataset=&quot;116&quot;
-               field=&quot;CopyrightNotice&quot;
-               targetType=&quot;STRING&quot;/&gt;
+            &lt;mapsTo part-ref="copyright"
+               dataset="116"
+               field="CopyrightNotice"
+               targetType="STRING"/&gt;
         &lt;/iim&gt;
         &lt;xmp&gt;
-            &lt;mapsTo part-ref=&quot;copyright&quot;
-              targetType=&quot;LangAlt&quot;
-              targetNamespace=&quot;http://purl.org/dc/elements/1.1/&quot;
-              field=&quot;rights&quot;/&gt;
+            &lt;mapsTo part-ref="copyright"
+              targetType="LangAlt"
+              targetNamespace="http://purl.org/dc/elements/1.1/"
+              field="rights"/&gt;
         &lt;/xmp&gt;
     &lt;/metadata&gt;
 
-    &lt;characterMapping id=&quot;utf8-to-iso8859-1&quot;&gt;
-        &lt;character from=&quot;0xa6&quot; to=&quot;0x7c&quot; comment=&quot;from &#xa6;; to=|&quot;/&gt;
+    &lt;characterMapping id="utf8-to-iso8859-1"&gt;
+        &lt;character from="0xa6" to="0x7c" comment="from ¦; to=|"/&gt;
     &lt;/characterMapping&gt;
-&lt;/customized-mapping&gt;</tt></pre></div>
-
-
-
-
+&lt;/customized-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>It has a configuration section, a set of mapping definitions and optional character mappings. The root tag
-<tt>customized-mapping</tt> indicates that the mapping configuration customizes a (default) mapping. In this
+<code>customized-mapping</code> indicates that the mapping configuration customizes a (default) mapping. In this
 context customization means that it</p>
-
-
-
+</div>
+<div class="ulist">
 <ul>
-
 <li>
-
 <p>may add mappings</p>
 </li>
-
 <li>
-
 <p>may override existing mappings</p>
 </li>
-
 <li>
-
 <p>may change the configuration and character mappings</p>
 </li>
 </ul>
-
-
-
-<p>The default mapping in alignment with the IPTC recommendation (<a href="#IPTC-PhotoMetadata">[IPTC-PhotoMetadata]</a>) is defined
-in <a class="externalLink" href="https://github.com/dpa-gmbh/metadata-mapper/blob/master/src/main/resources/image-metadata-mapping/default-mapping.xml">default-mapping.xml</a>.</p>
-
-
-
-<p>An example of a customized mapping is given by <a class="externalLink" href="https://github.com/dpa-gmbh/metadata-mapper/blob/master/example/dpa-mapping.xml">dpa Customized Mapping</a>.</p>
-
-
-
-<div class="section" id="a_mapping_configurations">
-<h3 id="a_mapping_configurations">Mapping Configurations</h3>
-
-
-<p>The configuration section may look as follows:</p>
-
-
-
-
-<div>
-<pre class="highlight"><tt>&lt;config&gt;
-  &lt;timezone&gt;Europe/Berlin&lt;/timezone&gt;
-  &lt;iim charset=&quot;iso8859-1&quot; characterMappingRef=&quot;utf8-to-iso8859-1&quot; defaultReplaceChar=&quot;&#xb7;&quot;/&gt;
-  &lt;xmp charset=&quot;utf-8&quot; defaultReplaceChar=&quot;&#xb7;&quot;/&gt;
-  &lt;dateParser id=&quot;dateParser-dayOnly&quot; inputDateFormat=&quot;yyyy-MM-dd&quot;/&gt;
-  &lt;dateParser id=&quot;dateParser-timestamp&quot; inputDateFormat=&quot;yyyy-MM-dd'T'HH:mm:ssZZZ&quot;/&gt;
-&lt;/config&gt;</tt></pre></div>
-
-
-
-
-<div class="section" id="a_timezone">
-<h4 id="a_timezone">Timezone</h4>
-
-
-<p>It specifies the timezone to use for parsing dates which do not contain a timezone specifier. This
-timezone is also used as default timezone for the output of dates in case they don&#x2019;t have a timezone specifier.
-The timezone format must be compatible with <tt>java.util.TimeZone.getAvailableIDs()</tt>.</p>
-
-
-
 </div>
-<div class="section" id="sec.characterMapping">
+<div class="paragraph">
+<p>The default mapping in alignment with the IPTC recommendation (<a href="#IPTC-PhotoMetadata">[IPTC-PhotoMetadata]</a>) is defined
+in <a href="https://github.com/dpa-gmbh/metadata-mapper/blob/master/src/main/resources/image-metadata-mapping/default-mapping.xml">default-mapping.xml</a>.</p>
+</div>
+<div class="paragraph">
+<p>An example of a customized mapping is given by <a href="https://github.com/dpa-gmbh/metadata-mapper/blob/master/example/dpa-mapping.xml">dpa Customized Mapping</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="a_mapping_configurations">Mapping Configurations</h3>
+<div class="paragraph">
+<p>The configuration section may look as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;config&gt;
+  &lt;timezone&gt;Europe/Berlin&lt;/timezone&gt;
+  &lt;iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/&gt;
+  &lt;xmp charset="utf-8" defaultReplaceChar="·"/&gt;
+  &lt;dateParser id="dateParser-dayOnly" inputDateFormat="yyyy-MM-dd"/&gt;
+  &lt;dateParser id="dateParser-timestamp" inputDateFormat="yyyy-MM-dd'T'HH:mm:ssZZZ"/&gt;
+&lt;/config&gt;</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="a_timezone">Timezone</h4>
+<div class="paragraph">
+<p>It specifies the timezone to use for parsing dates which do not contain a timezone specifier. This
+timezone is also used as default timezone for the output of dates in case they don&#8217;t have a timezone specifier.
+The timezone format must be compatible with <code>java.util.TimeZone.getAvailableIDs()</code>.</p>
+</div>
+</div>
+<div class="sect3">
 <h4 id="sec.characterMapping">Character Mapping</h4>
-
-
-<p><tt>&lt;iim&gt;</tt> and <tt>&lt;xmp&gt;</tt> define the character encoding for the related outputs. Please refer to <a href="#sec.characterMapping">Character Mapping</a>.</p>
-
-
-
+<div class="paragraph">
+<p><code>&lt;iim&gt;</code> and <code>&lt;xmp&gt;</code> define the character encoding for the related outputs. Please refer to <a href="#sec.characterMapping">Character Mapping</a>.</p>
+</div>
+<div class="paragraph">
 <p>When generating output based on UTF-8 sources to a limited character encoding (.e.g ISO8859-15)
 a mapping for unsupported characters may be required. For this case a character mapping can be declared.</p>
-
-
-Example of a Character Mapping
-
-
-<div>
-<pre class="highlight"><tt>&lt;characterMapping id=&quot;utf8-to-iso8859-1&quot;&gt;
-  &lt;character from=&quot;0xa6&quot; to=&quot;0x7c&quot; comment=&quot;from &#xa6;; to=|&quot;/&gt;
-  &lt;character from=&quot;0xa8&quot; to=&quot;0x22&quot; comment=&quot;from &#xa8;; to=&amp;quot;&quot;/&gt;
-  &lt;character from=&quot;0xb4&quot; to=&quot;0x27&quot; comment=&quot;from &#xb4;; to='&quot;/&gt;
-&lt;/characterMapping&gt;</tt></pre></div>
-
-
-
-<table border="0" class="tableblock frame-all grid-all spread"><caption class="title">Table 1. Table Character Mapping</caption>
-
+</div>
+<div class="listingblock">
+<div class="title">Example of a Character Mapping</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;characterMapping id="utf8-to-iso8859-1"&gt;
+  &lt;character from="0xa6" to="0x7c" comment="from ¦; to=|"/&gt;
+  &lt;character from="0xa8" to="0x22" comment="from ¨; to=&amp;quot;"/&gt;
+  &lt;character from="0xb4" to="0x27" comment="from ´; to='"/&gt;
+&lt;/characterMapping&gt;</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Table Character Mapping</caption>
 <colgroup>
-<col style="width: 33%;" />
-<col style="width: 33%;" />
-<col style="width: 33%;" />
+<col style="width: 33%;"/>
+<col style="width: 33%;"/>
+<col style="width: 33%;"/>
 </colgroup>
 <thead>
-
-<tr class="a">
-
+<tr>
 <th class="tableblock halign-left valign-top">Attribute</th>
-
 <th class="tableblock halign-left valign-top">Usage</th>
-
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
-
-<tr class="b">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">from</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">source character unicode value</p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">from</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source character unicode value</p></td>
 </tr>
-
-<tr class="a">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">to</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">target character unicode value</p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">to</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">target character unicode value</p></td>
 </tr>
-
-<tr class="b">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">comment</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">optional</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Human readable expression</p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">comment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">optional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Human readable expression</p></td>
 </tr>
 </tbody>
 </table>
-
-
+<div class="paragraph">
 <p>Such a character mapping has to be configured in the config section of the metadata mapping configuration:</p>
-
-
-
-
-<div>
-<pre class="highlight"><tt>&lt;config&gt;
-  &lt;iim charset=&quot;iso8859-1&quot; characterMappingRef=&quot;utf8-to-iso8859-1&quot; defaultReplaceChar=&quot;&#xb7;&quot;/&gt;
-&lt;/config&gt;</tt></pre></div>
-
-
-
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;config&gt;
+  &lt;iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/&gt;
+&lt;/config&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This configuration defines ISO-8859-1 as target encoding for IIM and refers the character mapping to use.
 With this configuration the metadata mapper first looks up this table in order to map a character. If a
 character could not be found then the mapper checks whether it is a valid character of the target encoding.
-If it is not a valid character then the default chacter given by attribute <tt>defaultReplaceChar</tt> is used.</p>
-
-
-
+If it is not a valid character then the default chacter given by attribute <code>defaultReplaceChar</code> is used.</p>
 </div>
-<div class="section" id="a_date_parser">
+</div>
+<div class="sect3">
 <h4 id="a_date_parser">Date Parser</h4>
-
-
-<p>Date Parser are used to parse input dates using the given <tt>inputDateFormat</tt>. The format string syntax
-being used is documented at <a class="bare" href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html</a>.
+<div class="paragraph">
+<p>Date Parser are used to parse input dates using the given <code>inputDateFormat</code>. The format string syntax
+being used is documented at <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" class="bare">http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html</a>.
 Mappings may refer Date Parsers in order to parse a date and output this date in a certain date format.</p>
-
-
-
-
-</div></div>
-<div class="section" id="a_mapping_metadata">
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="a_mapping_metadata">Mapping Metadata</h3>
-
-
-<div class="section" id="a_mapping_name_and_overriding_definitions">
+<div class="sect3">
 <h4 id="a_mapping_name_and_overriding_definitions">Mapping Name and Overriding Definitions</h4>
-
-
+<div class="paragraph">
 <p>A mapping is defined by</p>
-
-
-
-
-<div>
-<pre class="highlight"><tt>&lt;metadata name=&quot;Copyright Notice&quot;&gt;</tt></pre></div>
-
-
-
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;metadata name="Copyright Notice"&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The name of the metadata element is a required attribute. To override a default metadata mapping the name of
 this mapping has simply to be reused in the related customized metadata mapping. In the given example the
-default metadata mapping for <tt>Copyright Notice</tt> is overriden.</p>
-
-
-
-<p>By conventions the name is taken from the <a href="#IPTC-PhotoMetadata">[IPTC-PhotoMetadata]</a> specification.</p>
-
-
-
+default metadata mapping for <code>Copyright Notice</code> is overriden.</p>
 </div>
-<div class="section" id="a_selecting_data">
+<div class="paragraph">
+<p>By conventions the name is taken from the <a href="#IPTC-PhotoMetadata">[IPTC-PhotoMetadata]</a> specification.</p>
+</div>
+</div>
+<div class="sect3">
 <h4 id="a_selecting_data">Selecting Data</h4>
-
-
-<div class="section" id="a_xpath_expressions">
+<div class="sect4">
 <h5 id="a_xpath_expressions">XPath Expressions</h5>
-
-
+<div class="paragraph">
 <p>Each mapping starts with a set of XPath expressions used to select the data out of the source document:</p>
-
-
-
-
-<div>
-<pre class="highlight"><tt>&lt;xpath part=&quot;source&quot; rank=&quot;1&quot;&gt;&lt;![CDATA[//rightsInfo/copyrightHolder/name]]&gt;&lt;/xpath&gt;</tt></pre></div>
-
-
-
-
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;xpath part="source" rank="1"&gt;&lt;![CDATA[//rightsInfo/copyrightHolder/name]]&gt;&lt;/xpath&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The XPath expressions have to be compliant to XPath 1.0 and are specified in a CDATA child element.
-The <tt>part</tt> of the <tt>xpath</tt> element is the name for the selection. The <tt>rank</tt> attribute allows
-the specifiy multiple XPath expressions (alternatives) for a <tt>part</tt>. These alternatives are resolved
-in order of their underlying <tt>rank</tt> value.</p>
-
-
-Example of alternative XPath expressions for copyright holder:
-
-
-<div>
-<pre class="highlight"><tt>&lt;xpath part=&quot;source&quot; rank=&quot;1&quot;&gt;&lt;![CDATA[//rightsInfo/copyrightHolder/name]]&gt;&lt;/xpath&gt;
-&lt;xpath part=&quot;source&quot; rank=&quot;2&quot;&gt;&lt;![CDATA[//rightsInfo/copyrightHolder/@literal]]&gt;&lt;/xpath&gt;</tt></pre></div>
-
-
-
-
-<p>By default the implementation of the Metadata Mapper expects <tt>NODE</tt> or <tt>NODELIST</tt> as the result type
+The <code>part</code> of the <code>xpath</code> element is the name for the selection. The <code>rank</code> attribute allows
+the specifiy multiple XPath expressions (alternatives) for a <code>part</code>. These alternatives are resolved
+in order of their underlying <code>rank</code> value.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of alternative XPath expressions for copyright holder:</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;xpath part="source" rank="1"&gt;&lt;![CDATA[//rightsInfo/copyrightHolder/name]]&gt;&lt;/xpath&gt;
+&lt;xpath part="source" rank="2"&gt;&lt;![CDATA[//rightsInfo/copyrightHolder/@literal]]&gt;&lt;/xpath&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default the implementation of the Metadata Mapper expects <code>NODE</code> or <code>NODELIST</code> as the result type
 for an XPath expression. Result types different from these two have to be declared in the mapping:
 An XPath expression returning a string:</p>
-
-
-
-
-<div>
-<pre class="highlight"><tt>&lt;xpath part=&quot;language&quot;
-       rank=&quot;1&quot;
-       returnType=&quot;STRING&quot;&gt;&lt;![CDATA[substring(//contentMeta/language/@tag,1,2)]]&gt;&lt;/xpath&gt;</tt></pre></div>
-
-
-
-
 </div>
-<div class="section" id="a_default_values">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;xpath part="language"
+       rank="1"
+       returnType="STRING"&gt;&lt;![CDATA[substring(//contentMeta/language/@tag,1,2)]]&gt;&lt;/xpath&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
 <h5 id="a_default_values">Default Values</h5>
-
-
+<div class="paragraph">
 <p>Default values function as fallbacks in case the entire set of XPath expressions of a given name does
 not match. Defaults can also be used to write a constant value into an image metadata field.</p>
-
-
-Example of a default value
-
-
-<div>
-<pre class="highlight"><tt>&lt;default part=&quot;copyright&quot;&gt;(c) dpa&lt;/default&gt;</tt></pre></div>
-
-
-
-
 </div>
-<div class="section" id="a_processors">
+<div class="listingblock">
+<div class="title">Example of a default value</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;default part="copyright"&gt;(c) dpa&lt;/default&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
 <h5 id="a_processors">Processors</h5>
-
-
+<div class="paragraph">
 <p>In some cases a processing of the selected data is appropriate. For these cases a processor
 can be used.</p>
-
-
-Example of a processor declaration
-
-
-<div>
-<pre class="highlight"><tt>&lt;metadata name=&quot;Copyright Notice&quot;&gt;
-  &lt;xpath part=&quot;copyright&quot;&gt;&lt;![CDATA[//rightsInfo/copyrightNotice]]&gt;&lt;/xpath&gt;
+</div>
+<div class="listingblock">
+<div class="title">Example of a processor declaration</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;metadata name="Copyright Notice"&gt;
+  &lt;xpath part="copyright"&gt;&lt;![CDATA[//rightsInfo/copyrightNotice]]&gt;&lt;/xpath&gt;
 
   &lt;processors&gt;
      &lt;processor
-        part-ref=&quot;copyright&quot;
-        class=&quot;de.dpa.oss.metadata.mapper.processor.ModifyValueIfNotEmpty&quot;&gt;
-        &lt;parameter name=&quot;prependString&quot; value=&quot;(c) &quot;/&gt;
+        part-ref="copyright"
+        class="de.dpa.oss.metadata.mapper.processor.ModifyValueIfNotEmpty"&gt;
+        &lt;parameter name="prependString" value="(c) "/&gt;
      &lt;/processor&gt;
   &lt;/processors&gt;
   ...
-&lt;/metadata&gt;</tt></pre></div>
-
-
-
-
+&lt;/metadata&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>A Processor refers a part and a class implementing the interface
-<tt>de.dpa.oss.metadata.mapper.processor.Processor</tt>.</p>
-
-
-Processor Interface
-
-
-<div>
-<pre class="highlight"><tt>public interface Processor
+<code>de.dpa.oss.metadata.mapper.processor.Processor</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Processor Interface</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public interface Processor
 {
   /**
    * @param values selected by xpath expression. Empty array if no values have been
@@ -532,483 +429,311 @@ Processor Interface
    * @return post-processed values
    */
   List&lt;String&gt; process(final List&lt;String&gt; values);
-}</tt></pre></div>
-
-
-
-
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The class gets all the values selected by the referred XPath expression and returns the new
 list of values.</p>
-
-
-
-
-</div></div>
-<div class="section" id="a_definition_of_data_output">
+</div>
+</div>
+</div>
+<div class="sect3">
 <h4 id="a_definition_of_data_output">Definition of Data Output</h4>
-
-
+<div class="paragraph">
 <p>The metadata mapper supports the image metadata standards IPTC Information Interchange Model (IPTC IIM) and
 Extensible Metadata Platform (XMP). Regarding XMP it supports the namespaces</p>
-
-
-
+</div>
+<div class="ulist">
 <ul>
-
 <li>
-
-<p><a class="bare" href="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/">http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/</a></p>
+<p><a href="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" class="bare">http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/</a></p>
 </li>
-
 <li>
-
-<p><a class="bare" href="http://iptc.org/std/Iptc4xmpExt/2008-02-29/">http://iptc.org/std/Iptc4xmpExt/2008-02-29/</a></p>
+<p><a href="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" class="bare">http://iptc.org/std/Iptc4xmpExt/2008-02-29/</a></p>
 </li>
-
 <li>
-
-<p><a class="bare" href="http://purl.org/dc/elements/1.1/">http://purl.org/dc/elements/1.1/</a></p>
+<p><a href="http://purl.org/dc/elements/1.1/" class="bare">http://purl.org/dc/elements/1.1/</a></p>
 </li>
-
 <li>
-
-<p><a class="bare" href="http://ns.adobe.com/photoshop/1.0/">http://ns.adobe.com/photoshop/1.0/</a></p>
+<p><a href="http://ns.adobe.com/photoshop/1.0/" class="bare">http://ns.adobe.com/photoshop/1.0/</a></p>
 </li>
-
 <li>
-
-<p><a class="bare" href="http://ns.adobe.com/xap/1.0/rights/">http://ns.adobe.com/xap/1.0/rights/</a></p>
+<p><a href="http://ns.adobe.com/xap/1.0/rights/" class="bare">http://ns.adobe.com/xap/1.0/rights/</a></p>
 </li>
-
 <li>
-
-<p><a class="bare" href="http://ns.useplus.org/ldf/xmp/1.0/">http://ns.useplus.org/ldf/xmp/1.0/</a></p>
+<p><a href="http://ns.useplus.org/ldf/xmp/1.0/" class="bare">http://ns.useplus.org/ldf/xmp/1.0/</a></p>
 </li>
 </ul>
-
-
-
-<table border="0" class="table table-striped">
-
-<tr class="a">
-
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
 <td class="icon">
-Note
+<div class="title">Note</div>
 </td>
-
 <td class="content">
-This restriction will be lifted soon (see <a class="externalLink" href="https://github.com/dpa-gmbh/metadata-mapper/issues/41">Issue #41</a>)
+This restriction will be lifted soon (see <a href="https://github.com/dpa-gmbh/metadata-mapper/issues/41">Issue #41</a>)
 </td>
 </tr>
 </table>
-
-
-
-<div class="section" id="a_output_of_selected_data_in_general">
+</div>
+<div class="sect4">
 <h5 id="a_output_of_selected_data_in_general">Output of Selected Data in General</h5>
-
-
+<div class="paragraph">
 <p>A typical metadata mapping may look like follows:</p>
-
-
-
-
-<div>
-<pre class="highlight"><tt>&lt;metadata name=&quot;Keywords&quot;&gt;
-  &lt;xpath part=&quot;keywords&quot;&gt;&lt;![CDATA[//contentMeta/keyword | //contentMeta/subject/name]]&gt;&lt;/xpath&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;metadata name="Keywords"&gt;
+  &lt;xpath part="keywords"&gt;&lt;![CDATA[//contentMeta/keyword | //contentMeta/subject/name]]&gt;&lt;/xpath&gt;
   &lt;iim&gt;
-    &lt;mapsTo part-ref=&quot;keywords&quot; dataset=&quot;25&quot; field=&quot;Keywords&quot; targetType=&quot;LIST_OF_STRING&quot;/&gt;
+    &lt;mapsTo part-ref="keywords" dataset="25" field="Keywords" targetType="LIST_OF_STRING"/&gt;
   &lt;/iim&gt;
   &lt;xmp&gt;
-    &lt;mapsTo field=&quot;subject&quot; targetType=&quot;Bag&quot; targetNamespace=&quot;http://purl.org/dc/elements/1.1/&quot;&gt;
-      &lt;mapsTo part-ref=&quot;keywords&quot; field=&quot;subject&quot; targetType=&quot;Text&quot;
-              targetNamespace=&quot;http://purl.org/dc/elements/1.1/&quot; /&gt;
+    &lt;mapsTo field="subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/"&gt;
+      &lt;mapsTo part-ref="keywords" field="subject" targetType="Text"
+              targetNamespace="http://purl.org/dc/elements/1.1/" /&gt;
     &lt;/mapsTo&gt;
   &lt;/xmp&gt;
-&lt;/metadata&gt;</tt></pre></div>
-
-
-
-
-<p>Each output definition is enclosed in a <tt>&lt;iim&gt;</tt> or <tt>&lt;xmp&gt;</tt> tag and consists of a set of <tt>&lt;mapsTo&gt;</tt>
-element. Since XMP supports complex, nested data structures, like e. g. sets, structures,
-sets of structures and so on, <tt>&lt;mapsTo&gt;</tt> elements can be appropriately nested in the mapping
-definition too.</p>
-
-
-
-<p>The relation between data selection and data output is implemented by the part name of an
-<tt>&lt;xpath&gt;</tt> element: each <tt>&lt;mapsTo&gt;</tt> element refers its' data source via the <tt>part-ref</tt> attribute.
-Structure, cardinality and type of the output data field is only determined by the <tt>&lt;mapsTo&gt;</tt> element. The
-selected data functions only as source of information. If the selected data contains an array of elements
-and the <tt>&lt;mapsTo&gt;</tt> targets a single string then the first element of the array may be output only.</p>
-
-
-
+&lt;/metadata&gt;</code></pre>
 </div>
-<div class="section" id="a_mapping_to_iim">
+</div>
+<div class="paragraph">
+<p>Each output definition is enclosed in a <code>&lt;iim&gt;</code> or <code>&lt;xmp&gt;</code> tag and consists of a set of <code>&lt;mapsTo&gt;</code>
+element. Since XMP supports complex, nested data structures, like e. g. sets, structures,
+sets of structures and so on, <code>&lt;mapsTo&gt;</code> elements can be appropriately nested in the mapping
+definition too.</p>
+</div>
+<div class="paragraph">
+<p>The relation between data selection and data output is implemented by the part name of an
+<code>&lt;xpath&gt;</code> element: each <code>&lt;mapsTo&gt;</code> element refers its' data source via the <code>part-ref</code> attribute.
+Structure, cardinality and type of the output data field is only determined by the <code>&lt;mapsTo&gt;</code> element. The
+selected data functions only as source of information. If the selected data contains an array of elements
+and the <code>&lt;mapsTo&gt;</code> targets a single string then the first element of the array may be output only.</p>
+</div>
+</div>
+<div class="sect4">
 <h5 id="a_mapping_to_iim">Mapping to IIM</h5>
-
-
-<p>An IIM mapping contains a set of <tt>&lt;mapsTo&gt;</tt> elements. These elements can store a string, a date or
+<div class="paragraph">
+<p>An IIM mapping contains a set of <code>&lt;mapsTo&gt;</code> elements. These elements can store a string, a date or
 a list of strings. They cannot be nested since IIM des not define structures and the like.</p>
-
-
-
-<p>The following attributes are supported for <tt>&lt;mapsTo&gt;</tt> elements:</p>
-
-
-<table border="0" class="tableblock frame-all grid-all spread"><caption class="title">Table 2. Attributes of IIM &amp;lt;mapsTo&amp;gt; elements</caption>
-
+</div>
+<div class="paragraph">
+<p>The following attributes are supported for <code>&lt;mapsTo&gt;</code> elements:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Attributes of IIM &lt;mapsTo&gt; elements</caption>
 <colgroup>
-<col style="width: 25%;" />
-<col style="width: 25%;" />
-<col style="width: 25%;" />
-<col style="width: 25%;" />
+<col style="width: 25%;"/>
+<col style="width: 25%;"/>
+<col style="width: 25%;"/>
+<col style="width: 25%;"/>
 </colgroup>
 <thead>
-
-<tr class="a">
-
+<tr>
 <th class="tableblock halign-left valign-top">Attribute</th>
-
 <th class="tableblock halign-left valign-top">Type</th>
-
 <th class="tableblock halign-left valign-top">Usage</th>
-
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
-
-<tr class="b">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">part-ref</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">String</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Refers to a <tt>&lt;xpath&gt;</tt> element</p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">part-ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refers to a <code>&lt;xpath&gt;</code> element</p></td>
 </tr>
-
-<tr class="a">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">field</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">String</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Name for IIM field to fill. This name must exactly match one of those Application Record Tags
-mentioned at <a class="bare" href="http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/IPTC.html#ApplicationRecord">http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/IPTC.html#ApplicationRecord</a></p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">field</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name for IIM field to fill. This name must exactly match one of those Application Record Tags
+mentioned at <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/IPTC.html#ApplicationRecord" class="bare">http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/IPTC.html#ApplicationRecord</a></p></td>
 </tr>
-
-<tr class="b">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">dataset</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Number</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Dataset number within IIM record 2 (application record)</p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dataset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dataset number within IIM record 2 (application record)</p></td>
 </tr>
-
-<tr class="a">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">targetType</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">String</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Target type: <tt>STRING,LIST_OF_STRING,DATE</tt>.</p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">targetType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target type: <code>STRING,LIST_OF_STRING,DATE</code>.</p></td>
 </tr>
-
-<tr class="b">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">dateParserRef</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Reference</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">optional</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Refers a date input format defined in the configuration section. Example is given below.</p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dateParserRef</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">optional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refers a date input format defined in the configuration section. Example is given below.</p></td>
 </tr>
-
-<tr class="a">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">outputDateFormat</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">String</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">optional</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">In case of <tt>targetType=DATE</tt> this attribute specifies the target output format based on a format documented at <a class="bare" href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html</a></p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">outputDateFormat</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">optional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In case of <code>targetType=DATE</code> this attribute specifies the target output format based on a format documented at <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" class="bare">http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html</a></p></td>
 </tr>
 </tbody>
 </table>
-
-
+<div class="paragraph">
 <p>For addressing the IIM record set, only the field attribut is used. To improve readability of the
 mapping declaraction the dataset attribute is mandatory as well.</p>
-
-
-
-<p>The <tt>targetType=DATE</tt> is used to generate a date string into a specific format. It requires a <tt>dateParserRef</tt> and
-an <tt>outputDateFormat</tt> being set too. <tt>dateParserRef</tt> refers a date parser format given in the config section. This
-format is assumed to be given by the input and thus the input string is parsed accordingly. <tt>outputDateFormat</tt>
+</div>
+<div class="paragraph">
+<p>The <code>targetType=DATE</code> is used to generate a date string into a specific format. It requires a <code>dateParserRef</code> and
+an <code>outputDateFormat</code> being set too. <code>dateParserRef</code> refers a date parser format given in the config section. This
+format is assumed to be given by the input and thus the input string is parsed accordingly. <code>outputDateFormat</code>
 specifies the output format to use.</p>
-
-
-Example for Mapping a Date into a certain format
-
-
-<div>
-<pre class="highlight"><tt>&lt;config&gt;
-  &lt;dateParser id=&quot;dateParser-dayOnly&quot; inputDateFormat=&quot;yyyy-MM-dd&quot;/&gt;
+</div>
+<div class="listingblock">
+<div class="title">Example for Mapping a Date into a certain format</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;config&gt;
+  &lt;dateParser id="dateParser-dayOnly" inputDateFormat="yyyy-MM-dd"/&gt;
 &lt;/config&gt;
 ...
-&lt;metadata name=&quot;Date Created&quot;&gt;
-  &lt;xpath part=&quot;contentCreated&quot;&gt;&lt;![CDATA[//contentMeta/contentCreated]]&gt;&lt;/xpath&gt;
+&lt;metadata name="Date Created"&gt;
+  &lt;xpath part="contentCreated"&gt;&lt;![CDATA[//contentMeta/contentCreated]]&gt;&lt;/xpath&gt;
   &lt;iim&gt;
-    &lt;mapsTo part-ref=&quot;contentCreated&quot; dataset=&quot;55&quot; field=&quot;DateCreated&quot; targetType=&quot;DATE&quot;
-      dateParserRef=&quot;dateParser-dayOnly&quot; outputDateFormat=&quot;yyyy:MM:dd&quot;/&gt;
+    &lt;mapsTo part-ref="contentCreated" dataset="55" field="DateCreated" targetType="DATE"
+      dateParserRef="dateParser-dayOnly" outputDateFormat="yyyy:MM:dd"/&gt;
   &lt;/iim&gt;
-&lt;/metadata&gt;</tt></pre></div>
-
-
-
-
-<p>In this example the content selected by <tt>contentCreated</tt> is expected to have the date format <tt>yyyy-MM-dd</tt> and
-the metadata field <tt>DateCreated</tt> is filled with a date formatted using <tt>yyyy:MM:dd</tt>.</p>
-
-
-
+&lt;/metadata&gt;</code></pre>
 </div>
-<div class="section" id="a_mapping_to_xmp">
+</div>
+<div class="paragraph">
+<p>In this example the content selected by <code>contentCreated</code> is expected to have the date format <code>yyyy-MM-dd</code> and
+the metadata field <code>DateCreated</code> is filled with a date formatted using <code>yyyy:MM:dd</code>.</p>
+</div>
+</div>
+<div class="sect4">
 <h5 id="a_mapping_to_xmp">Mapping to XMP</h5>
-
-
+<div class="paragraph">
 <p>XMP allows the definition of structures and sets (sequences,bags) which can be nested. This may result in
-e. g. a structure containing an array of structures containing&#x2026;&#x200b;
-In order to define nested structures the <tt>&lt;mapsTo&gt;</tt> elements can be nested in XMP mappings.</p>
-
-
-Example of nested <tt>&lt;mapsTo&gt;</tt> elements mapping content to an XMP structure
-
-
-<div>
-<pre class="highlight"><tt>&lt;metadata name=&quot;Creator's Contact Info&quot;&gt;
-  &lt;xpath part=&quot;line&quot;&gt;&lt;![CDATA[//contentMeta/creator/personDetails/contactInfo/address/line]]&gt;&lt;/xpath&gt;
-  &lt;xpath part=&quot;city&quot;&gt;&lt;![CDATA[//contentMeta/creator/personDetails/contactInfo/address/locality/name]]&gt;&lt;/xpath&gt;
+e. g. a structure containing an array of structures containing&#8230;&#8203;
+In order to define nested structures the <code>&lt;mapsTo&gt;</code> elements can be nested in XMP mappings.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of nested <code>&lt;mapsTo&gt;</code> elements mapping content to an XMP structure</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;metadata name="Creator's Contact Info"&gt;
+  &lt;xpath part="line"&gt;&lt;![CDATA[//contentMeta/creator/personDetails/contactInfo/address/line]]&gt;&lt;/xpath&gt;
+  &lt;xpath part="city"&gt;&lt;![CDATA[//contentMeta/creator/personDetails/contactInfo/address/locality/name]]&gt;&lt;/xpath&gt;
   &lt;xmp&gt;
-	&lt;mapsTo field=&quot;CreatorContactInfo&quot;
-	        targetNamespace=&quot;http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/&quot;
-	        targetType=&quot;Struct&quot;&gt;
-	  &lt;mapsTo part-ref=&quot;line&quot;
-	          field=&quot;CiAdrExtadr&quot;
-	          targetNamespace=&quot;http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/&quot;
-	          targetType=&quot;Text&quot;/&gt;
-	  &lt;mapsTo part-ref=&quot;city&quot;
-              field=&quot;CiAdrCity&quot;
-              targetNamespace=&quot;http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/&quot;
-              targetType=&quot;Text&quot;/&gt;
+	&lt;mapsTo field="CreatorContactInfo"
+	        targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/"
+	        targetType="Struct"&gt;
+	  &lt;mapsTo part-ref="line"
+	          field="CiAdrExtadr"
+	          targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/"
+	          targetType="Text"/&gt;
+	  &lt;mapsTo part-ref="city"
+              field="CiAdrCity"
+              targetNamespace="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/"
+              targetType="Text"/&gt;
 	&lt;/mapsTo&gt;
   &lt;/xmp&gt;
-&lt;/metadata&gt;</tt></pre></div>
-
-
-
-
-<p>The following attributes are supported for <tt>&lt;mapsTo&gt;</tt> elements in XMP mappings:</p>
-
-
-<table border="0" class="tableblock frame-all grid-all spread"><caption class="title">Table 3. Attributes of XMP &amp;lt;mapsTo&amp;gt; elements</caption>
-
+&lt;/metadata&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following attributes are supported for <code>&lt;mapsTo&gt;</code> elements in XMP mappings:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Attributes of XMP &lt;mapsTo&gt; elements</caption>
 <colgroup>
-<col style="width: 25%;" />
-<col style="width: 25%;" />
-<col style="width: 25%;" />
-<col style="width: 25%;" />
+<col style="width: 25%;"/>
+<col style="width: 25%;"/>
+<col style="width: 25%;"/>
+<col style="width: 25%;"/>
 </colgroup>
 <thead>
-
-<tr class="a">
-
+<tr>
 <th class="tableblock halign-left valign-top">Attribute</th>
-
 <th class="tableblock halign-left valign-top">Type</th>
-
 <th class="tableblock halign-left valign-top">Usage</th>
-
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
-
-<tr class="b">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">part-ref</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">String</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Refers to a <tt>&lt;xpath&gt;</tt> element</p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">part-ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refers to a <code>&lt;xpath&gt;</code> element</p></td>
 </tr>
-
-<tr class="a">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">targetType</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">String</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Possible values: <tt>Text,Integer,Date,LangAlt,Struct,Sequence,Bag</tt></p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">targetType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Possible values: <code>Text,Integer,Date,LangAlt,Struct,Sequence,Bag</code></p></td>
 </tr>
-
-<tr class="b">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">field</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">String</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Name of XMP target field</p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">field</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of XMP target field</p></td>
 </tr>
-
-<tr class="a">
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">targetNamespace</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">String</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">required</p></td>
-
-<td class="tableblock halign-left valign-top">
-<p class="tableblock">Supported namespaces are: <a class="bare" href="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/,http://iptc.org/std/Iptc4xmpExt/2008-02-29/">http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/,http://iptc.org/std/Iptc4xmpExt/2008-02-29/</a>,
-<a class="bare" href="http://purl.org/dc/elements/1.1/,http://ns.adobe.com/photoshop/1.0/,http://ns.adobe.com/xap/1.0/rights/,http://ns.useplus.org/ldf/xmp/1.0/">http://purl.org/dc/elements/1.1/,http://ns.adobe.com/photoshop/1.0/,http://ns.adobe.com/xap/1.0/rights/,http://ns.useplus.org/ldf/xmp/1.0/</a></p></td>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">targetNamespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported namespaces are: <a href="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/,http://iptc.org/std/Iptc4xmpExt/2008-02-29/" class="bare">http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/,http://iptc.org/std/Iptc4xmpExt/2008-02-29/</a>,
+<a href="http://purl.org/dc/elements/1.1/,http://ns.adobe.com/photoshop/1.0/,http://ns.adobe.com/xap/1.0/rights/,http://ns.useplus.org/ldf/xmp/1.0/" class="bare">http://purl.org/dc/elements/1.1/,http://ns.adobe.com/photoshop/1.0/,http://ns.adobe.com/xap/1.0/rights/,http://ns.useplus.org/ldf/xmp/1.0/</a></p></td>
 </tr>
 </tbody>
 </table>
-
-
+<div class="paragraph">
 <p>In XMP each namespace has a defined set of fields. To find the correct spelling for a field in a
-certain namespace please refer to the <a class="bare" href="http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/XMP.html">http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/XMP.html</a>
+certain namespace please refer to the <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/XMP.html" class="bare">http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/XMP.html</a>
 where the supported fields (tags) of each namespace is listed.</p>
-
-
-
-<div class="section" id="a_limitations_of_xmp_mapping">
+</div>
+<div class="sect5">
 <h6 id="a_limitations_of_xmp_mapping">Limitations of XMP Mapping</h6>
-
-
+<div class="paragraph">
 <p>In general the metadata mapper supports a small subset of XMP complexity. For instance it does
-not support localizations in the form of specifying <tt>xml:lang</tt> attributes for text values.</p>
-
-
-
+not support localizations in the form of specifying <code>xml:lang</code> attributes for text values.</p>
+</div>
+<div class="paragraph">
 <p>Due to lack of slice constructs in the configuration language the mapping of sets (sequences,bags)
-only a complete array can be bound to a <tt>&lt;mapsTo&gt;</tt> element. It is not possible to iterate over an array
-with multiple <tt>&lt;mapsTo&gt;</tt> &quot;calls&quot;. In practical speaking this means:</p>
-
-
-
+only a complete array can be bound to a <code>&lt;mapsTo&gt;</code> element. It is not possible to iterate over an array
+with multiple <code>&lt;mapsTo&gt;</code> "calls". In practical speaking this means:</p>
+</div>
+<div class="ulist">
 <ul>
-
 <li>
-
 <p>an array of sclars like a bag of strings can be expressed.</p>
 </li>
-
 <li>
-
 <p>structures containing arrays of scalars can be expressed</p>
 </li>
-
 <li>
-
 <p>array of structures is not possible to map.</p>
 </li>
 </ul>
-
-
-
-
-
-
-</div></div></div></div>
-<div class="section" id="a_reference">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="a_reference">Reference</h3>
-
-
+<div class="ulist bibliography">
 <ul class="bibliography">
-
 <li>
-
-<p><a name="XMP-part1" id="XMP-part1"></a>[XMP-part1] &quot;XMP SPECIFICATION PART 1&#x2009;&#x2014;&#x2009;DATA MODEL, SERIALIZATION, AND CORE PROPERTIES&quot;, Adobe, <a class="bare" href="http://www.adobe.com/content/dam/Adobe/en/devnet/xmp/pdfs/XMPSpecificationPart1.pdf">http://www.adobe.com/content/dam/Adobe/en/devnet/xmp/pdfs/XMPSpecificationPart1.pdf</a></p>
+<p><a id="XMP-part1"></a>[XMP-part1] "XMP SPECIFICATION PART 1&#8201;&#8212;&#8201;DATA MODEL, SERIALIZATION, AND CORE PROPERTIES", Adobe, <a href="http://www.adobe.com/content/dam/Adobe/en/devnet/xmp/pdfs/XMPSpecificationPart1.pdf" class="bare">http://www.adobe.com/content/dam/Adobe/en/devnet/xmp/pdfs/XMPSpecificationPart1.pdf</a></p>
 </li>
-
 <li>
-
-<p><a name="IPTC-PhotoMetadata" id="IPTC-PhotoMetadata"></a>[IPTC-PhotoMetadata] &quot;Photo Metadata&quot;, 2014, IPTC, <a class="bare" href="http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata">http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata</a></p>
+<p><a id="IPTC-PhotoMetadata"></a>[IPTC-PhotoMetadata] "Photo Metadata", 2014, IPTC, <a href="http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata" class="bare">http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata</a></p>
 </li>
 </ul>
-
-
-
-
-
-
-
-Last updated 2015-07-23 12:19:32 CEST
-
-
-</div></div>
-
+</div>
+</div>
+</div>
+</div>
                   </div>
             </div>
           </div>

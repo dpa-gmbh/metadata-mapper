@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="Date-Revision-yyyymmdd" content="20150723" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>dpa - metadata mapper &#x2013; Build Info</title>
+    <title>dpa - metadata mapper &#x2013; </title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.0.0-SNAPSHOT.min.css" />
     <link rel="stylesheet" href="./css/dpa-theme-1.0.0-SNAPSHOT.min.css" />
     <link rel="stylesheet" href="./css/site.css" />
@@ -37,7 +37,7 @@
         
 <script src="./js/apache-maven-fluido-1.0.0-SNAPSHOT.min.js" type="text/javascript"></script>
           
-    <meta charset="UTF-8" /><!-- [if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"/><![endif] --><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Asciidoctor 1.5.2" />              </head>
+                  </head>
         <body class="topBarDisabled">
           
     
@@ -152,107 +152,68 @@
                 
         <div id="bodyColumn"  class="span9" >
                                   
-            
-
-
-
-
-
-
-
-<div class="section" id="a_build_info">
+            <div class="sect1">
 <h2 id="a_build_info">Build Info</h2>
-
-
-
-<div class="section" id="a_prerequisites">
+<div class="sectionbody">
+<div class="sect2">
 <h3 id="a_prerequisites">Prerequisites</h3>
-
-
-<p>The metadata mapper uses the exiftool (&lt;<a class="bare" href="http://www.sno.phy.queensu.ca/~phil/exiftool/&gt;">http://www.sno.phy.queensu.ca/~phil/exiftool/&gt;</a>) to modify the
+<div class="paragraph">
+<p>The metadata mapper uses the exiftool (&lt;<a href="http://www.sno.phy.queensu.ca/~phil/exiftool/&gt;" class="bare">http://www.sno.phy.queensu.ca/~phil/exiftool/&gt;</a>) to modify the
 images accordingly. This tool needs to be installed and has to be referred either in the execution path
 or by an environment variable named EXIFTOOL.</p>
-
-
-
+</div>
+<div class="paragraph">
 <p>For example:</p>
-
-
-
-
-<div>
-<pre>export EXIFTOOL=/myinstallhome/exiftool</pre></div>
-
-
-
-
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>export EXIFTOOL=/myinstallhome/exiftool</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Alternatively you may setup a java system property:</p>
-
-
-
-
-<div>
-<pre>-Dexiftool.path=/myinstallhome/exiftool</pre></div>
-
-
-
-
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-Dexiftool.path=/myinstallhome/exiftool</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Via code you may directly call the wrapper in order to specify the path:</p>
-
-
-
-
-<div>
-<pre>de.dpa.oss.metadata.mapper.imaging.backend.exiftoolExifToolWrapper.setPathToExifTool(&quot;/myinstallhome/exiftool&quot;)</pre></div>
-
-
-
-
 </div>
-<div class="section" id="a_building_the_command_line_tool">
+<div class="literalblock">
+<div class="content">
+<pre>de.dpa.oss.metadata.mapper.imaging.backend.exiftoolExifToolWrapper.setPathToExifTool("/myinstallhome/exiftool")</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="a_building_the_command_line_tool">Building the Command Line Tool</h3>
-
-
+<div class="paragraph">
 <p>Run</p>
-
-
-
-
-<div>
-<pre>mvn -P executable clean package</pre></div>
-
-
-
-
-<p>creates a jar containg all dependencies</p>
-
-
-
 </div>
-<div class="section" id="a_building_the_jar_file">
+<div class="literalblock">
+<div class="content">
+<pre>mvn -P executable clean package</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>creates a jar containg all dependencies</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="a_building_the_jar_file">Building the jar File</h3>
-
-
+<div class="paragraph">
 <p>Run</p>
-
-
-
-
-<div>
-<pre>mvn clean package</pre></div>
-
-
-
-
-
-
-
-
-Last updated 2015-07-23 12:19:31 CEST
-
-
-</div></div>
-
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean package</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
                   </div>
             </div>
           </div>
