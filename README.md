@@ -8,7 +8,7 @@ A metadata mapping is based on three files: an input XML, a JPEG file and a mapp
 file. The configuration contains XPath expressions and relates them to primitive and complex 
 fields of XMP and IIM image metadata. In this way the metadata mapper knows which content to extract
 out of the input XML file and how to map it to image metadata of the input JPEG file. The mapping
-configuration is documented in [TODO].
+configuration is documented in the [Metadata Mapper Documentation](https://dpa-gmbh.github.io/metadata-mapper/).
 
 XML documents may contain encodings which are not suitable for the target image metadata field. 
 Or in some cases you may have XML documents with mixed character sets and you do not want
