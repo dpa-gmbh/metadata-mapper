@@ -1,6 +1,6 @@
 == Download ==
 
-Download version 1.2.0 as link:metadata-mapper-1.0.1-SNAPSHOT.jar[jar file]
+Download the command line version and library https://github.com/dpa-gmbh/metadata-mapper/releases/latest[here]
 
 === What's New in this Version ===
 
