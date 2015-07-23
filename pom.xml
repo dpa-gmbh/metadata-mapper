@@ -33,7 +33,7 @@
         <junit.version>4.11</junit.version>
         <guava.version>18.0</guava.version>
         <maven.site.plugin>3.4</maven.site.plugin>
-        <asciidoc.plugin>1.5.3</asciidoc.plugin>
+        <asciidoc.plugin>1.5.2</asciidoc.plugin>
         <asciidoc-site-source-highlighter>highlightjs</asciidoc-site-source-highlighter>
     </properties>
 
@@ -275,11 +275,11 @@
                         <version>${asciidoc.plugin}</version>
                     </dependency>
                     <!-- dpa skin -->
-                    <dependency>
+                    <!--<dependency>
                         <groupId>de.dpa.maven.skins</groupId>
                         <artifactId>dpa-maven-skin</artifactId>
                         <version>1.0.0-SNAPSHOT</version>
-                    </dependency>
+                    </dependency>-->
                 </dependencies>
             </plugin>
 
