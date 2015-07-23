@@ -60,7 +60,7 @@ creates a the jar for embedding the mapper into own projects
 
 Calling the tool
 ```
-java -jar target/metadata-mapper-1.0-SNAPSHOT.jar
+java -jar target/metadata-mapper-${project.version}.jar
 
 ** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
 Usage: de.dpa.oss.metadata.mapper.MetadataMapperCmd
@@ -72,24 +72,30 @@ Usage: de.dpa.oss.metadata.mapper.MetadataMapperCmd
                                             override and/or enhance the default 
                                             mappingCustomization. By default it uses dpa 
                                             mappingCustomization
-  -printCharacterMappingTable (-c) [flag]   Outputs configured character mappingCustomization 
-                                            table. Does not perform any mappingCustomization. 
-                                            Uses default mappingCustomization file if 
-                                            argument -m is omitted
+  -printCharacterMappingTable (-c) [flag]   Outputs configured character 
+                                            mappingCustomization table. Does not perform 
+                                            any mappingCustomization. Uses default 
+                                            mappingCustomization file if argument -m 
+                                            is omitted
   -exiftoolPath               (-t) [String] Path to exiftool. Alternatively you may set 
                                             environment variable EXIFTOOL
-  -emptyTagGroupBeforeMapping (-e) [flag]   Removes all tags from those tag groups which are 
-                                            used by the mappingCustomization. By default mapped 
-                                            tag values will be merged with existing tags
-  -removeTagGroups            (-r) [String] Comma separated list of metadata tag groups to 
-                                            clear before mapping. The syntax needs to match
-                                            the exiftool syntax to specify containers: TAG_GROUP:TAG. 
-                                            For a list of available containers see exiftool. 
-                                            Example: -r IPTC:ALL,XMP:XMP-dc
-  -removeAllTagGroups         (-R) [flag]   Removes all metadata from given file before processing
-  -explainMapping             (-x) [flag]   Experimental feature: Dumps mapping information 
-                                            based on a given document. At present state the 
-                                            output for XMP is not complete
+  -emptyTagGroupBeforeMapping (-e) [flag]   Removes all tags from those tag groups which 
+                                            are  
+                                            used by the mappingCustomization. By default 
+                                            mapped tag values will be merged with 
+                                            existing tags
+  -removeTagGroups            (-r) [String] Comma separated list of metadata tag groups 
+                                            to clear before mapping. The syntax needs 
+                                            to match the exiftool syntax to specify 
+                                            containers: TAG_GROUP:TAG. 
+                                            For a list of available containers see 
+                                            exiftool. Example: -r IPTC:ALL,XMP:XMP-dc
+  -removeAllTagGroups         (-R) [flag]   Removes all metadata from given file before 
+                                            processing
+  -explainMapping             (-x) [flag]   Experimental feature: Dumps mapping 
+                                            information based on a given document. 
+                                            At present state the output for XMP is not 
+                                            complete
   -help                       (-h) [flag] 
 ```
 
