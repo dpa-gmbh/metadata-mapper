@@ -48,10 +48,11 @@ context customization means that it
  * may override existing mappings
  * may change the configuration and character mappings
 
-The default mapping in alignment with the IPTC recommendation (<<iptcspec>>) is defined
+The default mapping in alignment with the IPTC recommendation (<<IPTC-PhotoMetadata>>) is defined
 in https://github.com/dpa-gmbh/metadata-mapper/blob/master/src/main/resources/image-metadata-mapping/default-mapping.xml[default-mapping.xml].
 
 An example of a customized mapping is given by https://github.com/dpa-gmbh/metadata-mapper/blob/master/example/dpa-mapping.xml[dpa Customized Mapping].
+
 === Mapping Configurations ===
 
 The configuration section may look as follows:
@@ -139,7 +140,7 @@ The name of the metadata element is a required attribute. To override a default 
 this mapping has simply to be reused in the related customized metadata mapping. In the given example the
 default metadata mapping for `Copyright Notice` is overriden.
 
-By conventions the name is taken from the <<iptcspec>> specification.
+By conventions the name is taken from the <<IPTC-PhotoMetadata>> specification.
 
 ==== Selecting Data ====
 
@@ -237,7 +238,7 @@ Extensible Metadata Platform (XMP). Regarding XMP it supports the namespaces
 * http://ns.adobe.com/xap/1.0/rights/
 * http://ns.useplus.org/ldf/xmp/1.0/
 
-// This restriction will be lifted soon (see https://github.com/dpa-gmbh/metadata-mapper/issues/41[Issue #41])
+NOTE: This restriction will be lifted soon (see https://github.com/dpa-gmbh/metadata-mapper/issues/41[Issue #41])
 
 ===== Output of Selected Data in General =====
 
@@ -421,4 +422,4 @@ with multiple `<mapsTo>` "calls". In practical speaking this means:
 
 [bibliography]
 - [[[XMP-part1]]] "XMP SPECIFICATION PART 1 -- DATA MODEL, SERIALIZATION, AND CORE PROPERTIES", Adobe, http://www.adobe.com/content/dam/Adobe/en/devnet/xmp/pdfs/XMPSpecificationPart1.pdf
-- [[[iptcspec]]] "Photo Metadata", 2014, IPTC, http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata
+- [[[IPTC-PhotoMetadata]]] "Photo Metadata", 2014, IPTC, http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata

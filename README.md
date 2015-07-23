@@ -43,14 +43,15 @@ or directly call the wrapper in order to specify the path:
 
 Run
 ```
-mvn package -P executable
+mvn -P executable clean package 
 ```
 creates a jar containg all dependencies needed by the commandline tool
 
+# Building the jar file
 
 Run 
 ```
-mvn package
+mvn clean package
 ```
 creates a the jar for embedding the mapper into own projects
 
@@ -62,22 +63,40 @@ Calling the tool
 java -jar target/metadata-mapper-1.0-SNAPSHOT.jar
 
 ** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
-Usage: de.dpa.oss.metadata.mapper.MetadataMapper
-  -inputImage (-i) [String] filename of input image
-  -outputImage (-o) [String] filename of resulting image
-  -g2doc (-d) [String] filename of input G2 document
-  -validateMapping (-v) [String] Validate given mappingCustomization file
-  -emptyTagGroupBeforeMapping (-e) [flag] Removes all tags from those tag groups which are used by the mappingCustomization. By default mapped tag values will be merged with existing tags
-  -mappingCustomization (-m) [String] mappingCustomization file which is used to override and/or enhance the default mappingCustomization. By default it uses dpa mappingCustomization
-  -printCharacterMappingTable (-c) [flag] Outputs configured character mappingCustomization table. Does not perform any mappingCustomization. Uses default mappingCustomization file if argument -m is omitted
-  -exiftoolPath (-t) [String] Path to exiftool. Alternatively you may set environment variable EXIFTOOL
-  -help (-h) [flag]
+Usage: de.dpa.oss.metadata.mapper.MetadataMapperCmd
+  -inputImage                 (-i) [String] Filename of input image
+  -outputImage                (-o) [String] Filename of resulting image
+  -g2doc                      (-d) [String] Filename of input G2 document
+  -validateMapping            (-v) [String] Validate given mappingCustomization file
+  -mappingCustomization       (-m) [String] Mapping customization file which is used to 
+                                            override and/or enhance the default 
+                                            mappingCustomization. By default it uses dpa 
+                                            mappingCustomization
+  -printCharacterMappingTable (-c) [flag]   Outputs configured character mappingCustomization 
+                                            table. Does not perform any mappingCustomization. 
+                                            Uses default mappingCustomization file if 
+                                            argument -m is omitted
+  -exiftoolPath               (-t) [String] Path to exiftool. Alternatively you may set 
+                                            environment variable EXIFTOOL
+  -emptyTagGroupBeforeMapping (-e) [flag]   Removes all tags from those tag groups which are 
+                                            used by the mappingCustomization. By default mapped 
+                                            tag values will be merged with existing tags
+  -removeTagGroups            (-r) [String] Comma separated list of metadata tag groups to 
+                                            clear before mapping. The syntax needs to match
+                                            the exiftool syntax to specify containers: TAG_GROUP:TAG. 
+                                            For a list of available containers see exiftool. 
+                                            Example: -r IPTC:ALL,XMP:XMP-dc
+  -removeAllTagGroups         (-R) [flag]   Removes all metadata from given file before processing
+  -explainMapping             (-x) [flag]   Experimental feature: Dumps mapping information 
+                                            based on a given document. At present state the 
+                                            output for XMP is not complete
+  -help                       (-h) [flag] 
 ```
 
 The distribution contains samples in *./example*. Call the tool using these samples as
 follows:
 ```
-java -jar target/metadata-mapper-1.0-SNAPSHOT.jar -i example/150105-99-07656.jpeg -o result.jpg -d example/g2-news-example.xml
+java -jar target/metadata-mapper-${project.version}.jar -i example/150105-99-07656.jpeg -o result.jpg -d example/g2-news-example.xml
 ```
 
 This call uses the default mapping which is based on the IPTC "Photo Metadata" standard revision 1.2, 

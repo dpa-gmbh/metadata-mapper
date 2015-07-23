@@ -1,3 +1,5 @@
+## Project License
+
 The MIT License (MIT) (http://opensource.org/licenses/MIT)
 
 Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH
@@ -14,3 +16,17 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR P
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Libraries used by this Project
+
+Please refer to [dependency overview](https://dpa-gmbh.github.io/metadata-mapper/dependencies.html)
+
+## Additional
+
+### exiftool
+
+Homepage: http://www.sno.phy.queensu.ca/~phil/exiftool/
+
+License
+
+> This is free software; you can redistribute it and/or modify it under the same terms as [Perl itself](http://dev.perl.org/licenses/).

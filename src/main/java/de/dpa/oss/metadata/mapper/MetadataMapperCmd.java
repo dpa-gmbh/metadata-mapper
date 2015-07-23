@@ -28,19 +28,19 @@ public class MetadataMapperCmd
 {
     private static Logger logger = LoggerFactory.getLogger(MetadataMapperCmd.class);
 
-    @Argument(alias = "i", required = false, description = "filename of input image")
+    @Argument(alias = "i", required = false, description = "Filename of input image")
     protected static String inputImage = null;
 
-    @Argument(alias = "o", required = false, description = "filename of resulting image")
+    @Argument(alias = "o", required = false, description = "Filename of resulting image")
     protected static String outputImage = null;
 
-    @Argument(alias = "d", required = false, description = "filename of input G2 document")
+    @Argument(alias = "d", required = false, description = "Filename of input G2 document")
     protected static String g2doc = null;
 
     @Argument(alias = "v", required = false, description = "Validate given mappingCustomization file")
     protected static String validateMapping = null;
 
-    @Argument(alias = "m", required = false, description = "mappingCustomization file which is used to override and/or enhance the default "
+    @Argument(alias = "m", required = false, description = "Mapping Customization file which is used to override and/or enhance the default "
             + "mappingCustomization. By default it uses dpa mappingCustomization")
     protected static String mappingCustomization = null;
 
@@ -57,7 +57,7 @@ public class MetadataMapperCmd
                     + "By default mapped tag values will be merged with existing tags")
     protected static Boolean emptyTagGroupBeforeMapping = false;
 
-    @Argument(alias = "r", required = false, description = "comma-separated list of metadata tag groups to clear before mapping. "
+    @Argument(alias = "r", required = false, description = "Comma separated list of metadata tag groups to clear before mapping. "
             + "The syntax needs to match the exiftool syntax to specify containers: TAG_GROUP:TAG. For a list of available "
             + "containers see exiftool. Example: -r IPTC:ALL,XMP:XMP-dc")
     protected static String removeTagGroups;
@@ -303,7 +303,7 @@ public class MetadataMapperCmd
 
     public static void main(String argv[])
     {
-        //System.out.println("** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH");
+        System.out.println("** MetadataMapper - Copyright (c) 2015 dpa Deutsche Presse-Agentur GmbH");
         try
         {
             Args.parse(MetadataMapperCmd.class, argv);
