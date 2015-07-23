@@ -1,10 +1,10 @@
-# Libraries used by this Project
+## Libraries used by this Project
 
 Please refer to [dependency overview](https://dpa-gmbh.github.io/metadata-mapper/dependencies.html)
 
-# Additional
+## Additional
 
-## exiftool
+### exiftool
 
 Homepage: http://www.sno.phy.queensu.ca/~phil/exiftool/
 
