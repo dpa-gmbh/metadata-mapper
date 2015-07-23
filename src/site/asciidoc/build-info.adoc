@@ -21,7 +21,7 @@ Alternatively you may setup a java system property:
 Via code you may directly call the wrapper in order to specify the path:
 
 ....
-de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool.setPathToExifTool("/myinstallhome/exiftool")
+de.dpa.oss.metadata.mapper.imaging.backend.exiftoolExifToolWrapper.setPathToExifTool("/myinstallhome/exiftool")
 ....
 
 === Building the Command Line Tool ===
@@ -29,7 +29,15 @@ de.dpa.oss.metadata.mapper.imaging.backend.exiftool.ExifTool.setPathToExifTool("
 Run
 
 ....
-mvn package
+mvn -P executable clean package
 ....
 
 creates a jar containg all dependencies
+
+=== Building the jar File ===
+
+Run
+
+....
+mvn clean package
+....
