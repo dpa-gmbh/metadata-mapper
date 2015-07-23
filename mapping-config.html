@@ -212,13 +212,14 @@ context customization means that it</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The default mapping in alignment with the IPTC recommendation (<a href="#iptcspec">[iptcspec]</a>) is defined
+<p>The default mapping in alignment with the IPTC recommendation (<a href="#IPTC-PhotoMetadata">[IPTC-PhotoMetadata]</a>) is defined
 in <a href="https://github.com/dpa-gmbh/metadata-mapper/blob/master/src/main/resources/image-metadata-mapping/default-mapping.xml">default-mapping.xml</a>.</p>
 </div>
 <div class="paragraph">
-<p>An example of a customized mapping is given by <a href="https://github.com/dpa-gmbh/metadata-mapper/blob/master/example/dpa-mapping.xml">dpa Customized Mapping</a>.
-=== Mapping Configurations ===</p>
+<p>An example of a customized mapping is given by <a href="https://github.com/dpa-gmbh/metadata-mapper/blob/master/example/dpa-mapping.xml">dpa Customized Mapping</a>.</p>
 </div>
+<div class="sect2">
+<h3 id="a_mapping_configurations">Mapping Configurations</h3>
 <div class="paragraph">
 <p>The configuration section may look as follows:</p>
 </div>
@@ -317,6 +318,7 @@ being used is documented at <a href="http://docs.oracle.com/javase/7/docs/api/ja
 Mappings may refer Date Parsers in order to parse a date and output this date in a certain date format.</p>
 </div>
 </div>
+</div>
 <div class="sect2">
 <h3 id="a_mapping_metadata">Mapping Metadata</h3>
 <div class="sect3">
@@ -335,7 +337,7 @@ this mapping has simply to be reused in the related customized metadata mapping.
 default metadata mapping for <code>Copyright Notice</code> is overriden.</p>
 </div>
 <div class="paragraph">
-<p>By conventions the name is taken from the <a href="#iptcspec">[iptcspec]</a> specification.</p>
+<p>By conventions the name is taken from the <a href="#IPTC-PhotoMetadata">[IPTC-PhotoMetadata]</a> specification.</p>
 </div>
 </div>
 <div class="sect3">
@@ -463,6 +465,18 @@ Extensible Metadata Platform (XMP). Regarding XMP it supports the namespaces</p>
 <p><a href="http://ns.useplus.org/ldf/xmp/1.0/" class="bare">http://ns.useplus.org/ldf/xmp/1.0/</a></p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This restriction will be lifted soon (see <a href="https://github.com/dpa-gmbh/metadata-mapper/issues/41">Issue #41</a>)
+</td>
+</tr>
+</table>
 </div>
 <div class="sect4">
 <h5 id="a_output_of_selected_data_in_general">Output of Selected Data in General</h5>
@@ -713,7 +727,7 @@ with multiple <code>&lt;mapsTo&gt;</code> "calls". In practical speaking this me
 <p><a id="XMP-part1"></a>[XMP-part1] "XMP SPECIFICATION PART 1&#8201;&#8212;&#8201;DATA MODEL, SERIALIZATION, AND CORE PROPERTIES", Adobe, <a href="http://www.adobe.com/content/dam/Adobe/en/devnet/xmp/pdfs/XMPSpecificationPart1.pdf" class="bare">http://www.adobe.com/content/dam/Adobe/en/devnet/xmp/pdfs/XMPSpecificationPart1.pdf</a></p>
 </li>
 <li>
-<p><a id="iptcspec"></a>[iptcspec] "Photo Metadata", 2014, IPTC, <a href="http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata" class="bare">http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata</a></p>
+<p><a id="IPTC-PhotoMetadata"></a>[IPTC-PhotoMetadata] "Photo Metadata", 2014, IPTC, <a href="http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata" class="bare">http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata</a></p>
 </li>
 </ul>
 </div>
