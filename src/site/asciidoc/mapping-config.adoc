@@ -48,6 +48,10 @@ context customization means that it
  * may override existing mappings
  * may change the configuration and character mappings
 
+The default mapping in alignment with the IPTC recommendation (<<iptcspec>>) is defined
+in https://github.com/dpa-gmbh/metadata-mapper/blob/master/src/main/resources/image-metadata-mapping/default-mapping.xml[default-mapping.xml].
+
+An example of a customized mapping is given by https://github.com/dpa-gmbh/metadata-mapper/blob/master/example/dpa-mapping.xml[dpa Customized Mapping].
 === Mapping Configurations ===
 
 The configuration section may look as follows:
@@ -76,6 +80,7 @@ When generating output based on UTF-8 sources to a limited character encoding (.
 a mapping for unsupported characters may be required. For this case a character mapping can be declared.
 
 .Example of a Character Mapping
+[source,xml]
 ----
 <characterMapping id="utf8-to-iso8859-1">
   <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
@@ -85,7 +90,7 @@ a mapping for unsupported characters may be required. For this case a character 
 ----
 
 
-.Table title
+.Table Character Mapping
 |===
 |Attribute |Usage |Description
 
@@ -103,6 +108,7 @@ a mapping for unsupported characters may be required. For this case a character 
 |===
 
 Such a character mapping has to be configured in the config section of the metadata mapping configuration:
+[source,xml]
 ----
 <config>
   <iim charset="iso8859-1" characterMappingRef="utf8-to-iso8859-1" defaultReplaceChar="·"/>
@@ -161,7 +167,9 @@ for an XPath expression. Result types different from these two have to be declar
 An XPath expression returning a string:
 [source,xml]
 ----
-<xpath part="language" rank="1" returnType="STRING"><![CDATA[substring(//contentMeta/language/@tag,1,2)]]></xpath>
+<xpath part="language"
+       rank="1"
+       returnType="STRING"><![CDATA[substring(//contentMeta/language/@tag,1,2)]]></xpath>
 ----
 
 ===== Default Values =====
@@ -229,6 +237,7 @@ Extensible Metadata Platform (XMP). Regarding XMP it supports the namespaces
 * http://ns.adobe.com/xap/1.0/rights/
 * http://ns.useplus.org/ldf/xmp/1.0/
 
+// This restriction will be lifted soon (see https://github.com/dpa-gmbh/metadata-mapper/issues/41[Issue #41])
 
 ===== Output of Selected Data in General =====
 
@@ -242,7 +251,8 @@ A typical metadata mapping may look like follows:
   </iim>
   <xmp>
     <mapsTo field="subject" targetType="Bag" targetNamespace="http://purl.org/dc/elements/1.1/">
-      <mapsTo part-ref="keywords" field="subject" targetNamespace="http://purl.org/dc/elements/1.1/" targetType="Text"/>
+      <mapsTo part-ref="keywords" field="subject" targetType="Text"
+              targetNamespace="http://purl.org/dc/elements/1.1/" />
     </mapsTo>
   </xmp>
 </metadata>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2015 sp2 (x64) (http://www.altova.com) by Matthias Gebert (dpa Deutsche Presse-Agentur GmbH) -->
 <xs:schema
         xmlns:xs="http://www.w3.org/2001/XMLSchema"
         xmlns="http://xml.dpa.com/cl/metadatamapper/2014-08-08/"
