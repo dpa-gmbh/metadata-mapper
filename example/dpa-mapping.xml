@@ -137,6 +137,7 @@
     </metadata>
 
 	<characterMapping id="utf8-to-iso8859-1">
+        <character from="0x179" to="0x5a" comment="from Ź; to=Z"/>
         <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>
         <character from="0xa8" to="0x22" comment="from ¨; to=&quot;"/>
         <character from="0xb4" to="0x27" comment="from ´; to='"/>
@@ -152,7 +153,6 @@
         <character from="0x118" to="0x45" comment="from Ę; to=E"/>
         <character from="0x112" to="0x45" comment="from Ē; to=E"/>
         <character from="0x10c" to="0x43" comment="from Č; to=C"/>
-        <character from="0x179" to="0x5a" comment="from Ź; to=Z"/>
         <character from="0x116" to="0x45" comment="from Ė; to=E"/>
         <character from="0x122" to="0x47" comment="from Ģ; to=G"/>
         <character from="0x136" to="0x4b" comment="from Ķ; to=K"/>

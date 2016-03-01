@@ -29,6 +29,16 @@ public class MetadataMapperConfigReaderTest
     }
 
     @Test
+    public void shouldContainDefaultCharacterMapping() throws JAXBException
+    {
+        // given
+        // when
+        MappingType mappingType = new MetadataMapperConfigReader().getDefaultConfig();
+        // then
+        assertThat(mappingType.getCharacterMapping(),notNullValue());
+    }
+
+    @Test
     public void shouldOverrideMappings() throws JAXBException
     {
         // given

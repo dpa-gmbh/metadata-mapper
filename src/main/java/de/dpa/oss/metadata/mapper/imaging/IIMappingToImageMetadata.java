@@ -62,11 +62,11 @@ public class IIMappingToImageMetadata
     {
         if (iimStringCharacterMapping != null)
         {
-            metadata.addIPTCEntry(mappingInfo.getField(), value);
+            metadata.addIPTCEntry(mappingInfo.getField(), iimStringCharacterMapping.map(value));
         }
         else
         {
-            metadata.addIPTCEntry(mappingInfo.getField(), iimStringCharacterMapping.map(value));
+            metadata.addIPTCEntry(mappingInfo.getField(), value);
         }
     }
 

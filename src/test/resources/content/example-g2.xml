@@ -85,7 +85,7 @@
 				<subject literal="poiID" type="cpnat:poi"/>
 				<headline>Situation im Gazastreifen</headline>
 				<creditline>dpa</creditline>
-				<description role="drol:caption">Ein Werbebanner für den militärischen Kampf der Palästinenser hängt am 01.06.2015 über einer Straße in Gaza-Stadt (Palästinensische Gebiete). Fast ein Jahr nach dem jüngsten Krieg mit mehr als 2.200 Toten leidet die Bevölkerung des dicht besiedelten Palästinensergebiets immer noch schwer unter den Folgen. Foto: Jens Büttner/dpa</description>
+				<description role="drol:caption">ŹŹŹ converts to ZZZ.</description>
 			</contentMeta>
 			<assert literal="poiID">
 				<POIDetails>
