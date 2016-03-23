@@ -136,6 +136,17 @@
         </xmp>
     </metadata>
 
+    <metadata name="Description">
+        <xpath rank="1"><![CDATA[//contentMeta/description[@role='drol:caption']]]></xpath>
+        <xpath rank="2"><![CDATA[//contentMeta/description[not(@role)]]]></xpath>
+        <iim>
+            <mapsTo dataset="120" field="Caption-Abstract" targetType="STRING"/>
+        </iim>
+        <xmp>
+            <mapsTo targetType="LangAlt" targetNamespace="http://purl.org/dc/elements/1.1/" field="description"/>
+        </xmp>
+    </metadata>
+
 	<characterMapping id="utf8-to-iso8859-1">
         <character from="0x179" to="0x5a" comment="from Ź; to=Z"/>
         <character from="0xa6" to="0x7c" comment="from ¦; to=|"/>

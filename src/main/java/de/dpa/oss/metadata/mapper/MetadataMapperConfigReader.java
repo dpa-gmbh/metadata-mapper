@@ -31,12 +31,27 @@ public class MetadataMapperConfigReader
     public static MappingType defaultConfig = null;
     public static final String DEFAULT_MAPPING = "/image-metadata-mapping/default-mapping.xml";
 
+    /**
+     * @deprecated
+     * @param resourcePath
+     * @param caller
+     * @return
+     * @throws FileNotFoundException
+     * @throws JAXBException
+     */
     public static MappingType getDefaultConfigOverridenBy(final String resourcePath, Object caller)
             throws FileNotFoundException, JAXBException
     {
         return getDefaultConfigOverridenBy(ResourceUtil.resourceAsStream(resourcePath, caller.getClass()));
     }
 
+    /**
+     * @deprecated
+     * @param path
+     * @return
+     * @throws FileNotFoundException
+     * @throws JAXBException
+     */
     public static MappingType getDefaultConfigOverridenBy(final String path) throws FileNotFoundException, JAXBException
     {
         return getDefaultConfigOverridenBy(new FileInputStream(path));
@@ -44,6 +59,7 @@ public class MetadataMapperConfigReader
 
     /**
      * Reads the default configuration and overrides it with the specified one
+     * @deprectated
      */
     public static MappingType getDefaultConfigOverridenBy(final InputStream is) throws JAXBException
     {
@@ -53,6 +69,11 @@ public class MetadataMapperConfigReader
     public static MappingType getDefaultMapping() throws JAXBException
     {
         return new MetadataMapperConfigReader().getDefaultConfig();
+    }
+
+    public static MappingType readCustomConfig( final InputStream is ) throws JAXBException
+    {
+        return new MetadataMapperConfigReader().readConfig(is);
     }
 
     /**

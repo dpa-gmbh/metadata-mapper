@@ -195,4 +195,14 @@ public class MetadataMapperConfigReaderTest
         }
         assertThat( inheritedParser, is(Matchers.notNullValue()));
     }
+
+    @Test
+    public void shouldUseCustomMappingWithoutInheritance() throws JAXBException
+    {
+        // when
+        CustomizedMappingType customizedDefaultConfig = new MetadataMapperConfigReader().readConfig(this.getClass()
+                .getResourceAsStream("/content/overriding-mapping.xml"));
+        // then
+        assertThat(customizedDefaultConfig.getMetadata(), hasSize(2));
+    }
 }

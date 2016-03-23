@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class MappingTest
 
         // when
         MetadataMapper.modifyImageAt(imageInputStream)
-                .useDefaultMappingOverridenBy("example/dpa-mapping.xml")
+                .useCustomMapping(Paths.get("example/dpa-mapping.xml"))
                 .xmlDocument(document)
                 .executeMapping("target/" + this.getClass().getSimpleName()
                         + "-shouldApplyCustomizedMapping.jpg");
@@ -61,7 +62,7 @@ public class MappingTest
 
         // when
         MetadataMapper.modifyImageAt(imageInputStream)
-                .useDefaultMappingOverridenBy("example/dpa-mapping.xml")
+                .useCustomMapping(Paths.get("example/dpa-mapping.xml"))
                 .xmlDocument(document)
                 .executeMapping("target/" + this.getClass().getSimpleName()
                         + "-shouldApplyCustomizedMapping.jpg");
@@ -69,7 +70,7 @@ public class MappingTest
         // then
         StringWriter sw = new StringWriter();
         MetadataMapper.explainMapping().xmlDocument(document)
-                .useDefaultMappingOverridenBy("example/dpa-mapping.xml")
+                .useCustomMapping(Paths.get("example/dpa-mapping.xml"))
                 .explainMapping(sw);
         File generatedJPG = new File("target/" + this.getClass().getSimpleName()
                 + "-shouldApplyCustomizedMapping.jpg");
@@ -86,7 +87,7 @@ public class MappingTest
 
         // when
         MetadataMapper.modifyImageAt(imageInputStream)
-                .useDefaultMappingOverridenBy("example/dpa-mapping.xml")
+                .useCustomMapping(Paths.get("example/dpa-mapping.xml"))
                 .xmlDocument(document)
                 .executeMapping("target/" + this.getClass().getSimpleName()
                         + "-shouldApplyCustomizedMapping.jpg");
@@ -94,7 +95,7 @@ public class MappingTest
         // then
         StringWriter sw = new StringWriter();
         MetadataMapper.explainMapping().xmlDocument(document)
-                .useDefaultMappingOverridenBy("example/dpa-mapping.xml")
+                .useCustomMapping(Paths.get("example/dpa-mapping.xml"))
                 .explainMapping(sw);
         File generatedJPG = new File("target/" + this.getClass().getSimpleName()
                 + "-shouldApplyCustomizedMapping.jpg");

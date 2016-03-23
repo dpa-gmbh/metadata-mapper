@@ -29,7 +29,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 /**
- * This class offers the metadata mapper functionality. It purpose is to construct the desired functionality and to
+ * This class offers the metadata mapper functionality. Its purpose is to construct the desired functionality and to
  * call it. Typical use:
  * <pre>
  *   MetadataMapper.modifyImageAt( "image.jpg").withXMLDocument(xmldoc).withDefaultMapping().mapToImage(resultImage)
@@ -111,10 +111,20 @@ public class MetadataMapper
         return this;
     }
 
+    /**
+     * @deprecated inheritance not supported in future
+     */
     public MetadataMapper useDefaultMappingOverridenBy(final String pathToMapping) throws FileNotFoundException, JAXBException
     {
         logger.debug("Overriding default mapping by mapping definitions defined in:" + pathToMapping);
         this.mapping = MetadataMapperConfigReader.getDefaultConfigOverridenBy(pathToMapping);
+        return this;
+    }
+
+    public MetadataMapper useCustomMapping( final Path mappingConfigFile ) throws FileNotFoundException, JAXBException
+    {
+        logger.debug( "Using custom mapping");
+        this.mapping = MetadataMapperConfigReader.readCustomConfig(new FileInputStream(mappingConfigFile.toFile()));
         return this;
     }
 
