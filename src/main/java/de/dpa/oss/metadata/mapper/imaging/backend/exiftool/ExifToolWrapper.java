@@ -278,7 +278,7 @@ public class ExifToolWrapper
         {
             for (MetadataEncodingScope metadataFormat : characterEncoding.keySet())
             {
-                toReturn.add( "-charset " + metadataFormat + "=" + characterEncoding.get(metadataFormat));
+                toReturn.add( "-cxharset " + metadataFormat + "=" + characterEncoding.get(metadataFormat));
             }
         }
         return toReturn;
