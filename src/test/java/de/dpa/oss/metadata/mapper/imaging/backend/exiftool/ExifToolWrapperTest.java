@@ -7,6 +7,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -58,5 +59,19 @@ public class ExifToolWrapperTest
 
         // then
         assertThat(rightExceptionThrown, is(true));
+    }
+
+    @Test
+    public void shouldUseConfiguredCharacterEncoding() throws ExifToolIntegrationException
+    {
+        // given
+        final ExifToolWrapper exifToolWrapper = ExifToolWrapper.anExifTool()
+                .withEncodingCharSet(ExifToolWrapper.MetadataEncodingScope.ALL_FORMATS, "UTF8").build();
+
+        // when
+        final File file = new File(this.getClass().getResource("/content/mapping-dpa-example-image.jpeg").getFile());
+        exifToolWrapper.runExiftool(file, "-IPTC:ALL");
+        // then no exception occurs
+
     }
 }

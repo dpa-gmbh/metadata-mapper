@@ -33,11 +33,6 @@ public class MetadataMapperConfigReader
 
     /**
      * @deprecated
-     * @param resourcePath
-     * @param caller
-     * @return
-     * @throws FileNotFoundException
-     * @throws JAXBException
      */
     public static MappingType getDefaultConfigOverridenBy(final String resourcePath, Object caller)
             throws FileNotFoundException, JAXBException
@@ -47,10 +42,6 @@ public class MetadataMapperConfigReader
 
     /**
      * @deprecated
-     * @param path
-     * @return
-     * @throws FileNotFoundException
-     * @throws JAXBException
      */
     public static MappingType getDefaultConfigOverridenBy(final String path) throws FileNotFoundException, JAXBException
     {

@@ -67,6 +67,8 @@ public class ExifToolWrapper
         }
     }
 
+    private Map<MetadataEncodingScope, String> characterEncoding;
+
     public static String getPathToExifTool() {
         return pathToExifTool;
     }
@@ -124,6 +126,11 @@ public class ExifToolWrapper
 
         logger.debug("\t\tSuccessful, returning streams to caller.");
         return streams;
+    }
+
+    public void setCharacterEncoding(final Map<MetadataEncodingScope,String> characterEncoding)
+    {
+        this.characterEncoding = characterEncoding;
     }
 
     /**
@@ -259,11 +266,33 @@ public class ExifToolWrapper
     }
 
     /**
+     *
+     * @param givenArguments arguments given by callee
+     * @return callee's argument merged with arguments given by builder
+     */
+    private List<String> addConfiguredArguments( final String ... givenArguments )
+    {
+        final List<String> toReturn = new ArrayList(Arrays.asList(givenArguments));
+
+        if( characterEncoding!= null && characterEncoding.size() > 0 )
+        {
+            for (MetadataEncodingScope metadataFormat : characterEncoding.keySet())
+            {
+                toReturn.add( "-charset " + metadataFormat + "=" + characterEncoding.get(metadataFormat));
+            }
+        }
+        return toReturn;
+    }
+
+    /**
      * @param imageFile may be null. This is usefull in order to gather settings from exiftool, like e.g. "exiftool - charset" which is
      *                  used to get the list of supported charsets.
      */
     protected synchronized String runExiftool(final File imageFile, final String... cmdArgs) throws ExifToolIntegrationException
     {
+        final List<String> mergedArgs = addConfiguredArguments(cmdArgs);
+
+
         StringBuilder sb = new StringBuilder();
         try
         {
@@ -296,7 +325,7 @@ public class ExifToolWrapper
 
                 logger.debug("\tStreaming arguments to ExifTool process...");
 
-                for (String cmdArg : cmdArgs)
+                for (String cmdArg : mergedArgs)
                 {
                     streams.writer.write(cmdArg + "\n");
                 }
@@ -307,7 +336,7 @@ public class ExifToolWrapper
                     streams.writer.write('\n');
                 }
                 logger.debug("\tExecuting ExifTool...");
-                logger.debug("Using arguments: " + cmdArgs);
+                logger.debug("Using arguments: " + mergedArgs);
                 // Begin tracking the duration ExifTool takes to respond.
                 exifToolCallElapsedTime = System.currentTimeMillis();
 
@@ -325,7 +354,7 @@ public class ExifToolWrapper
 			 * execution arguments completely each time.
 			 */
                 final List<String> args = new ArrayList<>();
-                args.addAll(Arrays.asList(cmdArgs));
+                args.addAll(mergedArgs);
 
                 if (imageFile != null)
                 {
@@ -638,9 +667,43 @@ public class ExifToolWrapper
     }
 
 
+    public enum MetadataEncodingScope {
+        /**
+         * Set encoding for all metadata formats
+         */
+        ALL_FORMATS("ExifTool"),
+        /**
+         * Specify encoding for iptc
+         */
+        IPTC("IPTC"),
+        /**
+         * Specify encoding for exif
+         */
+        EXIF("EXIF")
+        ;
+
+        MetadataEncodingScope(final String scopeID)
+        {
+            this.encodingScope = scopeID;
+        }
+
+
+        private String encodingScope;
+
+        public String getEncodingScope()
+        {
+            return encodingScope;
+        }
+
+        @Override public String toString()
+        {
+            return encodingScope;
+        }
+    }
     public static class ExifToolBuilder
     {
         private boolean stayOpen = false;
+        private Map<MetadataEncodingScope,String> metadataTypeToEncoding = new HashMap<>();
 
         /**
          * leave the exiftool process open for subsequent calls.
@@ -652,9 +715,20 @@ public class ExifToolWrapper
             return this;
         }
 
+        public ExifToolBuilder withEncodingCharSet(final MetadataEncodingScope encodingScope, final String encodingCharSet)
+        {
+            metadataTypeToEncoding.put(encodingScope,encodingCharSet);
+            return this;
+        }
+
         public ExifToolWrapper build()
         {
-            return new ExifToolWrapper(stayOpen);
+            ExifToolWrapper toReturn = new ExifToolWrapper(stayOpen);
+            if (metadataTypeToEncoding.size() > 0)
+            {
+                toReturn.setCharacterEncoding(metadataTypeToEncoding);
+            }
+            return toReturn;
         }
     }
 }
