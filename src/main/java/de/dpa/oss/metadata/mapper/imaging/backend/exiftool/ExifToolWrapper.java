@@ -22,7 +22,8 @@ package de.dpa.oss.metadata.mapper.imaging.backend.exiftool;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ListMultimap;
-import com.google.gson.Gson;
+import com.google.common.io.ByteStreams;
+import com.google.gson.*;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagGroupBuilder;
 import de.dpa.oss.metadata.mapper.imaging.backend.exiftool.taginfo.TagInfo;
 import org.slf4j.Logger;
@@ -278,7 +279,8 @@ public class ExifToolWrapper
         {
             for (MetadataEncodingScope metadataFormat : characterEncoding.keySet())
             {
-                toReturn.add( "-cxharset " + metadataFormat + "=" + characterEncoding.get(metadataFormat));
+                toReturn.add( "-charset");
+                toReturn.add( metadataFormat + "=" + characterEncoding.get(metadataFormat));
             }
         }
         return toReturn;
@@ -568,6 +570,7 @@ public class ExifToolWrapper
     }
 
     /**
+     * @deprecated
      * @param nameOfTagGroups the list of tag groups to inspect. An entry may contain the specific location too. It has to be
      *                        separated by a colon. Example entries: "IPTC", "XMP:XMP-dc"
      * @return map containing tags as keys and tag values
@@ -593,6 +596,46 @@ public class ExifToolWrapper
             tagToValue = new ArrayList<>();
         }
         return tagToValue;
+    }
+
+    /**
+     *
+     * @return json object where each field has name "GroupName:Entry" and related value. In some cases the related value can by of type
+     * array.
+     * Example output:
+     * <pre>
+      {
+        "IPTC:City": "Stuttgart",
+        "IPTC:CopyrightNotice": "dpa",
+        "XMP:ToneCurveBlue": [
+            "0, 0",
+            "255, 255"
+        ]
+      }
+     * </pre>
+     * Return value may be null in case no entries could be found
+     */
+    public JsonObject readTagGroups( File image, final String ... nameOfTagGroups ) throws ExifToolIntegrationException
+    {
+        JsonObject toReturn = null;
+        final List<String> args = new ArrayList();
+        args.add("-j");
+        for (String nameOfTagGroup : nameOfTagGroups)
+        {
+            args.add( "-" + nameOfTagGroup);
+        }
+
+        String result = runExiftool(image, args);
+        if(!Strings.isNullOrEmpty(result))
+        {
+            final JsonArray array = new JsonParser().parse(result).getAsJsonArray();
+            if(array.size()>0)
+            {
+                toReturn = array.get(0).getAsJsonObject();
+            }
+        }
+
+        return toReturn;
     }
 
     private TagInfo parseTagInfoFromXMLInput(final String xmlInput) throws ParserConfigurationException, SAXException, IOException
